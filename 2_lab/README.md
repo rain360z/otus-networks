@@ -33,7 +33,6 @@
 + Назначение имени роутеру
 + Выключение DNS lookup
 + Назначение пароля для привилегированного режима
-+ Назначение пароля при подключении к консоли
 + Назначение пароля при подключении через консоль        
 + Назначим в качестве пороля для удаленного подключения к vty(virtual teletype) 
 + Включение службы шифрования паролей
@@ -42,7 +41,20 @@
 + Сохраним текущую конфигурацию в startup конфигурацию.
 
    ``` 
-
+     Router>enable
+     Router#conf terminal
+     Router(config)#hostname R1
+     R1(config)#no ip domain-lookup
+     R1(config)#enable password class
+     
+     R1(config)#line vty 0 4
+     R1(config-line)#password class
+     R1(config-line)#login
+     R1(config)#service password-encryption
+     
+     
+     
+     
 
 
 
