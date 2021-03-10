@@ -10,8 +10,6 @@
 
 Решение
 
-1. Соберем стенд, настроим 
-
 Таблица адресов  
 | Оборудование | Интерфейс  | ip-адрес | Маска |  Маршрут по умолчанию |
 |--------------|------------|----------|-------|-----------------------|
@@ -20,6 +18,9 @@
 ||G0/0/1.8|N/A|N/A|N/A|
 |S1|  VLAN 3|192.168.3.11|255.255.255.0|192.168.3.1|
 |S2| VLAN
+
+
+
 #### Решение
 #### Часть 1. Постройка стенда сети и базовая настройка устройств.
 
@@ -47,39 +48,61 @@
      R1(config)#no ip domain-lookup
      R1(config)#enable password class
      
+     R1(config)#line console 0
+     R1(config-line)#password class
+     R1(config-line)#login
+     
      R1(config)#line vty 0 4
      R1(config-line)#password class
      R1(config-line)#login
+     
      R1(config)#service password-encryption
      
+     R1(config)#banner login "anyone unauthorized access is prohibited."
      
+     R1#clock set 18:14:15 08 march 2021
      
-     
+     R1#copy running-config startup-config
 
-
-
-#### Конфигурируем аналогично базовые настройки на коммутаторах.
+Конфигурируем аналогично базовые настройки на коммутаторах.
 #### Конфигурируем PC
 На основе таблицы зададим IP адрес, маску и шлюз по умолчанию
 
-
 #### Создание VLANs на обоих коммутаторах
 
-Создать и назвать необходимые VLANs на каждом коммутаторе из таблицы выше.
- | Задача | Команда|
- |--------|--------|
- |        |        |
- | Создайте сеть VLAN с допустимым номером идентификатора. | ```S1(config)# vlan vlan-id```|
- | Укажите уникальное имя для идентификации сети VLAN. | ```S1(config-vlan)# name vlan-name```|
- | Вернитесь в привилегированный режим. | ```S1 (config-vlan) # end```|
- | Войдите в режим глобальной настройки.| ```S1# configure terminal```|
-Настроить порты управления
- | Задача | Команда|
- |--------|--------|
- | Войти в режим конфигурировации порта SVI |``` S1(config)# interface vlan 3``` |
- | Зададать IPv4 адресс для SVI | ```S2(config-if)#ip address 192.168.3.12 255.255.255.0```|
- | Включить Менеджмент интрефейс | ```Enable the management interface. S1(config-if)# no shutdown``` |
- | 
+На примере одного коммутатора рассмотрим:
++ Создание  VLANs в соответствии с таблицей
++ Настройку SVI портов
++ Назначение неиспользуемым портам native vlan, в данном случает отдельного VLANz ParkingLot
++ Настройка SSHv2
+
+``` S1(config)# vlan 3
+    S1(config-vlan)# name Managment
+    
+    S1(config)# interface vlan 3
+    S2(config-if)#ip address 192.168.3.12 255.255.255.0
+    S1(config-if)# no shutdown
+    
+    S1(config)#ip default-gateway 192.168.3.1
+    
+    S1(config)#interface range f0/2-4, f0/7-24, g0/1-2
+    S1(config-if-range)#switchport mode access 
+    S1(config-if-range)#switchport access vlan 7```
+
+    S1(config)#ip domain name S1
+    S1(config)#crypto key generate rsa general-keys modulus 2048
+    S1(config)#username adm password adm
+    S1(config)#line vty 0 4
+    S1(config-line)#transport input ssh
+    S1(config-line)#login local
+    S1(config)#ip ssh version 2
+ ```
+Создадим другие VLANs и назначим их на конкретне интерфейсы
+     
+ 
+    
+    
+    
  
 
 
