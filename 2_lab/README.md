@@ -101,15 +101,32 @@
      
 #### Часть 3. Создадание 802.1Q Trunk между коммутаторами
 
-Вручную настроить транк 
+Вручную настроить транк на коммутаторе S1
 
 ``` 
    S1(config)#interface f0/1
+   
    S1(config-if)#switchport mode trunk
+   S1(config-if)#switchport trunk native vlan 8
+   S1(config-if)#switchport trunk allowed vlan 3,4,7,8
+   
+```
+Зададим аналогичные настройки на коммутаторе S2 и S1 в сторону роутера.
 
+#### Часть 4. Насройка мевлановой маршрутизации на роутере.
+
+Включим интерфейс роутера G0/0/1. Настроим сабынтерфейсы с использованием 802.1Q.
 
 ```
- 
+R1(config)#interface gigabitEthernet 0/0/1
+R1(config-if)#no shutdown
+
+R1(config-if)#interface gigabitEthernet 0/0/1.3
+R1(config-subif)#Description "Default Gateway for Managment(3)"
+R1(config-subif)#encapsulation dot1Q 3
+R1(config-subif)#ip address 192.168.3.1 255.255.255.0
+```
+
 
  
     
