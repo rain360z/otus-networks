@@ -127,8 +127,61 @@ R1(config-subif)#encapsulation dot1Q 3
 R1(config-subif)#ip address 192.168.3.1 255.255.255.0
 ```
 
+Закончили конфигурирование оборудования. Проверка роботоспособности:
++ пинг от PC-A До Шлюза
+  ``` C:\>ping 192.168.3.1
 
- 
+      Pinging 192.168.3.1 with 32 bytes of data:
+
+      Reply from 192.168.3.1: bytes=32 time<1ms TTL=255
+      Reply from 192.168.3.1: bytes=32 time=1ms TTL=255
+      Reply from 192.168.3.1: bytes=32 time<1ms TTL=255
+
+      Ping statistics for 192.168.3.1:
+      Packets: Sent = 3, Received = 3, Lost = 0 (0% loss),
+      Approximate round trip times in milli-seconds:
+      Minimum = 0ms, Maximum = 1ms, Average = 0ms
+  ```
++ Пинг от PC-A до PC-B
+ ```C:\>ping 192.168.4.3
+
+Pinging 192.168.4.3 with 32 bytes of data:
+
+Request timed out.
+Reply from 192.168.4.3: bytes=32 time<1ms TTL=127
+Reply from 192.168.4.3: bytes=32 time=10ms TTL=127
+Reply from 192.168.4.3: bytes=32 time<1ms TTL=127
+
+Ping statistics for 192.168.4.3:
+    Packets: Sent = 4, Received = 3, Lost = 1 (25% loss),
+Approximate round trip times in milli-seconds:
+    Minimum = 0ms, Maximum = 10ms, Average = 3ms
+```
+
++ Пинг от PC-A до S2
+``` C:\>ping 192.168.3.12
+
+Pinging 192.168.3.12 with 32 bytes of data:
+
+Reply from 192.168.3.12: bytes=32 time=12ms TTL=255
+Reply from 192.168.3.12: bytes=32 time<1ms TTL=255
+Reply from 192.168.3.12: bytes=32 time<1ms TTL=255
+
+Ping statistics for 192.168.3.12:
+    Packets: Sent = 3, Received = 3, Lost = 0 (0% loss),
+Approximate round trip times in milli-seconds:
+    Minimum = 0ms, Maximum = 12ms, Average = 4ms
+```
++ Пустm tracert из PC-B  до PC-A
+``` C:\>tracert 192.168.3.3
+
+Tracing route to 192.168.3.3 over a maximum of 30 hops: 
+
+  1   0 ms      0 ms      0 ms      192.168.4.1
+  2   0 ms      2 ms      10 ms     192.168.3.3
+```
+Промежуточным адресом является адрес шлюза
+
     
     
     
