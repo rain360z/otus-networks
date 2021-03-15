@@ -46,11 +46,11 @@ S1(config-line)#logging synchronousip a
 
 Проверим связь между коммутатором S1 и S3?  
 
-3 рис.  
+
 ![alt text](https://github.com/rain360z/otus-networks/blob/main/3_lab/pictures/3.PNG)
 Проверим связь между коммутатором S2 и S3?  
 
-4 рис
+
 ![alt text](https://github.com/rain360z/otus-networks/blob/main/3_lab/pictures/4.PNG)
 #### Часть 2. Выбер корневого моста
 
@@ -61,10 +61,10 @@ S1(config-line)#logging synchronousip a
 
 ![alt text](https://github.com/rain360z/otus-networks/blob/main/3_lab/pictures/5.PNG)
 
-Коммутатор S2 
+Коммутатор S2   
 ![alt text](https://github.com/rain360z/otus-networks/blob/main/3_lab/pictures/6.PNG)
 
-Коммутатор S3
+Коммутатор S3  
 ![alt text](https://github.com/rain360z/otus-networks/blob/main/3_lab/pictures/7.PNG)
 
 
