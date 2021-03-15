@@ -10,7 +10,8 @@
 4. Наблюдение за процессом выбора протоколом STP порта, исходя
 из приоритета портов
 
-Рис 1.
+
+![alt text](https://github.com/rain360z/otus-networks/blob/main/3_lab/pictures/1.JPG)
 
 Топология
 
@@ -40,29 +41,31 @@ S1(config-line)#logging synchronousip a
 
 Проверим связь между коммутатором S1 и S2?
 
-2 рис.
+
+![alt-text](https://github.com/rain360z/otus-networks/blob/main/3_lab/pictures/2.PNG)
 
 Проверим связь между коммутатором S1 и S3?  
 
 3 рис.  
-
+![alt text](https://github.com/rain360z/otus-networks/blob/main/3_lab/pictures/3.PNG)
 Проверим связь между коммутатором S2 и S3?  
 
 4 рис
-
+![alt text](https://github.com/rain360z/otus-networks/blob/main/3_lab/pictures/4.PNG)
 #### Часть 2. Выбер корневого моста
 
 Отключим все порты кроме F0/2 и F0/4,данные порты настроим в качестве транковых и отобразим данные протокола spanning-tree.
 В моем случае вместо F0/2 и F0/4,будут e0/1 и e0/3.
 
 Коммутатор S1   
-5 рис 
+
+![alt text](https://github.com/rain360z/otus-networks/blob/main/3_lab/pictures/5.PNG)
 
 Коммутатор S2 
-6 рис
+![alt text](https://github.com/rain360z/otus-networks/blob/main/3_lab/pictures/6.PNG)
 
 Коммутатор S3
-7 рис
+![alt text](https://github.com/rain360z/otus-networks/blob/main/3_lab/pictures/7.PNG)
 
 
     
