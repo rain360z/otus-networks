@@ -42,13 +42,13 @@ S1(config-line)#logging synchronousip
 
 Проверим связь между коммутатором S1 и S2?
 
-
-![](3_lab/pictures/2.PNG)
+тут
+![alt text](https://github.com/rain360z/otus-networks/blob/main/3_lab/pictures/3.PNG)
 
 Проверим связь между коммутатором S1 и S3?  
 
 
-![alt text](https://github.com/rain360z/otus-networks/blob/main/3_lab/pictures/3.PNG)
+![alt text](https://github.com/rain360z/otus-networks/blob/main/3_lab/pictures/3.PNG)  
 Проверим связь между коммутатором S2 и S3?  
 
 
