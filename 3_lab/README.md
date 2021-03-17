@@ -33,7 +33,7 @@
 
 ```
 S1(config)#line console 0  
-S1(config-line)#logging synchronousip a 
+S1(config-line)#logging synchronousip
 
 ```  
 
@@ -69,7 +69,7 @@ S1(config-line)#logging synchronousip a
 
 Приоритеты у всех коммутаторов одинаковые. Корневой мост будет выбираться на основании MAC-адресов. 
 В нашем случае корневой мост S1  
-8 рис
+![alt text](https://github.com/rain360z/otus-networks/blob/main/3_lab/pictures/8.PNG)
 
 Определим роли и состояние активных портов на каждом коммутаторе
 
