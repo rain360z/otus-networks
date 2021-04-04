@@ -1,6 +1,7 @@
 # Настроить DHCPv4
 
-Рис  1
+https://github.com/rain360z/otus-networks/blob/main/5_lab/Pictures/1.png
+
 | VLAN	| Name	| Interface Assigned|
 |-------|-------|-------------------|
 | 1	|N/A	| S2: F0/18| 
@@ -23,7 +24,7 @@
 
 #### Шаг 2. Подключим сетево оборудование как показанно на схеме.
 
-Рис Скринш 1
+https://github.com/rain360z/otus-networks/blob/main/5_lab/Pictures/Screenshot_1.png
 
 #### Шаг 3. Базовое конфигурирование маршрутизаторов.
 
@@ -37,7 +38,7 @@
  + Настроим на R1 интерфейс s1/0 в соответствии таблицей адресов и добавим 
 маршрут по умолчанию.
 ```  
-Скр 2
+https://github.com/rain360z/otus-networks/blob/main/5_lab/Pictures/Screenshot_2.png
 
 ``` 
 
@@ -50,10 +51,11 @@
  + Настроить и включить SVI порт S1 и на S2
  + Назначить на неиспользуемых портах S1 VlAN и выключить их. На S2 Не используемые порты отлкючить
 
-Рис 3
-Рис 4
-Рис 5
-Рис 6
+https://github.com/rain360z/otus-networks/blob/main/5_lab/Pictures/Screenshot_3.png
+https://github.com/rain360z/otus-networks/blob/main/5_lab/Pictures/Screenshot_4.png
+https://github.com/rain360z/otus-networks/blob/main/5_lab/Pictures/Screenshot_5.png
+https://github.com/rain360z/otus-networks/blob/main/5_lab/Pictures/Screenshot_6.png
+
 
 #### Шаг 8. 
 
@@ -68,25 +70,28 @@
 #### Шаг 1. Настроить R1 с DHCPv4 пулом для 2 поддерживаемых сабынтерфейсов.
 + Исключить первые 5 используемыъ адресов для кажлого пула адресов.
 
-рис 7
+https://github.com/rain360z/otus-networks/blob/main/5_lab/Pictures/Screenshot_7.png  
+
 + Создать DHCP пул
 + Установть сеть которую поддерживать DHCP сервер
 + Настроить доменное имя
 + Настроить шлюз пол умолчанию для каждого DHCP пула
 + Назначить время аренды 2 дня 12 часов 30 минут
 
-Рис 8
+https://github.com/rain360z/otus-networks/blob/main/5_lab/Pictures/Screenshot_8.png
 
 #### Шаг 2. Проверить конфигурацию DHCP сервера следующими командами:
 ```show ip dhcp pool```   
-рис 9
+
+https://github.com/rain360z/otus-networks/blob/main/5_lab/Pictures/Screenshot_9.png
 
 ```show ip dhcp bindings ```  
-  Так как ни кто адрес не получил, привязок нету, то таблица пустая
- рис 10
+  Так как ни кто адрес не получил, привязок нету, то таблица пустая  
+https://github.com/rain360z/otus-networks/blob/main/5_lab/Pictures/Screenshot_10.png
+
 ```show ip dhcp server statistics```
 
-рис 11
+https://github.com/rain360z/otus-networks/blob/main/5_lab/Pictures/Screenshot_11.png
  
 
 #### Шаг 3. Попробовать получить ip адрес от DHCP на PC-A
@@ -95,8 +100,8 @@
 
 На VPCS: ```dhcp -r```
 
-рис 12
-рис 13
+https://github.com/rain360z/otus-networks/blob/main/5_lab/Pictures/Screenshot_12.png
+https://github.com/rain360z/otus-networks/blob/main/5_lab/Pictures/Screenshot_13.png
 
 
 ### Часть 3.  Настроить DHCP reley(трансляцию) на 
@@ -104,18 +109,18 @@
 #### Шаг 1. Настройка R2 как агента трасляции DHCP для локльной сети на интерфейсе e0/0
 + Настроить r``` ip helper-address ``` 
 
-Рис 14
+https://github.com/rain360z/otus-networks/blob/main/5_lab/Pictures/Screenshot_14.png
 
 #### Шаг 2. Попытаться запросить адрес IP адрес от DHCP для PC-B
 + Запросим IP адрес
-Рис 15
+https://github.com/rain360z/otus-networks/blob/main/5_lab/Pictures/Screenshot_15.png
 
 ```show ip dhcp bindings ```  
 ```show ip dhcp server statistics```
 
-Рис 16
+https://github.com/rain360z/otus-networks/blob/main/5_lab/Pictures/Screenshot_16.png
 
-Рис 17
+https://github.com/rain360z/otus-networks/blob/main/5_lab/Pictures/Screenshot_17.png
 
 
 # Настроить DHCPv6
@@ -145,13 +150,13 @@
 + Настроить на интерфейсах роутеров в соответствии с таблицей
 + Проверить доступность
 
-Рис 18
+https://github.com/rain360z/otus-networks/blob/main/5_lab/Pictures/Screenshot_18.png
 
 ### Часть 2 Проверить назначение адреса с помощью службы SLAAC
 
 После включения компьютера, были сформированны следующие адреса.
 
-Рис 19
+https://github.com/rain360z/otus-networks/blob/main/5_lab/Pictures/Screenshot_19.png
 
 Where did the host-id portion of the address come from?
 
