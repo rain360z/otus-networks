@@ -5,7 +5,7 @@
   1. Разработать и задокументировать адресное пространство для Москвы и Петербурга;
 
 Схема сети   
-![alert text](https://github.com/rain360z/otus-networks/blob/main/10_lab/pictures/Screenshot_1.JPG)
+![alert text](https://github.com/rain360z/otus-networks/blob/main/10_lab/Pictures/Screenshot_1.png)
 
 
 ###  Решение:
