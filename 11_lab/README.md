@@ -12,6 +12,7 @@
 
 ###  1. Задокументируем используемое адресное пространство с использованием IPv4 и IPv6.
 
+
   Общая таблица сетей.
 
 | Network IPv4     | Summary net    | Network IPv6             | Summary net         | Description   | Eq&port         |
@@ -275,53 +276,4 @@
 |SW9|SVI vlan 201 |IPv4   |10.128.1.1/24|10.128.1.0/24|Gate vlan 201|
 |SW9|SVI vlan 201 |IPv6   |1:1:2:100::9/64|1:1:2:100::/64|Gate vlan 201|
 |SW9|SVI vlan 201 |IPv4 LL|fe80::9|fe80::/10|Gate vlan 201|
-|||||||
-|||||||
-
-Внесены следующие изменения:  
-+ На данной схеме протокол STP ни где не используется:
-   -  В Москве используется L3 коммутаторы и реализована схема Layer 3 Access Layer. 2 дополнытельных канала между SW4 и SW5 будут избыточными их можно убрать.
-   -  В С.-Петербурге между SW9 и SW10 агрегация канала 802.1Q trunk, в протоколе STP тоже нет необходимости.
-+ С.-Петербур, если у нас есть деньги для дополнительного канала на R18, то мы сможем найти старенький маршрутизатор Cisco для HSRP. Ну и прийдется докупить для
-R16 дополнительные порты.
-+ В питербурге на SW9 и SW10 настроен VRRP, в будущем нужно будет перенести гео на R16 и R17
-
-Настроим часть сети в Питере.
-
-Настройки Ether-channel между SW9 и SW10
-
-``` SW9(config)# vlan 2
-    SW9(config-vlan)# name client 
-    SW9(config-vlan)# exit
-    SW9(config)# interface range e0/0-1
-    SW9(config-if-range)# channel-group 1 mode active
-    SW9(config-if-range)# exit
-    SW9(config)# interface port-channel 1
-    SW9(config-if)# switchport trunk encapsulation dot1q
-    SW9(config-if)# switchport mode trunk
-    SW9(config-if)# switchport trunk allowed vlan 200
-```   
-
-Аналогичные настройки сделаем на SW10
-
-Проверить работу Etherchannel можено командой:   
-``` show etherchannel summary ```   
-
-
-Настроим протокол резервирования маршрутизаторов VRRP SW9 и SW10
-```   
-  SW9(config)# interface FastEthernet0/2
-  SW9(config)# ip address 10.128.0.2 255.255.255.0
-  SW9(config)# vrrp 1 description -[ VRRP GOUP 1 FOR Client ]-
-  SW9(config)# vrrp 1 ip 192.168.0.254
-
-```   
-Командой ``` show vrrp ``` определили, что SW10 стал Мастером.
-
-
-    
-
-
-
-
 
