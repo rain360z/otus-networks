@@ -57,8 +57,7 @@
 ASBR имеет доступ до провайдера internet. Укажем другим маршрутизаторам в Автономной системе,
 что мы занаем маршрут по умолчанию.   
 
-```R14(config-router)#default-information originate   
-```
+```  R14(config-router)#default-information originate  ```
 
 Настроим работу OSPF на интерфейсе e0/3. Укажем что между двумя маршрутизаторами 
 в области 101 point-to-point сеть.
@@ -113,7 +112,9 @@ AREA 10
 
 ABR
 
-```(config-router)# area 101 stub no-summary ```
+```   
+(config-router)# area 101 stub no-summary   
+```
 
 На всех маршрутизаторах зоны
 
@@ -133,7 +134,8 @@ ABR
 
 Необходимо добавить фильтр на ABR граничащие с зоной 102
 
-``` (config)# ip prefix-list non101 seq 5 dany 10.127.255.0/28   
+``` 
+    (config)# ip prefix-list non101 seq 5 dany 10.127.255.0/28   
     (config)# ip prefix-list non101 seq 5 dany 10.127.255.224/28
      
     (config-router)#area 0 filter-list prefix out   
