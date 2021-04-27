@@ -28,7 +28,8 @@
 
 ### 1.1. Задать на схеме Area и Router ID
 
-СХЕМА
+СХЕМА  
+![](https://github.com/rain360z/otus-networks/blob/main/11_lab/Pictures/Screenshot_1.png)
 
 ### 2. Настроить работу OSPF на всех маршрутизаторах в сети
 
@@ -84,14 +85,19 @@ R14(config-if)# ip ospf network point-to-point
 
 Проверим в LSDB кажой AREA Router Link States .
 AREA 0 
-Скрин 2
+![](https://github.com/rain360z/otus-networks/blob/main/11_lab/Pictures/Screenshot_2.png)
 
-AREA 101
-SCR 3
-AREA 102
-SCR 4
-AREA 10
-SCR 5
+AREA 101  
+
+![](https://github.com/rain360z/otus-networks/blob/main/11_lab/Pictures/Screenshot_3.png)
+
+AREA 102  
+
+![](https://github.com/rain360z/otus-networks/blob/main/11_lab/Pictures/Screenshot_4.png)  
+
+AREA 10  
+
+![](https://github.com/rain360z/otus-networks/blob/main/11_lab/Pictures/Screenshot_5.png)
 
 ### 1.3 Поставить фильтр на AREA 101, маршрутизаторы получают только маршрут по умолчанию.
 
@@ -99,7 +105,7 @@ SCR 5
 
 Посмотирм текущие маршруты в AREA 101
 
-SCR 6
+![](https://github.com/rain360z/otus-networks/blob/main/11_lab/Pictures/Screenshot_6.png)
 
 После настройки зоны должны остаться присоединенные сети и Default route
 
@@ -115,7 +121,7 @@ ABR
 
 Посмотрим маршруты на R19 
 
-SCR 7
+![](https://github.com/rain360z/otus-networks/blob/main/11_lab/Pictures/Screenshot_7.png)
 
 ###1.4 Поставить фильтр 102, маршрутизаторы получают все маршруты, кроме маршрутов в зону 101
 
@@ -123,7 +129,7 @@ SCR 7
 
 Проверим текущие маршруты в AREA 102
 
-SCR 8 
+![](https://github.com/rain360z/otus-networks/blob/main/11_lab/Pictures/Screenshot_8.png) 
 
 Необходимо добавить фильтр на ABR граничащие с зоной 102
 
@@ -137,7 +143,7 @@ SCR 8
 
 Проверим текущие маршруты в AREA 102
 
-SCR 9
+![](https://github.com/rain360z/otus-networks/blob/main/11_lab/Pictures/Screenshot_9.png)
 
 видим что в таблице маршрутизации из других зон нету сетей из AREA 101
 
@@ -159,23 +165,24 @@ SCR 9
 
 Area 101
 
-SCR 10
+![](https://github.com/rain360z/otus-networks/blob/main/11_lab/Pictures/Screenshot_10.png)
 
 
 AREA 0 
 
-SRC 11
+![](https://github.com/rain360z/otus-networks/blob/main/11_lab/Pictures/Screenshot_11.png)
 
-AREA 102
-SRC 12
+AREA 102  
 
-SRC 13
+![](https://github.com/rain360z/otus-networks/blob/main/11_lab/Pictures/Screenshot_12.png)
+
+![](https://github.com/rain360z/otus-networks/blob/main/11_lab/Pictures/Screenshot_13.png)
 
 2.1 Настроить Total stub Area 101
 
 Настройки аналогичные с ipv4
 
-SRC14
+![](https://github.com/rain360z/otus-networks/blob/main/11_lab/Pictures/Screenshot_14.png)
 
 
 2.3 Настроим фильтр на зоне 102
@@ -185,11 +192,11 @@ R15(config)# ipv6 prefix-list non101 seq 4 deny 1:1:1:1::/64
 R15(config)# ipv6 prefix-list non101 seq 4 deny 1:1:1:15::/64
 R15(config-rtr)# area 102 filter-list prefix non101 in
 ```
-SCR 15
+![](https://github.com/rain360z/otus-networks/blob/main/11_lab/Pictures/Screenshot_15.png)
 
 Исходя из таблица маршрутизации, у нас вместе с AREA 101 пропали маршруты и AREA 0
 
-SCR 16
+![](https://github.com/rain360z/otus-networks/blob/main/11_lab/Pictures/Screenshot_16.png)
 
 Настройка ospf ipv6 закончена.
 
