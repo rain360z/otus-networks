@@ -204,5 +204,43 @@ R15(config-rtr)# area 102 filter-list prefix non101 in
 
 Выявлены проблемные места
 
-В AREA 101 пропали маршруты и AREA 0
+1) В AREA 101 пропали маршруты и AREA 0
+
+2) Не работает маршрутизация на L3 коммутаторах 
+Проверка работоспособности межвлановой маршрутизации между vlan 100 и 99.
+Проверка доступности SW4 (10.127.255.98) c сетей пользователей
+
+![](https://github.com/rain360z/otus-networks/blob/main/11_lab/Pictures/Screenshot_17.png)
+
+![](https://github.com/rain360z/otus-networks/blob/main/11_lab/Pictures/Screenshot_18.png)
+Настройки vPS  
+
+![](https://github.com/rain360z/otus-networks/blob/main/11_lab/Pictures/Screenshot_19.png)
+
+Настройки SW3
+
+![](https://github.com/rain360z/otus-networks/blob/main/11_lab/Pictures/Screenshot_20.png)
+
+Tracert до 10.127.255.1
+
+
+![](https://github.com/rain360z/otus-networks/blob/main/11_lab/Pictures/Screenshot_21.png)
+
+![](https://github.com/rain360z/otus-networks/blob/main/11_lab/Pictures/Screenshot_22.png)
+
+Очень странный
+
+![](https://github.com/rain360z/otus-networks/blob/main/11_lab/Pictures/Screenshot_23.png)
+
+C VPC335 нету доступа до узла 10.127.255.65
+
+С маршрутизатора доступ до есть 
+
+![](https://github.com/rain360z/otus-networks/blob/main/11_lab/Pictures/Screenshot_24.png) 
+
+Доступа нет и дальше шлюза трафик не идет
+![](https://github.com/rain360z/otus-networks/blob/main/11_lab/Pictures/Screenshot_25.png)
+
+
+
 
