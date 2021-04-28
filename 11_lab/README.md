@@ -77,7 +77,7 @@ R14(config-if)# ip ospf network point-to-point
 
 В соответствии с зонами настроим остальные маршрутизаторы.
 
-Проверим в LSDB каждой AREA Router Link States .
+Проверим в LSDB каждой AREA Router Link States.
 AREA 0 
 ![](https://github.com/rain360z/otus-networks/blob/main/11_lab/Pictures/Screenshot_2.png)
 
