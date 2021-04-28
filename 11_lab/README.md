@@ -73,8 +73,7 @@ R14(config-if)#int e0/1
 R14(config-if)# ip ospf 4 area 0
 R14(config-if)# ip ospf network point-to-point
 ```
-Все файлы изменений приведены [здесь](configs/).   
-
+Все файлы изменений приведены [здесь](Configs/).
 В соответствии с зонами настроим остальные маршрутизаторы.
 
 Проверим в LSDB каждой AREA Router Link States.
