@@ -13,11 +13,11 @@
 План работы и изменения зафиксированы в документации   
 
 ###  Задание: 
-[1. Настроить OSPF IPv4](https://github.com/rain360z/otus-networks/tree/main/11_lab#1-%D0%BD%D0%B0%D1%81%D1%82%D1%80%D0%BE%D0%B8%D1%82%D1%8C-ospf-ipv4)
-  [1.1 Поставить фильтр на AREA 101, маршрутизаторы получают только маршрут по умолчанию.]()
-  [1.2 Поставить фильтр 102, маршрутизаторы получают все маршруты, кроме маршрутов в зону 101.]()
-2. Настроить OSPF IPv6
-3. Выявление проблемных места
+[1. Настроить OSPF IPv4](https://github.com/rain360z/otus-networks/tree/main/11_lab#1-%D0%BD%D0%B0%D1%81%D1%82%D1%80%D0%BE%D0%B8%D1%82%D1%8C-ospf-ipv4)  
+  [1.1 Поставить фильтр на AREA 101, маршрутизаторы получают только маршрут по умолчанию.](https://github.com/rain360z/otus-networks/tree/main/11_lab#11-%D0%BF%D0%BE%D1%81%D1%82%D0%B0%D0%B2%D0%B8%D1%82%D1%8C-%D1%84%D0%B8%D0%BB%D1%8C%D1%82%D1%80-%D0%BD%D0%B0-area-101-%D0%BC%D0%B0%D1%80%D1%88%D1%80%D1%83%D1%82%D0%B8%D0%B7%D0%B0%D1%82%D0%BE%D1%80%D1%8B-%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B0%D1%8E%D1%82-%D1%82%D0%BE%D0%BB%D1%8C%D0%BA%D0%BE-%D0%BC%D0%B0%D1%80%D1%88%D1%80%D1%83%D1%82-%D0%BF%D0%BE-%D1%83%D0%BC%D0%BE%D0%BB%D1%87%D0%B0%D0%BD%D0%B8%D1%8E)  
+  [1.2 Поставить фильтр 102, маршрутизаторы получают все маршруты, кроме маршрутов в зону 101.](https://github.com/rain360z/otus-networks/tree/main/11_lab#12-%D0%BF%D0%BE%D1%81%D1%82%D0%B0%D0%B2%D0%B8%D1%82%D1%8C-%D1%84%D0%B8%D0%BB%D1%8C%D1%82%D1%80-102-%D0%BC%D0%B0%D1%80%D1%88%D1%80%D1%83%D1%82%D0%B8%D0%B7%D0%B0%D1%82%D0%BE%D1%80%D1%8B-%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B0%D1%8E%D1%82-%D0%B2%D1%81%D0%B5-%D0%BC%D0%B0%D1%80%D1%88%D1%80%D1%83%D1%82%D1%8B-%D0%BA%D1%80%D0%BE%D0%BC%D0%B5-%D0%BC%D0%B0%D1%80%D1%88%D1%80%D1%83%D1%82%D0%BE%D0%B2-%D0%B2-%D0%B7%D0%BE%D0%BD%D1%83-101)  
+[2. Настроить OSPF IPv6](https://github.com/rain360z/otus-networks/tree/main/11_lab#2-%D0%BD%D0%B0%D1%81%D1%82%D1%80%D0%BE%D0%B8%D1%82%D1%8C-ospf-ipv6)  
+[3. Выявление проблемных мест](https://github.com/rain360z/otus-networks/tree/main/11_lab#3-%D0%B2%D1%8B%D1%8F%D0%B2%D0%BB%D0%B5%D0%BD%D1%8B-%D0%BF%D1%80%D0%BE%D0%B1%D0%BB%D0%B5%D0%BC%D0%BD%D1%8B%D0%B5-%D0%BC%D0%B5%D1%81%D1%82%D0%B0)  
 
 
 ###  Решение:
@@ -73,6 +73,7 @@ R14(config-if)#int e0/1
 R14(config-if)# ip ospf 4 area 0
 R14(config-if)# ip ospf network point-to-point
 ```
+Все файлы изменений приведены [здесь](configs/).   
 
 В соответствии с зонами настроим остальные маршрутизаторы.
 
@@ -116,7 +117,9 @@ ABR
 
 Посмотрим маршруты на R19 
 
-![](https://github.com/rain360z/otus-networks/blob/main/11_lab/Pictures/Screenshot_7.png)
+![](https://github.com/rain360z/otus-networks/blob/main/11_lab/Pictures/Screenshot_7.png)  
+
+Все файлы изменений приведены [здесь](configs/). 
 
 ### 1.2 Поставить фильтр 102, маршрутизаторы получают все маршруты, кроме маршрутов в зону 101
 
@@ -135,7 +138,9 @@ ABR
     (config-router)#area 0 filter-list prefix out   
 ```
 
-т.о мы блокруем сети выходящие из area 0 с данными префиксами.
+т.о мы блокруем сети выходящие из area 0 с данными префиксами.  
+
+Все файлы изменений приведены [здесь](configs/). 
 
 Проверим текущие маршруты в AREA 102
 
@@ -196,7 +201,9 @@ R15(config-rtr)# area 102 filter-list prefix non101 in
 
 ![](https://github.com/rain360z/otus-networks/blob/main/11_lab/Pictures/Screenshot_15.png)
 
-Настройка ospf ipv6 закончена.
+Настройка ospf ipv6 закончена.  
+
+Все файлы изменений приведены [здесь](configs/). 
 
 ### 3. Выявлены проблемные места
 
