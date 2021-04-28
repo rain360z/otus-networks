@@ -1,0 +1,139 @@
+
+!
+! Last configuration change at 18:18:56 +04 Wed Apr 28 2021
+!
+version 15.2
+service timestamps debug datetime msec
+service timestamps log datetime msec
+no service password-encryption
+service compress-config
+!
+hostname SW5
+!
+boot-start-marker
+boot-end-marker
+!
+!
+!
+no aaa new-model
+clock timezone +04 4 0
+!
+!
+!
+!
+!
+!
+!
+!
+no ip domain-lookup
+ip cef
+ipv6 unicast-routing
+ipv6 cef
+!
+!
+!
+spanning-tree mode rapid-pvst
+spanning-tree extend system-id
+!
+vlan internal allocation policy ascending
+!
+! 
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+interface Ethernet0/0
+ no shutdown
+ no switchport
+ ip address 10.127.255.209 255.255.255.240
+ ip ospf network point-to-point
+ ip ospf 4 area 10
+ duplex auto
+ ipv6 address FE80::5 link-local
+ ipv6 address 1:1:1:14::5/64
+ ipv6 ospf 6 area 10
+!
+interface Ethernet0/1
+ no shutdown
+ no switchport
+ ip address 10.127.255.193 255.255.255.240
+ ip ospf network point-to-point
+ ip ospf 4 area 10
+ duplex auto
+ ipv6 address FE80::5 link-local
+ ipv6 address 1:1:1:13::5/64
+ ipv6 ospf 6 area 10
+!
+interface Ethernet0/2
+ no shutdown
+!
+interface Ethernet0/3
+ no shutdown
+!
+interface Ethernet1/0
+ no shutdown
+ no switchport
+ ip address 10.127.255.146 255.255.255.240
+ ip ospf 4 area 10
+ duplex auto
+ ipv6 address FE80::5 link-local
+ ipv6 address 1:1:1:10::5/64
+ ipv6 ospf 6 area 10
+!
+interface Ethernet1/1
+ no shutdown
+ no switchport
+ ip address 10.127.255.114 255.255.255.240
+ ip ospf network point-to-point
+ ip ospf 4 area 10
+ duplex auto
+ ipv6 address FE80::5 link-local
+ ipv6 address 1:1:1:8::5/64
+ ipv6 ospf 6 area 10
+!
+interface Ethernet1/2
+ no shutdown
+!
+interface Ethernet1/3
+ no shutdown
+!
+router ospf 4
+ router-id 0.0.0.5
+ passive-interface default
+ no passive-interface Ethernet0/0
+ no passive-interface Ethernet0/1
+ no passive-interface Ethernet1/0
+ no passive-interface Ethernet1/1
+!
+ip forward-protocol nd
+!
+no ip http server
+no ip http secure-server
+!
+!
+!
+ipv6 router ospf 6
+ router-id 0.0.0.5
+!
+!
+!
+!
+control-plane
+!
+!
+line con 0
+ logging synchronous
+line aux 0
+line vty 0 4
+ login
+!
+!
+end

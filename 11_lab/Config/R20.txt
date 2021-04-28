@@ -1,0 +1,130 @@
+
+!
+! Last configuration change at 00:41:02 +04 Wed Apr 28 2021
+!
+version 15.4
+service timestamps debug datetime msec
+service timestamps log datetime msec
+no service password-encryption
+!
+hostname R20
+!
+boot-start-marker
+boot-end-marker
+!
+!
+!
+no aaa new-model
+clock timezone +04 4 0
+mmi polling-interval 60
+no mmi auto-configure
+no mmi pvc
+mmi snmp-timeout 180
+!
+!
+!
+!
+!
+!
+!
+!
+
+
+!
+!
+!
+!
+ip cef
+ipv6 unicast-routing
+ipv6 cef
+!
+multilink bundle-name authenticated
+!
+!
+!
+!
+!
+!
+!
+!
+!
+redundancy
+!
+!
+! 
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+interface Ethernet0/0
+ no shutdown
+ ip address 10.127.255.82 255.255.255.240
+ ip ospf network point-to-point
+ ip ospf 4 area 102
+ ipv6 address FE80::20 link-local
+ ipv6 address 1:1:1:6::20/64
+ ipv6 ospf 6 area 102
+!
+interface Ethernet0/1
+ no shutdown
+ ip address 10.127.255.241 255.255.255.240
+ ip ospf network point-to-point
+ ip ospf 4 area 102
+ ipv6 address FE80::20 link-local
+ ipv6 address 1:1:1:16::20/64
+ ipv6 ospf 6 area 102
+!
+interface Ethernet0/2
+ no shutdown
+ no ip address
+ shutdown
+!
+interface Ethernet0/3
+ no shutdown
+ no ip address
+ shutdown
+!
+router ospf 4
+ router-id 0.0.0.20
+ passive-interface default
+ no passive-interface Ethernet0/0
+ no passive-interface Ethernet0/1
+!
+ip forward-protocol nd
+!
+!
+no ip http server
+no ip http secure-server
+!
+ipv6 router ospf 6
+ router-id 0.0.0.20
+!
+!
+!
+!
+control-plane
+!
+!
+!
+!
+!
+!
+!
+!
+line con 0
+ logging synchronous
+line aux 0
+line vty 0 4
+ login
+ transport input none
+!
+!
+end

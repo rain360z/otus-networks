@@ -239,12 +239,16 @@ R13
 
 ![](https://github.com/rain360z/otus-networks/blob/main/11_lab/Pictures/Screenshot_18.png)
 
-проверка достпуа с VPCs:    
+проверка достпуа с VPCs:      
 + SW3: SVI-10.0.0.1
 + SW3: e0/1-10.127.255.194
-+ SW4: e0/0-10.127.255.161
-![](https://github.com/rain360z/otus-networks/blob/main/11_lab/Pictures/Screenshot_21.png)   
-trace SW4: e0/1 10.127.255.177
++ SW4: e0/0-10.127.255.161  
+
+![](https://github.com/rain360z/otus-networks/blob/main/11_lab/Pictures/Screenshot_21.png)  
+  
+trace SW4: e0/1 10.127.255.177  
+
+
 ![](https://github.com/rain360z/otus-networks/blob/main/11_lab/Pictures/Screenshot_22.png)
 
 

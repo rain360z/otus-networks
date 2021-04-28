@@ -1,0 +1,150 @@
+
+!
+! Last configuration change at 01:40:53 +04 Wed Apr 28 2021
+!
+version 15.4
+service timestamps debug datetime msec
+service timestamps log datetime msec
+no service password-encryption
+!
+hostname R15
+!
+boot-start-marker
+boot-end-marker
+!
+!
+!
+no aaa new-model
+clock timezone +04 4 0
+mmi polling-interval 60
+no mmi auto-configure
+no mmi pvc
+mmi snmp-timeout 180
+!
+!
+!
+!
+!
+!
+!
+!
+
+
+!
+!
+!
+!
+ip cef
+ipv6 unicast-routing
+ipv6 cef
+!
+multilink bundle-name authenticated
+!
+!
+!
+!
+!
+!
+!
+!
+!
+redundancy
+!
+!
+! 
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+interface Ethernet0/0
+ no shutdown
+ ip address 10.127.255.65 255.255.255.240
+ ip ospf network point-to-point
+ ip ospf 4 area 0
+ ipv6 address FE80::15 link-local
+ ipv6 address 1:1:1:5::15/64
+ ipv6 ospf 6 area 0
+!
+interface Ethernet0/1
+ no shutdown
+ ip address 10.127.255.49 255.255.255.240
+ ip ospf network point-to-point
+ ip ospf 4 area 0
+ ipv6 address FE80::15 link-local
+ ipv6 address 1:1:1:4::15/64
+ ipv6 ospf 6 area 0
+!
+interface Ethernet0/2
+ no shutdown
+ ip address 30.30.30.2 255.255.255.240
+ ipv6 address FE80::15 link-local
+ ipv6 address 2001:1:1:30::15/64
+!
+interface Ethernet0/3
+ no shutdown
+ ip address 10.127.255.81 255.255.255.240
+ ip ospf network point-to-point
+ ip ospf 4 area 102
+ ipv6 address FE80::15 link-local
+ ipv6 address 1:1:1:6::15/64
+ ipv6 ospf 6 area 102
+!
+router ospf 4
+ router-id 0.0.0.15
+ area 0 filter-list prefix non102_1 out
+ passive-interface default
+ no passive-interface Ethernet0/0
+ no passive-interface Ethernet0/1
+ no passive-interface Ethernet0/3
+ default-information originate
+!
+ip forward-protocol nd
+!
+!
+no ip http server
+no ip http secure-server
+ip route 0.0.0.0 0.0.0.0 30.30.30.1
+!
+!
+ip prefix-list non102_1 seq 5 deny 10.127.255.224/28
+ip prefix-list non102_1 seq 6 deny 10.127.255.0/28
+!
+ip prefix-list non102_2 seq 6 deny 10.127.255.0/28
+ipv6 route ::/0 2001:1:1:30::21
+ipv6 router ospf 6
+ router-id 0.0.0.15
+ area 102 filter-list prefix non101 in
+ default-information originate
+!
+!
+!
+ipv6 prefix-list non101 seq 4 deny 1:1:1:1::/64
+ipv6 prefix-list non101 seq 5 deny 1:1:1:15::/64
+!
+!
+control-plane
+!
+!
+!
+!
+!
+!
+!
+!
+line con 0
+ logging synchronous
+line aux 0
+line vty 0 4
+ login
+ transport input none
+!
+!
+end
