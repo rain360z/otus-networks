@@ -22,7 +22,7 @@ IP/v6 Адреса внесены в таблицу тут
 
 ![](Pictures/Screenshot_1.png)
 
-Выделим зону Backbone
+Выделим зону Backbone  
 ![](Pictures/Screenshot_2.png)
 
 Настроим R23
