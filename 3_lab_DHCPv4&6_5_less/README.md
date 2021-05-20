@@ -12,9 +12,9 @@
 
 
 
-###Задание
+### Задание
 
-###1 . Создание стенда, базовое конфигурирование оборудования.
+### 1 . Создание стенда, базовое конфигурирование оборудования.
 
 #### Шаг 1. Создадим схему адресов и запишем их в таблицу
      Разделим подсеть 192.168.1.0/24 на 3 подсети.  
@@ -34,12 +34,18 @@
 
  + Включение интерфейса E0/0  
  + Настройка сабынтерфейсов для каждого VLAN всоответствии с таблицей.
+
+
 #### Шаг 5. Настройка E0/0 На R2, затем маршрутизацию на обоих роутерах
  + Настроим на R1 интерфейс s1/0 в соответствии таблицей адресов и добавим 
 маршрут по умолчанию.
   
-![alt text](Pictures/Screenshot_2.png)
-
+    DLR1(config)# interface s1/0
+    DLR1(config-if)#ip address 10.0.0.1 255.255.255.252
+    DLR1(config-if)# Description "VLAN 1000 to R2"
+    DLR1(config-if)# no shutdown
+    DLR1(config-if)# exit
+    DLR1(config)# ip route 0.0.0.0 0.0.0.0 10.0.0.2
 
 Аналогичные настройки добавим на R2
 
@@ -50,17 +56,29 @@
  + Настроить и включить SVI порт S1 и на S2
  + Назначить на неиспользуемых портах S1 VlAN и выключить их. На S2 Не используемые порты отлкючить  
 
-
-![alt text](Pictures/Screenshot_3.png) 
-
-![alt text](Pictures/Screenshot_4.png)  
-
-![alt text](Pictures/Screenshot_5.png)  
-
-![alt text](Pictures/Screenshot_6.png)  
-
-
-
+    ALS1(config)# vlan 100
+    ALS1(config-if)# name CLIENTS
+    ALS1(config-if)# vlan 200
+    ALS1(config-if)# name MANAGEMENT
+    ALS1(config-if)# vlan 999 
+    ALS1(config-if)# name PARKING_LOT
+    ALS1(config-if)# exit
+    ALS1(config)# ip routing
+    ALS1(config)# interface vlan 100
+    ALS1(config-if)# ip address 192.168.1.2 255.255.255.192
+    ALS1(config-if)# interface vlan 200
+    ALS1(config-if)# ip address 192.168.1.66
+    ALS1(config-if)# interface e0/1
+    ALS1(config-if)# switchport mode access
+    ALS1(config-if)# switchport access vlan 200
+    ALS1(config-if)# interface e0/2
+    ALS1(config-if)# switchport mode access
+    ALS1(config-if)# switchport access vlan 100
+    ALS1(config-if)# interface e0/3
+    ALS1(config-if)# switchport mode access
+    ALS1(config-if)# switchport access vlan 999
+    
+    
 #### Шаг 8. 
 
 Это стандартный VlAN на любом порту. Где все кадры идут без тэга.
@@ -69,15 +87,23 @@
 
 Нужно выбрать протокол инкапсляции вручную и так же  настроить native vlan
 
-  (config-if)# switchport trunk encapsulation dot1q
-  (config-if)#switchport trunk native vlan 1000
+
+    ALS1(config-if)# interface e0/0
+    ALS1(config-if)# switchport trunk encapsulation dot1q
+    ALS1(config-if)# switchport mode trunk
+    ALS1(config-if)# switchport trunk allowed vlan 100, 200, 1000
+    ALS1(config-if)# switchport trunk native vlan 1000
 
 ### Часть 2 Конфигурирование и проверка 2 DHCPv4 серверов на R1
 
 #### Шаг 1. Настроить R1 с DHCPv4 пулом для 2 поддерживаемых сабынтерфейсов.
 + Исключить первые 5 используемыъ адресов для кажлого пула адресов.
 
-![alt text](Pictures/Screenshot_7.png)
+ DLR1(config)# ip dhcp excluded-address 192.168.1.1 192.168.1.5
+ DLR1(config)# ip dhcp excluded-address 192.168.1.97 192.168.1.101
+ DLR1(config)# ip dhcp excluded-address 192.168.1.65
+ DLR1(config)# ip dhcp excluded-address 192.168.1.97
+
 
 + Создать DHCP пул
 + Установть сеть которую поддерживать DHCP сервер
@@ -85,7 +111,21 @@
 + Настроить шлюз пол умолчанию для каждого DHCP пула
 + Назначить время аренды 2 дня 12 часов 30 минут
 
-![alt text](Pictures/Screenshot_8.png)
+DLR1(config)# ip dhcp pool R2_Client_LAN
+DLR1(config-config)# network 192.168.1.0 255.255.255.192
+DLR1(config-config)# domain-name ccna-lab.com
+DLR1(config-config)# default-router 192.168.1.1
+DLR1(config-config)# lease 2 12 30
+DLR1(config-config)# ip dhcp pool R2_64
+DLR1(config-config)# network 192.168.1.64 255.255.255.254
+DLR1(config-config)# domain-name ccna2-lab.com
+DLR1(config-config)# default-router 192.168.1.65
+DLR1(config-config)# lease 2 12 30
+DLR1(config-config)# ip dhcp pool SABNET_C
+DLR1(config-config)# network 192.168.1.96 255.255.255.240
+DLR1(config-config)# domain-name ccna_C-lab.com
+DLR1(config-config)# default-router 192.168.1.97
+DLR1(config-config)# lease 2 12 30
 
 #### Шаг 2. Проверить конфигурацию DHCP сервера следующими командами:
 ```show ip dhcp pool```   
@@ -107,8 +147,8 @@
 
 На VPCS: ```dhcp -r```
 
-![alt text](Pictures/Screenshot_12.png)
-![alt text](Pictures/Screenshot_13.png)
+![alt text](Pictures/Screenshot_24.png)
+![alt text](Pictures/Screenshot_25.png)
 
 
 ### Часть 3.  Настроить DHCP reley(трансляцию) на 
