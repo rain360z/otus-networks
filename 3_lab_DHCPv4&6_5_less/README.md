@@ -39,14 +39,14 @@
 #### Шаг 5. Настройка E0/0 На R2, затем маршрутизацию на обоих роутерах
  + Настроим на R1 интерфейс s1/0 в соответствии таблицей адресов и добавим 
 маршрут по умолчанию.
-  
+```  
     DLR1(config)# interface s1/0
     DLR1(config-if)#ip address 10.0.0.1 255.255.255.252
     DLR1(config-if)# Description "VLAN 1000 to R2"
     DLR1(config-if)# no shutdown
     DLR1(config-if)# exit
     DLR1(config)# ip route 0.0.0.0 0.0.0.0 10.0.0.2
-
+```
 Аналогичные настройки добавим на R2
 
 #### Шаг 6. Настройка базовой конфигурации на каждом коммутаторе
@@ -56,6 +56,7 @@
  + Настроить и включить SVI порт S1 и на S2
  + Назначить на неиспользуемых портах S1 VlAN и выключить их. На S2 Не используемые порты отлкючить  
 
+```
     ALS1(config)# vlan 100  
     ALS1(config-if)# name CLIENTS  
     ALS1(config-if)# vlan 200  
@@ -77,7 +78,7 @@
     ALS1(config-if)# interface e0/3  
     ALS1(config-if)# switchport mode access  
     ALS1(config-if)# switchport access vlan 999  
-    
+```    
     
 #### Шаг 8. 
 
