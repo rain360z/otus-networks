@@ -56,27 +56,27 @@
  + Настроить и включить SVI порт S1 и на S2
  + Назначить на неиспользуемых портах S1 VlAN и выключить их. На S2 Не используемые порты отлкючить  
 
-    ALS1(config)# vlan 100
-    ALS1(config-if)# name CLIENTS
-    ALS1(config-if)# vlan 200
-    ALS1(config-if)# name MANAGEMENT
-    ALS1(config-if)# vlan 999 
-    ALS1(config-if)# name PARKING_LOT
-    ALS1(config-if)# exit
-    ALS1(config)# ip routing
-    ALS1(config)# interface vlan 100
-    ALS1(config-if)# ip address 192.168.1.2 255.255.255.192
-    ALS1(config-if)# interface vlan 200
-    ALS1(config-if)# ip address 192.168.1.66
-    ALS1(config-if)# interface e0/1
-    ALS1(config-if)# switchport mode access
-    ALS1(config-if)# switchport access vlan 200
-    ALS1(config-if)# interface e0/2
-    ALS1(config-if)# switchport mode access
-    ALS1(config-if)# switchport access vlan 100
-    ALS1(config-if)# interface e0/3
-    ALS1(config-if)# switchport mode access
-    ALS1(config-if)# switchport access vlan 999
+    ALS1(config)# vlan 100  
+    ALS1(config-if)# name CLIENTS  
+    ALS1(config-if)# vlan 200  
+    ALS1(config-if)# name MANAGEMENT  
+    ALS1(config-if)# vlan 999   
+    ALS1(config-if)# name PARKING_LOT  
+    ALS1(config-if)# exit  
+    ALS1(config)# ip routing  
+    ALS1(config)# interface vlan 100  
+    ALS1(config-if)# ip address 192.168.1.2 255.255.255.192  
+    ALS1(config-if)# interface vlan 200  
+    ALS1(config-if)# ip address 192.168.1.66  
+    ALS1(config-if)# interface e0/1  
+    ALS1(config-if)# switchport mode access  
+    ALS1(config-if)# switchport access vlan 200  
+    ALS1(config-if)# interface e0/2  
+    ALS1(config-if)# switchport mode access  
+    ALS1(config-if)# switchport access vlan 100  
+    ALS1(config-if)# interface e0/3  
+    ALS1(config-if)# switchport mode access  
+    ALS1(config-if)# switchport access vlan 999  
     
     
 #### Шаг 8. 
