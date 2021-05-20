@@ -100,10 +100,10 @@
 #### Шаг 1. Настроить R1 с DHCPv4 пулом для 2 поддерживаемых сабынтерфейсов.
 + Исключить первые 5 используемыъ адресов для кажлого пула адресов.
 
- DLR1(config)# ip dhcp excluded-address 192.168.1.1 192.168.1.5
- DLR1(config)# ip dhcp excluded-address 192.168.1.97 192.168.1.101
- DLR1(config)# ip dhcp excluded-address 192.168.1.65
- DLR1(config)# ip dhcp excluded-address 192.168.1.97
+    DLR1(config)# ip dhcp excluded-address 192.168.1.1 192.168.1.5
+    DLR1(config)# ip dhcp excluded-address 192.168.1.97 192.168.1.101
+    DLR1(config)# ip dhcp excluded-address 192.168.1.65
+    DLR1(config)# ip dhcp excluded-address 192.168.1.97
 
 
 + Создать DHCP пул
