@@ -99,35 +99,35 @@
 
 #### Шаг 1. Настроить R1 с DHCPv4 пулом для 2 поддерживаемых сабынтерфейсов.
 + Исключить первые 5 используемыъ адресов для кажлого пула адресов.
-
+```
     DLR1(config)# ip dhcp excluded-address 192.168.1.1 192.168.1.5
     DLR1(config)# ip dhcp excluded-address 192.168.1.97 192.168.1.101
     DLR1(config)# ip dhcp excluded-address 192.168.1.65
     DLR1(config)# ip dhcp excluded-address 192.168.1.97
-
+```
 
 + Создать DHCP пул
 + Установть сеть которую поддерживать DHCP сервер
 + Настроить доменное имя
 + Настроить шлюз пол умолчанию для каждого DHCP пула
 + Назначить время аренды 2 дня 12 часов 30 минут
-
-DLR1(config)# ip dhcp pool R2_Client_LAN
-DLR1(config-config)# network 192.168.1.0 255.255.255.192
-DLR1(config-config)# domain-name ccna-lab.com
-DLR1(config-config)# default-router 192.168.1.1
-DLR1(config-config)# lease 2 12 30
-DLR1(config-config)# ip dhcp pool R2_64
-DLR1(config-config)# network 192.168.1.64 255.255.255.254
-DLR1(config-config)# domain-name ccna2-lab.com
-DLR1(config-config)# default-router 192.168.1.65
-DLR1(config-config)# lease 2 12 30
-DLR1(config-config)# ip dhcp pool SABNET_C
-DLR1(config-config)# network 192.168.1.96 255.255.255.240
-DLR1(config-config)# domain-name ccna_C-lab.com
-DLR1(config-config)# default-router 192.168.1.97
-DLR1(config-config)# lease 2 12 30
-
+```
+    DLR1(config)# ip dhcp pool R2_Client_LAN
+    DLR1(config-config)# network 192.168.1.0 255.255.255.192
+    DLR1(config-config)# domain-name ccna-lab.com
+    DLR1(config-config)# default-router 192.168.1.1
+    DLR1(config-config)# lease 2 12 30
+    DLR1(config-config)# ip dhcp pool R2_64
+    DLR1(config-config)# network 192.168.1.64 255.255.255.254
+    DLR1(config-config)# domain-name ccna2-lab.com
+    DLR1(config-config)# default-router 192.168.1.65
+    DLR1(config-config)# lease 2 12 30
+    DLR1(config-config)# ip dhcp pool SABNET_C
+    DLR1(config-config)# network 192.168.1.96 255.255.255.240
+    DLR1(config-config)# domain-name ccna_C-lab.com
+    DLR1(config-config)# default-router 192.168.1.97
+    DLR1(config-config)# lease 2 12 30
+```
 #### Шаг 2. Проверить конфигурацию DHCP сервера следующими командами:
 ```show ip dhcp pool```   
 
