@@ -1,0 +1,106 @@
+
+!
+! Last configuration change at 11:43:02 +04 Thu May 20 2021
+!
+version 15.2
+service timestamps debug datetime msec
+service timestamps log datetime msec
+no service password-encryption
+service compress-config
+!
+hostname AS1
+!
+boot-start-marker
+boot-end-marker
+!
+!
+!
+no aaa new-model
+clock timezone +04 4 0
+!
+!
+!
+!
+!
+!
+!
+!
+no ip domain-lookup
+ip cef
+no ipv6 cef
+!
+!
+!
+spanning-tree mode rapid-pvst
+spanning-tree extend system-id
+!
+vlan internal allocation policy ascending
+!
+! 
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+interface Ethernet0/0
+ no shutdown
+ switchport trunk allowed vlan 100,200,1000
+ switchport trunk encapsulation dot1q
+ switchport trunk native vlan 1000
+ switchport mode trunk
+!
+interface Ethernet0/1
+ no shutdown
+ description "MANAGEMENT"
+ switchport access vlan 200
+ switchport mode access
+!
+interface Ethernet0/2
+ no shutdown
+ description "CLIENT"
+ switchport access vlan 100
+ switchport mode access
+!
+interface Ethernet0/3
+ no shutdown
+ switchport access vlan 999
+ switchport mode access
+ shutdown
+!
+interface Vlan100
+ no shutdown
+ ip address 192.168.1.62 255.255.255.192
+!
+interface Vlan200
+ no shutdown
+ no ip address
+ shutdown
+!
+ip forward-protocol nd
+!
+no ip http server
+no ip http secure-server
+!
+!
+!
+!
+!
+!
+control-plane
+!
+!
+line con 0
+ logging synchronous
+line aux 0
+line vty 0 4
+ login
+!
+!
+end

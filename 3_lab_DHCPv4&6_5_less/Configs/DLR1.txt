@@ -1,0 +1,192 @@
+
+!
+! Last configuration change at 08:08:43 +04 Fri May 21 2021
+!
+version 15.4
+service timestamps debug datetime msec
+service timestamps log datetime msec
+no service password-encryption
+!
+hostname DLR1
+!
+boot-start-marker
+boot-end-marker
+!
+!
+!
+no aaa new-model
+clock timezone +04 4 0
+mmi polling-interval 60
+no mmi auto-configure
+no mmi pvc
+mmi snmp-timeout 180
+!
+!
+!
+!
+!
+!
+!
+!
+
+
+!
+ip dhcp excluded-address 192.168.1.1 192.168.1.5
+ip dhcp excluded-address 192.168.1.97 192.168.1.101
+ip dhcp excluded-address 192.168.1.65
+ip dhcp excluded-address 192.168.1.97
+!
+ip dhcp pool R2_Client_LAN
+ network 192.168.1.0 255.255.255.192
+ domain-name ccna-lab.com
+ default-router 192.168.1.97 
+ lease 2 12 30
+!
+ip dhcp pool R2_64
+ network 192.168.1.64 255.255.255.224
+ domain-name ccna2-lab.com
+ default-router 192.168.1.65 
+!
+ip dhcp pool SABNET_C
+ network 192.168.1.96 255.255.255.240
+ domain-name ccna_C-lab.com
+ default-router 192.168.1.97 
+ lease 2 12 30
+!
+!
+!
+ip cef
+ipv6 unicast-routing
+ipv6 cef
+ipv6 dhcp pool R1-STATELESS
+ dns-server 2001:DB8:ACAD::254
+ domain-name STATELESS.com
+ domain-name R1_STATELESS
+!
+ipv6 dhcp pool R2-STATEFUL
+ address prefix 2001:DB8:ACAD:3:AAA::/80
+ dns-server 2001:DB8:ACAD::254
+ domain-name STATEFUL2.com
+!
+!
+multilink bundle-name authenticated
+!
+!
+!
+!
+!
+!
+!
+!
+!
+redundancy
+!
+!
+! 
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+interface Ethernet0/0
+ no shutdown
+ no ip address
+!
+interface Ethernet0/0.100
+ no shutdown
+ description "VLAN100 Users room"
+ encapsulation dot1Q 100
+ ip address 192.168.1.1 255.255.255.192
+ ipv6 address FE80::1 link-local
+ ipv6 address 2001:DB8:ACAD:1::1/64
+ ipv6 nd other-config-flag
+ ipv6 dhcp server R1-STATELESS
+!
+interface Ethernet0/0.200
+ no shutdown
+ description "VLAN 200 Counting room"
+ encapsulation dot1Q 200
+ ip address 192.168.1.65 255.255.255.224
+!
+interface Ethernet0/0.1000
+ no shutdown
+ encapsulation dot1Q 1000
+!
+interface Ethernet0/1
+ no shutdown
+ no ip address
+ shutdown
+!
+interface Ethernet0/2
+ no shutdown
+ no ip address
+ shutdown
+!
+interface Ethernet0/3
+ no shutdown
+ no ip address
+ shutdown
+!
+interface Serial1/0
+ no shutdown
+ description "VLAN 1000 to R2"
+ ip address 10.0.0.1 255.255.255.252
+ ipv6 address FE80::1 link-local
+ ipv6 address 2001:DB8:ACAD:2::1/64
+ ipv6 dhcp server R2-STATEFUL
+ serial restart-delay 0
+!
+interface Serial1/1
+ no shutdown
+ no ip address
+ shutdown
+ serial restart-delay 0
+!
+interface Serial1/2
+ no shutdown
+ no ip address
+ shutdown
+ serial restart-delay 0
+!
+interface Serial1/3
+ no shutdown
+ no ip address
+ shutdown
+ serial restart-delay 0
+!
+ip forward-protocol nd
+!
+!
+no ip http server
+no ip http secure-server
+ip route 0.0.0.0 0.0.0.0 10.0.0.2
+!
+ipv6 route ::/0 2001:DB8:ACAD:2::2
+!
+!
+!
+control-plane
+!
+!
+!
+!
+!
+!
+!
+!
+line con 0
+ logging synchronous
+line aux 0
+line vty 0 4
+ login
+ transport input none
+!
+!
+end
