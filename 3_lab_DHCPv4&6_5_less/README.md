@@ -157,10 +157,15 @@
 #### Шаг 1. Настройка R2 как агента трасляции DHCP для локльной сети на интерфейсе e0/0
 + Настроить r``` ip helper-address ``` 
 
-![alt text](Pictures/Screenshot_14.png)
+```
+    DLR2(config)# interface s1/0
+    DLR2(config-if)#ip helper-address 10.0.0.1
+
+```
 
 #### Шаг 2. Попытаться запросить адрес IP адрес от DHCP для PC-B
-+ Запросим IP адрес
++ Запросим IP адрес  
+
 ![alt text](Pictures/Screenshot_15.png)
 
 ```show ip dhcp bindings ```  
@@ -174,21 +179,22 @@
 # Настроить DHCPv6
 
 
-Топология  
-Рис 1
+Топология    
+
+![alt text](Pictures/1.png)
 
 | Device|	Interface|	IPv6 Address|
 |-------|----------------|------------------|
-| R1|	G0/0/0|	2001:db8:acad:2::1 /64|
-| R1|	G0/0/0| fe80::1|
-| R1	|G0/0/1|	2001:db8:acad:1::1/64|
-| R1	|G0/0/1	|fe80::1|
-| R2	|G0/0/0|	2001:db8:acad:2::2/64|
-| R2	|G0/0/0	fe80::2|
-| R2	|G0/0/1|	2001:db8:acad:3::1 /64|
-| R2	|G0/0/1|	fe80::1|
-| PC-A	|	NIC|	DHCP|
-| PC-B	|	NIC|	DHCP|
+| R1    |	s1/0      |	2001:db8:acad:2::1 /64|
+| R1    |	s1/0      | fe80::1|
+| R1	|e0/0         |	2001:db8:acad:1::1/64|
+| R1	|e0/0       	|fe80::1|
+| R2	|G0/0/0         |	2001:db8:acad:2::2/64|
+| R2	|G0/0/0	        |fe80::2|
+| R2	|G0/0/1         |	2001:db8:acad:3::1 /64|
+| R2	|G0/0/1         |	fe80::1|
+| PC-A	|	NIC         |	DHCP|
+| PC-B	|	NIC         |	DHCP|
 
 
 #### Шаг 4. Настроить интерфейсы и маршруты на обоих роутерах
@@ -204,20 +210,25 @@
 
 После включения компьютера, были сформированны следующие адреса.
 
-![alt text](Pictures/Screenshot_19.png)
+Пользователь в VLAN100
+
+![alt text](Pictures/Screenshot_26.png)
 
 Where did the host-id portion of the address come from?
 
 Был сгенирирован c помощью метода Extended Unique Identifier (EUI-64) или случайно сгенерированный
 
-#### Часть 3 Настройка и проверка службы DHCPv6 без сохранения состояния.
-Создадим DHCPv6 pool на R1. И добавить информациюкоторую будет передавать DHCPv6
+### Часть 3 Настройка и проверка службы DHCPv6 без сохранения состояния.
+Создадим DHCPv6 pool на R1. И добавить информацию которую будет передавать DHCPv6  
+
 ```
 R1(config)# ipv6 dhcp pool R1-STATELESS  
 R1(config-dhcp)# dns-server 2001:db8:acad::254  
 R1(config-dhcp)# domain-name STATELESS.com 
  
 ```
+
+
 
 Настроим на e0/0 SLAAC DHCPv6 без сохронения. И добавим DHCP pool.
 
@@ -228,7 +239,52 @@ R1(config-if)# ipv6 dhcp server R1-STATELESS
 
 ``` 
 
+Данные от DHCP Сервера не удалось получить.  
 
+![alt text](Pictures/Screenshot_27.png)
+
+
+### Часть Настройка сервера DHCPv6 с сохранением состояния на R1
+
+Настроим pool DHCPv6 на R1 
+
+```
+    DLR1(config)# ipv6 dhcp pool R2-STATEFUL
+    DLR1(config-dhcp)# address prefix 2001:db8:acad:3:aaa::/80
+    DLR1(config-dhcp)# dns-server 2001:db8:acad::254
+    DLR1(config-dhcp)# domain-name STATEFUL.com
+
+```
+Назначим созданный pool на интерфейс s1/0
+
+```
+    DLR2(config)# interface g0/0/0
+    DLR2(config-if)# ipv6 dhcp server R2-STATEFUL
+
+```
+### Часть 5. Настройка и проверка ретрансляции DHCPv6 на R2
+
+Шаг 1. Включите PC-B и проверьте адрес SLAAC, который он генерирует.
+VPC8 получал ардес из сети 2001:db8:acad:3::/64
+
+Шаг 2. Настройте R2 в качестве агента DHCP-ретрансляции для локальной сети на G0/0/1.
+
+```
+DLR2(config) # интерфейс e0/0
+DLR2(config-if)# ipv6 nd managed-config-flag
+DLR2(config-if)# ipv6 dhcp relay destination 2001:db8:acad:2::1 s1/0
+
+```
+
+Шаг 3. Попытка получить адрес IPv6 из DHCPv6 на PC-B.
+
+Поставил вместо VPC L3 коммутатор.
+
+Получили ip адрес из pool R2-STATEFUL
+
+![alt text](Pictures/Screenshot_28.png)
+
+![alt text](Pictures/Screenshot_29.png)
 
 
 
