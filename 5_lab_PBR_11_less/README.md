@@ -15,3 +15,8 @@
 ## Решение
 
 
+## Схема
+
+![](Pictures/Screenshot_1.png)
+
+
