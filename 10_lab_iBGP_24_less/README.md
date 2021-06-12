@@ -58,4 +58,65 @@ R15(config-router)# bgp default local-preference 200
 
 ## 2. Настроить iBGP в сети провайдера Триада; 
 
+Настроим iBGP поверх ISIS.
+
+Нужно настроить FullMesh iBGP со всеми соседями в AS 520.
+
+Либо настроить router reflector.
+
+Настроим на R25 сервер RouterReflector
+
+![](Pictures/Screenshot_4.png)
+
+```
+R25(config)# int l0
+R25(config-if)# ip add 25.25.25.25 255.255.255.255
+R25(config-if)# ip router isis
+R25(config)# router bgp 520
+R25(config-router)# neighbor RRC peer-group
+R25(config-router)# neighbor RRC route-reflector-client
+R25(config-router)# neighbor RRC remote-as 520
+R25(config-router)# neighbor RRC next-hop-self
+R25(config-router)# neighbor RRC update-sourcel0
+R25(config-router)# neighbor 23.23.23.23 peer-group RRC
+R25(config-router)# neighbor 24.24.24.24 peer-group RRC
+R25(config-router)# neighbor 25.25.25.25 RRC
+```
+
+Проверим работу:
+
+на Киторне поднимим Loopback 8 c адресом 8.8.8.8
+
+И посмотрим придут ли анонсына всех соседей iBGP в Триаде
+
+![](Pictures/Screenshot_6.png)
+
+С Офиса Петербурга доступ до 8.8.8.8 
+
+![](Pictures/Screenshot_7.png)
+
+## 3. Организовать полную IP связанность всех сетей.
+
+Москва --> Лабытанги 125.125.125.2
+
+![](Pictures/Screenshot_8.png)  
+Москва --> Чокурдах ISP1 125.125.125.66
+Москва --> Чокурдах ISP2 125.125.126.2
+
+![](Pictures/Screenshot_9.png)
+Москва --> Петербург ISP1 125.125.200.2
+Москва --> Петербург ISP2 125.125.200.130
+
+
+![](Pictures/Screenshot_10.png)
+
+связность есть до всехсетей смаршрутизатора Москва
+
+Если проверять доступность от R14 то трафик закольцовывется Между R14 и R12.
+
+Добавлю прямой линк между R14 и R15. Либо iBGP спустить на R12 и R13.
+
+![](Pictures/Screenshot_11.png)
+
+
 

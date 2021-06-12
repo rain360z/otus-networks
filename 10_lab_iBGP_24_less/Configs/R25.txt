@@ -1,0 +1,165 @@
+
+!
+! Last configuration change at 12:10:20 +04 Sat Jun 12 2021
+!
+version 15.4
+service timestamps debug datetime msec
+service timestamps log datetime msec
+no service password-encryption
+!
+hostname R25
+!
+boot-start-marker
+boot-end-marker
+!
+!
+!
+no aaa new-model
+clock timezone +04 4 0
+mmi polling-interval 60
+no mmi auto-configure
+no mmi pvc
+mmi snmp-timeout 180
+!
+!
+!
+!
+!
+!
+!
+!
+
+
+!
+!
+!
+!
+ip cef
+ipv6 unicast-routing
+ipv6 cef
+!
+multilink bundle-name authenticated
+!
+!
+!
+!
+!
+!
+!
+!
+!
+redundancy
+!
+!
+! 
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+interface Loopback0
+ no shutdown
+ ip address 25.25.25.25 255.255.255.255
+ ip router isis 
+!
+interface Ethernet0/0
+ no shutdown
+ ip address 125.125.255.2 255.255.255.248
+ ip router isis 
+ ipv6 address FE80::25 link-local
+ ipv6 address 2001:DB8:125:1::25/64
+ ipv6 router isis 
+!
+interface Ethernet0/1
+ no shutdown
+ description toR28
+ ip address 125.125.125.1 255.255.255.224
+ ipv6 address FE80::25 link-local
+ ipv6 address 2001:DB8:125:100::25/64
+!
+interface Ethernet0/2
+ no shutdown
+ description toR26
+ ip address 125.125.255.17 255.255.255.248
+ ip router isis 
+ ipv6 address 2001:DB8:125:3::25/64
+ ipv6 router isis 
+ isis circuit-type level-2-only
+!
+interface Ethernet0/3
+ no shutdown
+ ip address 125.125.125.65 255.255.255.224
+ ipv6 address FE80::25 link-local
+ ipv6 address 2001:DB8:125:101::25/64
+!
+interface Ethernet1/0
+ no shutdown
+ no ip address
+ shutdown
+!
+interface Ethernet1/1
+ no shutdown
+ no ip address
+ shutdown
+!
+interface Ethernet1/2
+ no shutdown
+ no ip address
+ shutdown
+!
+interface Ethernet1/3
+ no shutdown
+ no ip address
+ shutdown
+!
+router isis
+ net 49.2222.0025.0025.0025.00
+!
+router bgp 520
+ bgp log-neighbor-changes
+ network 125.125.125.0 mask 255.255.255.224
+ network 125.125.125.64 mask 255.255.255.224
+ neighbor RRC peer-group
+ neighbor RRC remote-as 520
+ neighbor RRC update-source Loopback0
+ neighbor RRC route-reflector-client
+ neighbor RRC next-hop-self
+ neighbor 23.23.23.23 peer-group RRC
+ neighbor 24.24.24.24 peer-group RRC
+ neighbor 26.26.26.26 peer-group RRC
+!
+ip forward-protocol nd
+!
+!
+no ip http server
+no ip http secure-server
+!
+!
+!
+access-list 1 permit 10.208.0.0 0.0.255.255
+!
+control-plane
+!
+!
+!
+!
+!
+!
+!
+!
+line con 0
+ logging synchronous
+line aux 0
+line vty 0 4
+ login
+ transport input none
+!
+!
+end

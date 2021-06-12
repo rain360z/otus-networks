@@ -1,0 +1,158 @@
+
+!
+! Last configuration change at 11:30:46 +04 Sat Jun 12 2021
+!
+version 15.4
+service timestamps debug datetime msec
+service timestamps log datetime msec
+no service password-encryption
+!
+hostname R23
+!
+boot-start-marker
+boot-end-marker
+!
+!
+!
+no aaa new-model
+clock timezone +04 4 0
+mmi polling-interval 60
+no mmi auto-configure
+no mmi pvc
+mmi snmp-timeout 180
+!
+!
+!
+!
+!
+!
+!
+!
+
+
+!
+!
+!
+!
+ip cef
+ipv6 unicast-routing
+ipv6 cef
+!
+multilink bundle-name authenticated
+!
+!
+!
+!
+!
+!
+!
+!
+!
+redundancy
+!
+!
+! 
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+interface Loopback0
+ no shutdown
+ ip address 23.23.23.23 255.255.255.255
+ ip router isis 
+!
+interface Ethernet0/0
+ no shutdown
+ description "to BGP as 101"
+ ip address 40.40.40.129 255.255.255.224
+ ipv6 address FE80::23 link-local
+ ipv6 address 2001:1:1:130::23/64
+!
+interface Ethernet0/1
+ no shutdown
+ ip address 125.125.255.1 255.255.255.248
+ ip router isis 
+ ipv6 address FE80::23 link-local
+ ipv6 address 2001:DB8:125:1::23/64
+ ipv6 router isis 
+!
+interface Ethernet0/2
+ no shutdown
+ description "to iBGP neighbor 520"
+ ip address 125.125.255.10 255.255.255.248
+ ip router isis 
+ ipv6 address FE80::23 link-local
+ ipv6 address 2001:DB8:125:2::24/64
+ ipv6 router isis 
+ isis circuit-type level-2-only
+!
+interface Ethernet0/3
+ no shutdown
+ no ip address
+ shutdown
+!
+interface Ethernet1/0
+ no shutdown
+ no ip address
+ shutdown
+!
+interface Ethernet1/1
+ no shutdown
+ no ip address
+ shutdown
+!
+interface Ethernet1/2
+ no shutdown
+ no ip address
+ shutdown
+!
+interface Ethernet1/3
+ no shutdown
+ no ip address
+ shutdown
+!
+router isis
+ net 49.2222.0023.0023.0023.00
+!
+router bgp 520
+ bgp log-neighbor-changes
+ network 40.40.40.128 mask 255.255.255.224
+ neighbor 25.25.25.25 remote-as 520
+ neighbor 25.25.25.25 next-hop-self
+ neighbor 40.40.40.130 remote-as 101
+!
+ip forward-protocol nd
+!
+!
+no ip http server
+no ip http secure-server
+!
+!
+!
+!
+control-plane
+!
+!
+!
+!
+!
+!
+!
+!
+line con 0
+ logging synchronous
+line aux 0
+line vty 0 4
+ login
+ transport input none
+!
+!
+end
