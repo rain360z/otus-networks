@@ -1,0 +1,177 @@
+
+!
+! Last configuration change at 23:46:35 +04 Fri Jul 16 2021
+!
+version 15.2
+service timestamps debug datetime msec
+service timestamps log datetime msec
+no service password-encryption
+service compress-config
+!
+hostname R16
+!
+boot-start-marker
+boot-end-marker
+!
+!
+!
+no aaa new-model
+clock timezone +04 4 0
+!
+!
+!
+!
+!
+!
+!
+!
+ip cef
+ipv6 unicast-routing
+ipv6 cef
+!
+!
+!
+spanning-tree mode rapid-pvst
+spanning-tree extend system-id
+!
+vlan internal allocation policy ascending
+!
+! 
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+interface Ethernet0/0
+ shutdown
+ no switchport
+ ip address 10.128.255.16 255.255.255.254
+ duplex auto
+ ipv6 address FE80::16 link-local
+ ipv6 address 2001:DB8:125:18::16/64
+!
+interface Ethernet0/1
+ shutdown
+ no switchport
+ ip address 10.128.255.3 255.255.255.254
+ duplex auto
+ ipv6 address FE80::16 link-local
+ ipv6 address 2001:DB8:125:11::16/64
+!
+interface Ethernet0/2
+ shutdown
+ no switchport
+ ip address 10.128.255.14 255.255.255.254
+ duplex auto
+ ipv6 address FE80::16 link-local
+ ipv6 address 2001:DB8:125:17::16/64
+!
+interface Ethernet0/3
+ shutdown
+ no switchport
+ ip address 10.128.255.7 255.255.255.254
+ duplex auto
+ ipv6 address FE80::16 link-local
+ ipv6 address 2001:DB8:125:13::16/64
+!
+interface Ethernet1/0
+ no shutdown
+!
+interface Ethernet1/1
+ shutdown
+ no switchport
+ ip address 10.128.255.13 255.255.255.254
+ duplex auto
+ ipv6 address FE80::16 link-local
+ ipv6 address 2001:DB8:125:16::16/64
+!
+interface Ethernet1/2
+ no shutdown
+!
+interface Ethernet1/3
+ no shutdown
+!
+!
+router eigrp E
+ !
+ address-family ipv4 unicast autonomous-system 1
+  !
+  af-interface default
+   passive-interface
+  exit-af-interface
+  !
+  af-interface Ethernet0/0
+   no passive-interface
+  exit-af-interface
+  !
+  af-interface Ethernet0/1
+   summary-address 10.128.0.0 255.255.128.0 
+   summary-address 10.128.255.8 255.255.255.248
+   summary-address 10.128.255.16 255.255.255.248
+   no passive-interface
+  exit-af-interface
+  !
+  af-interface Ethernet0/2
+   no passive-interface
+  exit-af-interface
+  !
+  af-interface Ethernet0/3
+   summary-address 10.128.0.0 255.255.128.0
+   summary-address 10.128.255.8 255.255.255.248
+   summary-address 10.128.255.16 255.255.255.248
+   no passive-interface
+  exit-af-interface
+  !
+  af-interface Ethernet1/1
+   no passive-interface
+  exit-af-interface
+  topology base
+  exit-af-topology
+  network 10.128.255.2 0.0.0.1
+  network 10.128.255.4 0.0.0.1
+  network 10.128.255.6 0.0.0.1
+  network 10.128.255.14 0.0.0.1
+  network 10.128.255.18 0.0.0.1
+  eigrp router-id 0.0.0.16
+ exit-address-family
+ !
+ service-family ipv4 autonomous-system 1
+  !
+  topology base
+  exit-sf-topology
+ exit-service-family
+!
+ip forward-protocol nd
+!
+no ip http server
+no ip http secure-server
+!
+!
+!
+ip prefix-list Def seq 5 permit 0.0.0.0/0
+!
+route-map leak-map-route-map permit 10
+ match ip address prefix-list Def
+!
+!
+!
+!
+!
+control-plane
+!
+!
+line con 0
+ logging synchronous
+line aux 0
+line vty 0 4
+ login
+!
+!
+end
