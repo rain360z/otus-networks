@@ -488,7 +488,27 @@ exit
 object network SERVER-INTRANET-OUTSIDE  
 subnet 10.128.0.0 255.255.0  
 nat (inside2,outside) static SERVER-INTRANET-PUBLIC  
-
+```
 Анононсы
 
+1. Организовать отказоустойчивую сеть пользователей
+2. На границе локальной сети внедрить кластер из межсетевых экранов cisco asa.
+3. Обеспечить пользователям доступ в интернет. 
+4. Создать DMZ зону.
+5. Для филиалов организовать DMVPN с IPSec
+
+
+## 3. Обеспечить пользователям доступ в интернет.
+
+ASA
+
+```
+object network USER-INTARNET-PUBLIC  
+    host 46.46.46.2  
+    exit  
+object network USER-INTRANET-OUTSIDE  
+     10.128.0.1 255.255.0  
+    nat (inside2,outside) static SERVER-INTRANET-PUBLIC  
+```
+Анононсы
 
