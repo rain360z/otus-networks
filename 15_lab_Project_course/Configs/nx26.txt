@@ -1,8 +1,12 @@
-!Running configuration last done at: Thu Jul 22 06:02:19 2021
-!Time: Thu Jul 22 06:03:23 2021
+
+
+!Command: show running-config
+!Running configuration last done at: Tue Jul 27 19:32:30 2021
+!Time: Tue Jul 27 19:32:30 2021
 
 version 9.2(2) Bios:version  
-vdc switch id 1
+hostname nx26
+vdc nx26 id 1
   limit-resource vlan minimum 16 maximum 4094
   limit-resource vrf minimum 2 maximum 4096
   limit-resource port-channel minimum 0 maximum 511
@@ -10,46 +14,98 @@ vdc switch id 1
   limit-resource u6route-mem minimum 96 maximum 96
   limit-resource m4route-mem minimum 58 maximum 58
   limit-resource m6route-mem minimum 8 maximum 8
+
 cfs eth distribute
+feature eigrp
+feature interface-vlan
+feature lacp
 feature vpc
 
 no password strength-check
-username admin password 5 $5$NHCDBA$i.9gvlhYhhd6yLw3wlybp5XID1FRoENPFygZuSN/W98 
- role network-admin
+username admin password 5 $5$PDFPCF$kKThMTW6pYINooIZpW9bB.RpnTUa28kI8dvmfxj.fq9  role network-admin
 ip domain-lookup
-snmp-server user admin network-admin auth md5 0x752d474303457b2791c93d4836cb4ad6
- priv 0x752d474303457b2791c93d4836cb4ad6 localizedkey
+copp profile strict
+snmp-server user admin network-admin auth md5 0x9ad8aea86e4d8fdb3fd92786a0f71c60 priv 0x9ad8aea86e4d8fdb3fd92786a0f71c60 localizedkey
 rmon event 1 description FATAL(1) owner PMON@FATAL
 rmon event 2 description CRITICAL(2) owner PMON@CRITICAL
 rmon event 3 description ERROR(3) owner PMON@ERROR
 rmon event 4 description WARNING(4) owner PMON@WARNING
 rmon event 5 description INFORMATION(5) owner PMON@INFO
 
-vlan 1
+ip route 0.0.0.0/0 172.16.8.1
+vlan 1,100,103
+vlan 100
+  name R22-ASA-FAILOVER
+vlan 103
+  name ASA-INSIDE
 
 vrf context management
+vpc domain 10
+  role priority 10
+  peer-keepalive destination 192.168.1.1 source 192.168.1.2
+
+interface Vlan1
+
+interface Vlan103
+  description "Gate for ASAinside"
+  no shutdown
+  ip address 172.16.8.2/30
+  ip router eigrp E
+  no ip passive-interface eigrp E
+
+interface port-channel15
+  description **vPC Peer-Link**
+  switchport mode trunk
+  spanning-tree port type network
+  vpc peer-link
 
 interface Ethernet1/1
 
 interface Ethernet1/2
+  description "ASAin"
+  switchport access vlan 103
 
 interface Ethernet1/3
+  description "to ASAv40"
+  no switchport
+  ip address 172.16.8.97/28
+  ip router eigrp E
+  no ip passive-interface eigrp E
+  no shutdown
 
 interface Ethernet1/4
+  no switchport
+  ip address 172.16.8.81/28
+  ip router eigrp E
+  no ip passive-interface eigrp E
+  no shutdown
 
 interface Ethernet1/5
+  description **L2**
+  switchport mode trunk
+  switchport trunk allowed vlan 100-102,104
 
 interface Ethernet1/6
+  description **R22**
+  switchport access vlan 100
 
 interface Ethernet1/7
 
 interface Ethernet1/8
 
 interface Ethernet1/9
+  description "ASAin"
+  switchport access vlan 103
 
 interface Ethernet1/10
+  description **vPC Peer-Link**
+  switchport mode trunk
+  channel-group 15 mode active
 
 interface Ethernet1/11
+  description **vPC Peer-Link**
+  switchport mode trunk
+  channel-group 15 mode active
 
 interface Ethernet1/12
 
@@ -287,6 +343,17 @@ interface Ethernet1/128
 
 interface mgmt0
   vrf member management
+  ip address 192.168.1.2/30
 line console
 line vty
 no feature signature-verification
+router eigrp E
+  autonomous-system 1
+  passive-interface default
+  address-family ipv4 unicast
+
+
+!
+
+
+!end
