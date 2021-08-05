@@ -239,19 +239,133 @@ Drop-reason: (acl-drop) Flow is denied by configured rule
 
 ```
 
-не правильно настроиои нат. происходит натирование в случае, если интициирует взаимодейстиве inside zone
+Нужно настроить ACL позволяющие из OUTSIDE получать доступ к INSIDE.
 
 
 
-object network obj_172.16.8.2
-host 172.16.8.2
-nat (inside,outside) static 66.66.66.3
 
 
 ```
 ASAv40(config)# show run access-list                                     
 access-list OUTSIDE_DMZ_TELNET extended permit tcp any host 172.16.8.2 eq telnet  
 access-group OUTSIDE_DMZ_TELNET in interface outside
+```
+
+## Добавление 2 провайдера
+
+![alert-text](Pictures2/Screenshot_5.png)
+
+Настроим статический нат для web server 
+
+```
+interface GigabitEthernet0/5
+ nameif outside-AS4
+ security-level 0
+ ip address 46.46.46.2 255.255.255.240 
+
+object network obj_172.16.8.2_AS4
+host 172.16.8.2
+
+object network obj_66.66.66.3
+ host 66.66.66.3
+
+nat (inside,any) source static obj_172.16.8.2 obj_66.66.66.3
+```
+
+
+Позволяет хостам из внешней сети обратиться к серверу по телнет
+
+
+```
+access-list OUTSIDE_DMZ_TELNET extended permit tcp any host 172.16.8.2 eq telnet
+
+```
+Для применения ACL к интерфейсу нужно создать access-group  для  outside и outside-AS4 
+
+
+```
+access-group OUTSIDE_DMZ_TELNET in interface outside-AS4
+
+access-group OUTSIDE_DMZ_TELNET in interface outside
+```
+
+
+ **Тест**
+
+Inside
+
+![alert-text](Pictures2/Screenshot_6.png)
+
+Outside
+
+![alert-text](Pictures2/Screenshot_7.png)
+
+Через другого провайдера тоже все работает.
+
+_________________
+``В случае жанного ната не происходит инспектирования 
+nat (any,any) source static obj_172.16.8.2 obj_66.66.66.3 description "Static NAT Web-server"q``
+____________________
+
+
+## Добавим L3 коммутатор в уровень дистрибьют
+
+По итогу у нас 2 inside интерфейса 2 outside. Cisco ASA имеет доступ до всех интерфейсов AS
+
+
+![alert-text](Pictures2/Screenshot_8.png)
+
+
+```
+interface GigabitEthernet0/2
+ nameif inside-nx25
+ security-level 100
+ ip address 172.16.8.33 255.255.255.240 
+ no shutdown
+```
+Поменяем ``object network obj_172.16.8.2_AS4``
+
+```
+object network obj_web
+    host 10.0.0.10
+    exit
+nat (inside,any) source static obj_web obj_66.66.66.3
+nat (inside-nx25,any) source static obj_web obj_66.66.66.3
+
+access-list OUTSIDE_DMZ_TELNET extended permit tcp any obj_web eq telnet
 
 ```
 
+Не удалось настроить, трафик не натировался.
+
+Попробую натировать адреса в совершенно другой адрес 100.100.100.100 из сети 100.100.100.0/24.
+
+Нужно будет еще анонсировать ее в BGP и сделать маршрут в эту сеть.
+
+```
+object network obj_66.66.66.3
+    host 100.100.100.0
+    exit
+router bgp 1
+    network 100.100.100.0 mask 255.255.255.0
+
+
+
+prefix-list BGP_OUT seq 15 permit 100.100.100.0/24
+
+route Null0 100.100.100.0 255.255.255.0
+```
+
+
+
+
+## Настройка EIGRP cisco asa
+
+для анонсирования дефолта 
+```
+route Null0 0.0.0.0 0.0.0.0 
+
+router eigrp 1
+    network 0.0.0.0 0.0.0.0
+
+```

@@ -2,7 +2,7 @@
 : 
 : Serial Number: 9A582VGGEBR
 : Hardware:   ASAv, 2048 MB RAM, CPU Xeon E5 series 2899 MHz
-: Written by enable_15 at 10:06:24.778 UTC Mon Aug 2 2021
+: Written by enable_15 at 18:51:26.639 UTC Mon Aug 2 2021
 !
 ASA Version 9.9(2) 
 !
@@ -40,10 +40,9 @@ interface GigabitEthernet0/4
  ip address 66.66.66.2 255.255.255.240 
 !
 interface GigabitEthernet0/5
- shutdown
- no nameif
- no security-level
- no ip address
+ nameif outside-AS4
+ security-level 0
+ ip address 46.46.46.2 255.255.255.240 
 !
 interface GigabitEthernet0/6
  shutdown
@@ -59,12 +58,16 @@ interface Management0/0
  no ip address
 !
 ftp mode passive
+same-security-traffic permit inter-interface
 object network obj_172.16.8.2
  host 172.16.8.2
+object network obj_66.66.66.3
+ host 66.66.66.3
 access-list OUTSIDE_DMZ_TELNET extended permit tcp any host 172.16.8.2 eq telnet 
 pager lines 23
 mtu inside 1500
 mtu outside 1500
+mtu outside-AS4 1500
 no failover
 no monitor-interface service-module 
 icmp unreachable rate-limit 1 burst-size 1
@@ -72,10 +75,28 @@ no asdm history enable
 arp timeout 14400
 no arp permit-nonconnected
 arp rate-limit 8192
-!
-object network obj_172.16.8.2
- nat (inside,outside) static 66.66.66.3
+nat (inside,any) source static obj_172.16.8.2 obj_66.66.66.3
 access-group OUTSIDE_DMZ_TELNET in interface outside
+access-group OUTSIDE_DMZ_TELNET in interface outside-AS4
+!
+prefix-list BGP_OUT seq 5 permit 66.66.66.0/28
+prefix-list BGP_OUT seq 10 permit 46.46.46.0/28
+!
+router bgp 1
+ bgp log-neighbor-changes
+ address-family ipv4 unicast
+  neighbor 46.46.46.1 remote-as 4
+  neighbor 46.46.46.1 activate
+  neighbor 46.46.46.1 prefix-list BGP_OUT out
+  neighbor 66.66.66.1 remote-as 2
+  neighbor 66.66.66.1 activate
+  neighbor 66.66.66.1 prefix-list BGP_OUT out
+  network 46.46.46.0 mask 255.255.255.240
+  network 66.66.66.0 mask 255.255.255.240
+  no auto-summary
+  no synchronization
+ exit-address-family
+!
 timeout xlate 3:00:00
 timeout pat-xlate 0:00:30
 timeout conn 1:00:00 half-closed 0:10:00 udp 0:02:00 sctp 0:02:00 icmp 0:00:02
@@ -199,5 +220,5 @@ call-home
  profile License
   destination address http https://tools.cisco.com/its/service/oddce/services/DDCEService
   destination transport-method http
-Cryptochecksum:5dfefe520b380c67cc3d1e07c27e483b
+Cryptochecksum:3f989856708979dab2ae43efab9c1d3d
 : end

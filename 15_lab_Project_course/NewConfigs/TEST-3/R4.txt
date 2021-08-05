@@ -1,6 +1,6 @@
 
 !
-! Last configuration change at 22:46:49 +04 Sun Aug 1 2021
+! Last configuration change at 22:46:49 +04 Mon Aug 2 2021
 !
 version 15.2
 service timestamps debug datetime msec
@@ -8,7 +8,7 @@ service timestamps log datetime msec
 no service password-encryption
 service compress-config
 !
-hostname R2
+hostname R4
 !
 boot-start-marker
 boot-end-marker
@@ -50,24 +50,24 @@ vlan internal allocation policy ascending
 !
 interface Ethernet0/0
  no shutdown
- description "client's home 3"
+ description "to BGP AS 7"
  no switchport
- ip address 192.168.168.2 255.255.255.0
- ip nat inside
+ ip address 33.33.33.18 255.255.255.240
  duplex auto
 !
 interface Ethernet0/1
  no shutdown
  description "to BGP AS 1"
  no switchport
- ip address 66.66.66.1 255.255.255.240
+ ip address 46.46.46.1 255.255.255.240
+ shutdown
  duplex auto
 !
 interface Ethernet0/2
  no shutdown
- description "to BGP AS 3"
+ description "to BGP AS 2"
  no switchport
- ip address 33.33.33.2 255.255.255.240
+ ip address 33.33.33.1 255.255.255.240
  duplex auto
 !
 interface Ethernet0/3
@@ -86,16 +86,15 @@ interface Ethernet1/2
 interface Ethernet1/3
  no shutdown
 !
-router bgp 2
+router bgp 4
  bgp log-neighbor-changes
  network 33.33.33.0 mask 255.255.255.240
- network 66.66.65.0 mask 255.255.255.0
- network 66.66.66.0 mask 255.255.255.240
- neighbor 20.20.20.2 remote-as 1001
- neighbor 40.40.40.2 remote-as 301
+ network 33.33.33.16 mask 255.255.255.240
+ network 46.46.46.0 mask 255.255.255.0
+ neighbor 33.33.33.2 remote-as 2
+ neighbor 33.33.33.17 remote-as 7
+ neighbor 46.46.46.2 remote-as 1
 !
-ip nat pool CLIENTS-HOME-3 66.66.65.2 66.66.65.254 netmask 255.255.255.0
-ip nat inside source list 1 pool CLIENTS-HOME-3
 ip forward-protocol nd
 !
 no ip http server
@@ -103,7 +102,6 @@ no ip http secure-server
 !
 !
 !
-access-list 1 permit 192.168.0.0 0.0.0.255
 !
 !
 !
@@ -116,7 +114,7 @@ line aux 0
 line vty 0 4
  password cisco
  login
- transport input all
+ transport input telnet
 !
 !
 end
