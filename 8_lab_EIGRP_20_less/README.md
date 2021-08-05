@@ -23,7 +23,7 @@
 
 
 
-## 1. В офисе С.-Петербург настроить EIGRP^ 
+## 1. В офисе С.-Петербург настроить EIGRP 
 
 Будут настроены следующие настройки:
 + включим настройки процесс eigrp;
@@ -31,7 +31,11 @@
 + назначим router-id
 + включим на интерфейсах eigrp
 
-Настроим named EIGRP ipv4 на R17.
+
+
+Настроим named EIGRP  на R17.
+
+### **ipv4**
 ```
 R17(config)# router eigrp E
 R17(config-router)# shutdown
@@ -62,6 +66,10 @@ R17(config-router)# no shutdown
 
 Соседство установили со всеми соседями eigrp.
 ![](Pictures/Screenshot_1.png)
+
+### **ipv6**
+
+
 
 ## 2. В офисе С.-Петербург настроить дополнительные параметры протокола EIGRP^
 
@@ -97,7 +105,15 @@ R17(config-router-af-interface)# summary-address 10.128.255.16 255.255.255.248
 
 ## 2.2 R32 получает только маршрут по-умолчанию
 
+Приведем пример настройки на R17 на R16 они будут аналогичными
+```
+R17(config)# router eigrp E
+R17(config-router)# address-family ipv4 unicast autonomous-system 1
+R17(config-router-af)# af-interface Ethernet0/3
+R17(config-router-af-interface)#summary-address 0.0.0.0 0.0.0.0
+```
 
+![](Pictures/Screenshot_5.png)
 
 
 

@@ -1,6 +1,6 @@
 
 !
-! Last configuration change at 23:46:35 +04 Fri Jul 16 2021
+! Last configuration change at 13:48:14 +04 Thu Aug 5 2021
 !
 version 15.2
 service timestamps debug datetime msec
@@ -50,15 +50,16 @@ vlan internal allocation policy ascending
 !
 !
 interface Ethernet0/0
- shutdown
+ no shutdown
  no switchport
  ip address 10.128.255.16 255.255.255.254
+ shutdown
  duplex auto
  ipv6 address FE80::16 link-local
  ipv6 address 2001:DB8:125:18::16/64
 !
 interface Ethernet0/1
- shutdown
+ no shutdown
  no switchport
  ip address 10.128.255.3 255.255.255.254
  duplex auto
@@ -66,15 +67,16 @@ interface Ethernet0/1
  ipv6 address 2001:DB8:125:11::16/64
 !
 interface Ethernet0/2
- shutdown
+ no shutdown
  no switchport
  ip address 10.128.255.14 255.255.255.254
+ shutdown
  duplex auto
  ipv6 address FE80::16 link-local
  ipv6 address 2001:DB8:125:17::16/64
 !
 interface Ethernet0/3
- shutdown
+ no shutdown
  no switchport
  ip address 10.128.255.7 255.255.255.254
  duplex auto
@@ -85,7 +87,7 @@ interface Ethernet1/0
  no shutdown
 !
 interface Ethernet1/1
- shutdown
+ no shutdown
  no switchport
  ip address 10.128.255.13 255.255.255.254
  duplex auto
@@ -112,7 +114,7 @@ router eigrp E
   exit-af-interface
   !
   af-interface Ethernet0/1
-   summary-address 10.128.0.0 255.255.128.0 
+   summary-address 10.128.0.0 255.255.128.0
    summary-address 10.128.255.8 255.255.255.248
    summary-address 10.128.255.16 255.255.255.248
    no passive-interface
@@ -123,20 +125,23 @@ router eigrp E
   exit-af-interface
   !
   af-interface Ethernet0/3
-   summary-address 10.128.0.0 255.255.128.0
-   summary-address 10.128.255.8 255.255.255.248
-   summary-address 10.128.255.16 255.255.255.248
+   summary-address 0.0.0.0 0.0.0.0
    no passive-interface
   exit-af-interface
   !
   af-interface Ethernet1/1
    no passive-interface
   exit-af-interface
+  !
   topology base
   exit-af-topology
+  network 10.128.255.0 0.0.0.1
   network 10.128.255.2 0.0.0.1
   network 10.128.255.4 0.0.0.1
   network 10.128.255.6 0.0.0.1
+  network 10.128.255.8 0.0.0.1
+  network 10.128.255.10 0.0.0.1
+  network 10.128.255.12 0.0.0.1
   network 10.128.255.14 0.0.0.1
   network 10.128.255.18 0.0.0.1
   eigrp router-id 0.0.0.16
@@ -155,12 +160,11 @@ no ip http secure-server
 !
 !
 !
+!
 ip prefix-list Def seq 5 permit 0.0.0.0/0
 !
 route-map leak-map-route-map permit 10
  match ip address prefix-list Def
-!
-!
 !
 !
 !
