@@ -1,6 +1,6 @@
 
 !
-! Last configuration change at 13:29:25 +04 Thu Aug 5 2021
+! Last configuration change at 11:37:38 +04 Fri Aug 6 2021
 !
 version 15.2
 service timestamps debug datetime msec
@@ -140,6 +140,37 @@ router eigrp E
   network 10.128.255.8 0.0.0.1
   network 10.128.255.10 0.0.0.1
   network 10.128.255.12 0.0.0.1
+  eigrp router-id 0.0.0.17
+ exit-address-family
+ !
+ address-family ipv6 unicast autonomous-system 1
+  !
+  af-interface default
+   passive-interface
+  exit-af-interface
+  !
+  af-interface Ethernet0/0
+   no passive-interface
+  exit-af-interface
+  !
+  af-interface Ethernet0/2
+   no passive-interface
+  exit-af-interface
+  !
+  af-interface Ethernet1/1
+   no passive-interface
+  exit-af-interface
+  !
+  af-interface Ethernet0/3
+   no passive-interface
+  exit-af-interface
+  !
+  af-interface Ethernet0/1
+   no passive-interface
+  exit-af-interface
+  !
+  topology base
+  exit-af-topology
   eigrp router-id 0.0.0.17
  exit-address-family
  !
