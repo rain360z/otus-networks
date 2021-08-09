@@ -1,6 +1,6 @@
 
 !
-! Last configuration change at 13:48:14 +04 Thu Aug 5 2021
+! Last configuration change at 21:13:48 +04 Mon Aug 9 2021
 !
 version 15.2
 service timestamps debug datetime msec
@@ -144,6 +144,39 @@ router eigrp E
   network 10.128.255.12 0.0.0.1
   network 10.128.255.14 0.0.0.1
   network 10.128.255.18 0.0.0.1
+  eigrp router-id 0.0.0.16
+ exit-address-family
+ !
+ address-family ipv6 unicast autonomous-system 1
+  !
+  af-interface default
+   passive-interface
+  exit-af-interface
+  !
+  af-interface Ethernet0/0
+   summary-address 2001:DB8:125:200::/60 leak-map LEAK-USERS
+   no passive-interface
+  exit-af-interface
+  !
+  af-interface Ethernet0/2
+   no passive-interface
+  exit-af-interface
+  !
+  af-interface Ethernet1/1
+   no passive-interface
+  exit-af-interface
+  !
+  af-interface Ethernet0/3
+   summary-address ::/0 leak-map LEAK-GW
+   no passive-interface
+  exit-af-interface
+  !
+  af-interface Ethernet0/1
+   no passive-interface
+  exit-af-interface
+  !
+  topology base
+  exit-af-topology
   eigrp router-id 0.0.0.16
  exit-address-family
  !

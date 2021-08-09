@@ -1,5 +1,7 @@
 
 !
+! Last configuration change at 13:41:51 +04 Fri Aug 6 2021
+!
 version 15.4
 service timestamps debug datetime msec
 service timestamps log datetime msec
@@ -33,7 +35,8 @@ mmi snmp-timeout 180
 !
 !
 ip cef
-no ipv6 cef
+ipv6 unicast-routing
+ipv6 cef
 !
 multilink bundle-name authenticated
 !
@@ -99,7 +102,6 @@ router eigrp E
    no passive-interface
   exit-af-interface
   !
-  !
   af-interface Ethernet0/0
    no passive-interface
   exit-af-interface
@@ -109,6 +111,25 @@ router eigrp E
   network 10.128.255.0 0.0.0.1
   network 10.128.255.2 0.0.0.1
   eigrp router-id 0.0.0.18
+ exit-address-family
+ !
+ address-family ipv6 unicast autonomous-system 1
+  !
+  af-interface default
+   passive-interface
+  exit-af-interface
+  !
+  af-interface Ethernet0/0
+   no passive-interface
+  exit-af-interface
+  !
+  af-interface Ethernet0/1
+   no passive-interface
+  exit-af-interface
+  !
+  topology base
+  exit-af-topology
+  eigrp router-id 0.0.0.32
  exit-address-family
 !
 router bgp 2042

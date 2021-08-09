@@ -1,5 +1,7 @@
 
 !
+! Last configuration change at 13:04:50 +04 Fri Aug 6 2021
+!
 version 15.4
 service timestamps debug datetime msec
 service timestamps log datetime msec
@@ -33,7 +35,8 @@ mmi snmp-timeout 180
 !
 !
 ip cef
-no ipv6 cef
+ipv6 unicast-routing
+ipv6 cef
 !
 multilink bundle-name authenticated
 !
@@ -83,9 +86,10 @@ interface Ethernet0/3
  no ip address
  shutdown
 !
+!
 router eigrp E
  !
-address-family ipv4 unicast autonomous-system 1
+ address-family ipv4 unicast autonomous-system 1
   !
   af-interface default
    passive-interface
@@ -95,7 +99,6 @@ address-family ipv4 unicast autonomous-system 1
    no passive-interface
   exit-af-interface
   !
-  !
   af-interface Ethernet0/0
    no passive-interface
   exit-af-interface
@@ -104,7 +107,25 @@ address-family ipv4 unicast autonomous-system 1
   exit-af-topology
   network 10.128.255.4 0.0.0.1
   network 10.128.255.6 0.0.0.1
-  
+  eigrp router-id 0.0.0.32
+ exit-address-family
+ !
+ address-family ipv6 unicast autonomous-system 1
+  !
+  af-interface default
+   passive-interface
+  exit-af-interface
+  !
+  af-interface Ethernet0/0
+   no passive-interface
+  exit-af-interface
+  !
+  af-interface Ethernet0/1
+   no passive-interface
+  exit-af-interface
+  !
+  topology base
+  exit-af-topology
   eigrp router-id 0.0.0.32
  exit-address-family
 !
@@ -114,6 +135,11 @@ ip forward-protocol nd
 no ip http server
 no ip http secure-server
 !
+!
+ip prefix-list Def seq 5 permit 0.0.0.0/0
+!
+route-map leak-map-route-map permit 10
+ match ip address prefix-list Def
 !
 !
 !
