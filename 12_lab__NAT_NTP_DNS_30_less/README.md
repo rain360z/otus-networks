@@ -14,13 +14,57 @@
 
 ## __1. Настроить DHCP в офисе Москва__ 
 
-### 1.1. Настроите DHCP сервер в офисе Москва на маршрутизаторах R12 и R13. VPC1 и VPC7 должны получать сетевые настройки по DHCP
+### 1.1. Настроите DHCP сервер в офисе Москва на маршрутизаторах SW2, SW3
 
-Шлюз у пользователей SW2 и SW3
 
 ![](Pictures/Screenshot_1.png)
 
 
- SW2(config)# ip dhcp excluded-address 192.168.1.1 192.168.1.5
- SW2(config)# ip dhcp excluded-address 192.168.1.97 192.168.1.101
+Настроим DHCP на SW3 аналагичные настройки сделаем на SW2
+
+```
+interface range e1/0-3
+    switchport access vlan 100
+    switchport mode access
+
+ip dhcp excluded-address 10.0.0.1 10.0.0.10
+ip dhcp pool VLAN100
+    network 10.0.0.0 255.255.255.128
+    domain-name ccna-lab.com
+    default-router 10.0.0.1
+    lease 2 12 30
+```
+
+![](Pictures/Screenshot_2.png)
+
+![](Pictures/Screenshot_3.png)
+
+## __2. 2.1 Настроите NTP сервер на R12 и R13. Все устройства в офисе Москва должны синхронизировать время с R12 и R13 __
+
+Настроим корректное время на всех устройствах(вручную) и включим NTP server и числовой слой. Добавим вкачестве NTP server R14, чтобы в случае отставания времени можно было найти false tickers.
+
+Чтобы синхронизировать время с помощью протокола NTP, следует сначала вручную выставить ваше время. Недопустима разница между вашим точным временем и показаниями ваших часов более 1000 секунд. 
+
+ stratum 1
+### R12
+
+```
+clock set 23:07:40 9 August 2021
+ntp master 1
+ntp update-calendar
+interface range e0/0-3, e1/0
+ntp broadcast
+
+
+```
+
+Настроим клиентов R19, R15, R20
+
+ntp server 10.127.255.18  
+ntp server 10.127.255.66  
+ntp server 10.127.255.17  
+
+![](Pictures/Screenshot_5.png)
+
+Видим, что NTP как точное время используют локальное время.
 
