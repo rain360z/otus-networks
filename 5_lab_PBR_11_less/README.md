@@ -96,7 +96,7 @@ R27(config)# track 1 ip sla 1 reachability
 
 R27(config)# track 2 ip sla 2 reachability
 R27(config)# ip route 0.0.0.0 0.0.0.0 125.125.125.65 10 track 1
-R27(config)# ip route 0.0.0.0 0.0.0.0 125.125.126.1 10 track 2
+R27(config)# ip route 0.0.0.0 0.0.0.0 125.125.126.1 20 track 2
 ```
 В настроках track добавим параметр dalay. В случае если после первого изменения track каждые 11 секунд. Данный параметр задржка перед изменением состояни track. 
 

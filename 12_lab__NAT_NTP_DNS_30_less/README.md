@@ -39,7 +39,7 @@ ip dhcp pool VLAN100
 
 ![](Pictures/Screenshot_3.png)
 
-## __2. 2.1 Настроите NTP сервер на R12 и R13. Все устройства в офисе Москва должны синхронизировать время с R12 и R13 __
+## __2.1 Настроите NTP сервер на R12 и R13. Все устройства в офисе Москва должны синхронизировать время с R12 и R13 __
 
 Настроим корректное время на всех устройствах(вручную) и включим NTP server и числовой слой. Добавим вкачестве NTP server R14, чтобы в случае отставания времени можно было найти false tickers.
 
@@ -68,3 +68,42 @@ ntp server 10.127.255.17
 
 Видим, что NTP как точное время используют локальное время.
 
+
+Настроим SW4, SW5 как stratum 2
+
+```
+SW4(config)#ntp master 2
+
+SW4(config)#ntp update-calendar 
+SW4(config)#interface range e0/0-1, e1/0-1
+SW4(config-if-range)#ntp broadcast 
+SW4(config-if-range)#exit
+SW4(config)#ntp server 10.127.255.18  
+SW4(config)#ntp server 10.127.255.66  
+SW4(config)#ntp server 10.127.255.17
+SW4(config)#ntp peer 10.127.255.193
+```
+
+![](Pictures/Screenshot_4.png)
+
+Настроим SW2,SW3
+
+ntp server 10.127.255.193 
+ntp server 10.127.255.177 
+ 
+ ![](Pictures/Screenshot_6.png)
+
+## __3. Настроить NAT в офисе Москва, C.-Перетбруг и Чокурдах__
+
+
+### __3.1. Настроите NAT(PAT) на R14 и R15. Трансляция должна осуществляться в адрес автономной системы AS1001__
+
+Сеть 10.0.0.0/25 в адрес 5.5.5.10
+Сеть 10.0.0.128/25 в адрес 5.5.5.11
+
+Настроим NAT на R15 
+
+```
+ip nat inside source pool NAT-POOL-VLAN100 5.5.5.10 overload
+
+```
