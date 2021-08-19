@@ -1,0 +1,191 @@
+
+!
+! Last configuration change at 17:33:31 +04 Thu Aug 19 2021
+!
+version 15.4
+service timestamps debug datetime msec
+service timestamps log datetime msec
+no service password-encryption
+!
+hostname R28
+!
+boot-start-marker
+boot-end-marker
+!
+!
+!
+no aaa new-model
+clock timezone +04 4 0
+mmi polling-interval 60
+no mmi auto-configure
+no mmi pvc
+mmi snmp-timeout 180
+!
+!
+!
+!
+!
+!
+!
+!
+
+
+!
+ip dhcp excluded-address 10.192.1.1 10.192.1.10
+ip dhcp excluded-address 10.192.0.1 10.192.0.10
+!
+ip dhcp pool Client
+ network 10.192.0.0 255.255.255.0
+ domain-name hello.com
+ default-router 10.192.0.1 
+!
+ip dhcp pool Client1
+ network 10.192.1.0 255.255.255.0
+ domain-name hello.com
+ default-router 10.192.1.1 
+!
+!
+!
+ip cef
+no ipv6 cef
+!
+multilink bundle-name authenticated
+!
+!
+!
+!
+!
+!
+!
+!
+!
+redundancy
+!
+!
+track 1 ip sla 1 reachability
+ delay down 11 up 11
+!
+track 2 ip sla 2 reachability
+ delay down 11 up 11
+!
+track 100 list boolean and
+ object 1
+ object 2
+ delay down 11 up 11
+!
+! 
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+interface Ethernet0/0
+ no shutdown
+ ip address 125.125.126.2 255.255.255.224
+ ip nat outside
+ ip virtual-reassembly in
+ ipv6 address FE80::28 link-local
+ ipv6 address 2001:DB8:125:102::26/64
+!
+interface Ethernet0/1
+ no shutdown
+ ip address 125.125.125.66 255.255.255.224
+ ip nat outside
+ ip virtual-reassembly in
+ ipv6 address FE80::28 link-local
+ ipv6 address 2001:DB8:125:101::28/64
+!
+interface Ethernet0/2
+ no shutdown
+ no ip address
+!
+interface Ethernet0/2.188
+ no shutdown
+ encapsulation dot1Q 188
+ ip address 10.192.0.1 255.255.255.0
+ ip nat inside
+ ip virtual-reassembly in
+ ip policy route-map RM_VLAN188
+!
+interface Ethernet0/2.201
+ no shutdown
+ encapsulation dot1Q 201
+ ip address 10.192.1.1 255.255.255.0
+ ip nat inside
+ ip virtual-reassembly in
+!
+interface Ethernet0/3
+ no shutdown
+ no ip address
+ shutdown
+!
+ip forward-protocol nd
+!
+!
+no ip http server
+no ip http secure-server
+ip nat inside source route-map NAT_ISP1 interface Ethernet0/1 overload
+ip nat inside source route-map NAT_ISP2 interface Ethernet0/0 overload
+ip route 0.0.0.0 0.0.0.0 125.125.125.65 10 track 1
+ip route 0.0.0.0 0.0.0.0 125.125.126.1 20 track 2
+!
+ip access-list extended VLAN188
+ permit icmp 10.192.0.0 0.0.0.255 any
+ permit tcp 10.192.0.0 0.0.0.255 any
+ permit udp 10.192.0.0 0.0.0.255 any
+ip access-list extended VLAN201
+ permit tcp 10.192.1.0 0.0.0.255 any
+ permit icmp 10.192.1.0 0.0.0.255 any
+ permit udp 10.192.1.0 0.0.0.255 any
+!
+ip sla 1
+ icmp-echo 125.125.125.65 source-ip 125.125.125.66
+ frequency 10
+ip sla schedule 1 life forever start-time now
+ip sla 2
+ icmp-echo 125.125.126.1 source-ip 125.125.126.2
+ frequency 10
+ip sla schedule 2 life forever start-time now
+!
+route-map RM_VLAN188 permit 5
+ match ip address VLAN188
+ set ip next-hop verify-availability 125.125.126.1 1 track 100
+ set ip next-hop verify-availability 125.125.126.1 5 track 100
+!
+route-map NAT_ISP2 permit 10
+ match ip address VLAN188 VLAN201
+ match interface Ethernet0/0
+!
+route-map NAT_ISP1 permit 10
+ match ip address VLAN188 VLAN201
+ match interface Ethernet0/1
+!
+!
+access-list 1 permit 10.192.1.0 0.0.0.255
+access-list 1 permit 10.192.0.0 0.0.0.255
+!
+control-plane
+!
+!
+!
+!
+!
+!
+!
+!
+line con 0
+ logging synchronous
+line aux 0
+line vty 0 4
+ login
+ transport input none
+!
+!
+end
