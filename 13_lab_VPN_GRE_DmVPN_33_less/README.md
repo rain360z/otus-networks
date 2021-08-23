@@ -20,7 +20,7 @@ GRE tunnel будем использовать между R15 и R18 на loopba
 5) Настроить статический маршрут и редистрибьюцию.
 6) Проверить доступность
 
-Сеть туннеля 172.31.0.0/24
+Сеть туннелей 172.31.0.0/24
 
 R15 ip адресс туннеля 172.31.0.1 255.255.255.0
 R18 ip адресс туннеля 172.31.0.2 255.255.255.0
@@ -46,9 +46,9 @@ interface tunnel50
     ip address 172.31.0.1 255.255.255.0
     tunnel destination 42.42.42.50
     tunnel source 5.5.5.50
-    keepalive 5
     ip mtu 1400
     ip tcp adjust-mss 1360
+    keepalive 5
 ! keepalive 5 чтобы туннель не поднимался если недоступен destination
 
 ```
@@ -130,11 +130,185 @@ router eigrp E
 3. Настроить Loopback/Интерфейсы
 4. Анонсировать peer BGP выбранные сети, если это небыло сделано до этого.
 5. Настроить interface Tunnel 
-6. Выбрать протокол динамической маршрутизации (Попробуй использовать VRF)
+6. Выбрать протокол динамической маршрутизации
 7. Проверить доступность
 
-1. В качесиве HUB(NHS) Будут выступать R14, R15. Так как у нас более приоритетный маршрут через Ламас, более  корректным будет использовать Схему DMVPN "Dual Hub, Single Cloud"
+1. Используем 2 Фазу
 
 ![](Pictures/Screenshot_4.png)
 
 
+
+2. Адресация
+
+
+Сеть туннелей 172.31.1.0/24
+
+R15 
+source 5.5.5.100
+адрес тунеля 172.31.1.1/24
+
+
+R14
+source 5.5.5.101
+адрес тунеля 172.31.1.2/24
+
+
+R28
+source 125.125.125.67
+адрес тунеля 172.31.1.3/24
+
+R27
+
+source 125.125.125.3
+адрес тунеля 172.31.1.4/24
+
+3-5 Настроим mGRE и nhrp
+( Отложил 3 фазу
+
+
+
+
+R15
+
+```
+interface loopback 100
+    ip address 5.5.5.100 255.255.255.255
+    no sh
+    exit
+interface tunnel100
+    tunnel mode gre multipoint
+    ip address 172.31.1.1 255.255.255.0
+    ip mtu 1400
+    ip tcp adjust-mss 1360
+    ip nhrp network-id 100
+    ip nhrp map multicast dynamic
+    tunnel source loopback100
+
+```
+
+R28
+
+```
+interface tunnel100
+    tunnel mode gre multipoint
+    ip address 172.31.1.3 255.255.255.0
+    ip mtu 1400
+    ip tcp adjust-mss 1360
+    ip nhrp network-id 100
+    ip nhrp map 172.31.1.1 5.5.5.100
+    ip nhrp map multicast 5.5.5.100
+    ip nhrp nhs 172.31.1.1
+    tunnel source Ethernet0/1
+```
+R27
+
+```
+interface tunnel100
+    tunnel mode gre multipoint
+    ip address 172.31.1.4 255.255.255.0
+    ip mtu 1400
+    ip tcp adjust-mss 1360
+    ip nhrp network-id 100
+    ip nhrp map 172.31.1.1 5.5.5.100
+    ip nhrp map multicast 5.5.5.100
+    ip nhrp nhs 172.31.1.1
+    tunnel source Ethernet0/0
+```
+
+```
+Команды проверки:  
+sh ip int br  
+__Sopke__  
+sh ip nhrp nhs  
+sh ip nhrp brief  
+sh ip nhrp   
+sh ip nhrp multicast  
+sh ip nhrp summary  
+sh ip nhrp traffic   
+__HUB__  
+sh ip nhrp brief  
+sh ip nhrp  
+sh ip nhrp multicast  
+sh ip nhrp summary   
+sh ip nhrp traffic  
+```
+
+Получили всю информацию от hub
+
+![](Pictures/Screenshot_5.png)
+
+6. Настроим динамическую маршрутизацию, будем использовать EIGRP
+
+R15
+
+```
+router eigrp DMVPN
+ !
+ address-family ipv4 unicast autonomous-system 100
+  !
+  af-interface default
+    no next-hop-self
+  af-interface Loopback100
+   no split-horizon
+  exit-af-interface
+  !
+  topology base
+    redistribute ospf 4 route-map OSPF-DMVPN
+  exit-af-topology
+  network 10.0.0.0 0.0.0.127
+  network 10.0.0.128 0.0.0.127
+  network 172.31.1.0 0.0.0.255
+  eigrp router-id 0.0.1.15
+ exit-address-family
+!
+
+ip access-list standard OSPF-DMVPN
+ permit 10.0.0.0 0.0.0.127
+ permit 10.0.0.128 0.0.0.127
+
+route-map OSPF-DMVPN permit 10
+ match ip address OSPF-DMVPN
+```
+R28
+
+```
+router eigrp DMVPN
+ !
+ address-family ipv4 unicast autonomous-system 100
+  !
+  af-interface default
+    no next-hop-self
+  af-interface Loopback100
+   no split-horizon
+  exit-af-interface
+  !
+  topology base
+  no auto-summary
+  exit-af-topology
+  network 10.192.0.0 0.0.0.255
+  network 10.192.1.0 0.0.0.255
+  network 172.31.1.0 0.0.0.255
+  eigrp router-id 0.0.1.28
+ exit-address-family
+ ```
+R27
+```
+router eigrp DMVPN
+ !
+ address-family ipv4 unicast autonomous-system 100
+  !
+  af-interface default
+    no next-hop-self
+    hold-time 35
+  af-interface Loopback100
+   no split-horizon
+  exit-af-interface
+  !
+  topology base
+  exit-af-topology
+  network 10.208.0.0 0.0.0.255
+  network 172.31.1.0 0.0.0.255
+  eigrp router-id 0.0.1.27
+ exit-address-family
+```
