@@ -1,7 +1,5 @@
 
 !
-! Last configuration change at 17:33:31 +04 Thu Aug 19 2021
-!
 version 15.4
 service timestamps debug datetime msec
 service timestamps log datetime msec
@@ -86,6 +84,23 @@ track 100 list boolean and
 !
 !
 !
+interface Loopback100
+ no shutdown
+ no ip address
+!
+interface Tunnel100
+ no shutdown
+ ip address 172.31.1.3 255.255.255.0
+ no ip redirects
+ ip mtu 1400
+ ip nhrp map 172.31.1.1 5.5.5.100
+ ip nhrp map multicast 5.5.5.100
+ ip nhrp network-id 100
+ ip nhrp nhs 172.31.1.1
+ ip tcp adjust-mss 1360
+ tunnel source Ethernet0/1
+ tunnel mode gre multipoint
+!
 interface Ethernet0/0
  no shutdown
  ip address 125.125.126.2 255.255.255.224
@@ -125,6 +140,29 @@ interface Ethernet0/3
  no shutdown
  no ip address
  shutdown
+!
+!
+router eigrp DMVPN
+ !
+ address-family ipv4 unicast autonomous-system 100
+  !
+  af-interface default
+   hold-time 35
+   no next-hop-self
+   no split-horizon
+  exit-af-interface
+  !
+  af-interface Tunnel100
+   split-horizon
+  exit-af-interface
+  !
+  topology base
+  exit-af-topology
+  network 10.192.0.0 0.0.0.255
+  network 10.192.1.0 0.0.0.255
+  network 172.31.1.0 0.0.0.255
+  eigrp router-id 0.0.1.28
+ exit-address-family
 !
 ip forward-protocol nd
 !

@@ -1,6 +1,6 @@
 
 !
-! Last configuration change at 09:38:56 +04 Wed Aug 18 2021
+! Last configuration change at 15:12:12 +04 Tue Aug 24 2021
 !
 version 15.4
 service timestamps debug datetime msec
@@ -63,6 +63,17 @@ redundancy
 !
 !
 !
+!
+interface Loopback50
+ no shutdown
+ ip address 42.42.42.50 255.255.255.255
+!
+interface Tunnel50
+ no shutdown
+ ip address 172.31.0.2 255.255.255.0
+ keepalive 60 3
+ tunnel source 42.42.42.50
+ tunnel destination 5.5.5.50
 !
 interface Ethernet0/0
  no shutdown
@@ -161,12 +172,19 @@ no ip http secure-server
 ip nat pool NAT-POOL-5 42.42.42.42 42.42.42.46 netmask 255.255.255.0
 ip nat inside source list 1 pool NAT-POOL-5 overload
 ip route 0.0.0.0 0.0.0.0 Null0
+ip route 10.0.0.0 255.255.255.128 172.31.0.1
 ip route 42.42.42.0 255.255.255.0 Null0
+!
+ip access-list standard Moscow
+ permit 10.0.0.0 0.0.0.127
 !
 !
 ip prefix-list NOTRANS seq 5 permit 125.125.200.128/25
 ip prefix-list NOTRANS seq 10 permit 125.125.200.0/25
 ip prefix-list NOTRANS seq 15 permit 42.42.42.0/24
+!
+route-map route-map-redistribute permit 10
+ match ip address Moscow
 !
 !
 access-list 1 permit 10.128.0.0 0.0.255.255

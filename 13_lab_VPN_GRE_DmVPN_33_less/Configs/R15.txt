@@ -1,5 +1,7 @@
 
 !
+! Last configuration change at 22:08:55 +04 Tue Aug 24 2021
+!
 version 15.4
 service timestamps debug datetime msec
 service timestamps log datetime msec
@@ -71,6 +73,37 @@ interface Loopback5
  no shutdown
  ip address 5.5.5.5 255.255.255.255
 !
+interface Loopback10
+ no shutdown
+ ip address 5.5.5.10 255.255.255.255
+!
+interface Loopback50
+ no shutdown
+ ip address 5.5.5.50 255.255.255.255
+!
+interface Loopback100
+ no shutdown
+ ip address 5.5.5.100 255.255.255.255
+!
+interface Tunnel50
+ no shutdown
+ ip address 172.31.0.1 255.255.255.0
+ ip mtu 1400
+ ip tcp adjust-mss 1360
+ tunnel source 5.5.5.50
+ tunnel destination 42.42.42.50
+!
+interface Tunnel100
+ no shutdown
+ ip address 172.31.1.1 255.255.255.0
+ no ip redirects
+ ip mtu 1400
+ ip nhrp map multicast dynamic
+ ip nhrp network-id 100
+ ip tcp adjust-mss 1360
+ tunnel source Loopback100
+ tunnel mode gre multipoint
+!
 interface Ethernet0/0
  no shutdown
  ip address 10.127.255.65 255.255.255.240
@@ -133,9 +166,38 @@ interface Ethernet1/3
  no ip address
  shutdown
 !
+!
+router eigrp DMVPN
+ !
+ address-family ipv4 unicast autonomous-system 100
+  !
+  af-interface default
+   no next-hop-self
+  exit-af-interface
+  !
+  af-interface Loopback100
+   no split-horizon
+  exit-af-interface
+  !
+  af-interface Tunnel100
+   summary-address 10.0.0.0 255.255.255.0
+   no split-horizon
+  exit-af-interface
+  !
+  topology base
+   redistribute ospf 4 route-map OSPF-DMVPN
+  exit-af-topology
+  network 10.0.0.0 0.0.0.127
+  network 10.0.0.128 0.0.0.127
+  network 10.127.255.64 0.0.0.15
+  network 172.31.1.0 0.0.0.255
+  eigrp router-id 0.0.1.15
+ exit-address-family
+!
 router ospf 4
  router-id 0.0.0.15
  area 0 filter-list prefix non102_1 out
+ redistribute eigrp 100 subnets
  passive-interface default
  no passive-interface Ethernet0/0
  no passive-interface Ethernet0/1
@@ -162,9 +224,18 @@ ip as-path access-list 1 deny .*
 !
 no ip http server
 no ip http secure-server
+ip nat inside source static tcp 10.127.255.225 23 interface Loopback10 23
 ip nat inside source route-map USERS interface Loopback5 overload
 ip route 5.5.5.0 255.255.255.0 Null0
 ip route 5.5.5.6 255.255.255.255 172.16.1.0
+ip route 5.5.5.11 255.255.255.255 172.16.1.0
+!
+ip access-list standard OSPF-DMVPN
+ permit 10.0.0.0 0.0.0.127
+ permit 10.0.0.128 0.0.0.127
+!
+ip access-list extended OUTSIDE
+ permit tcp any host 5.5.5.10 eq telnet
 !
 !
 ip prefix-list non102_1 seq 5 deny 10.127.255.224/28
@@ -183,6 +254,10 @@ ipv6 prefix-list non101 seq 4 deny 1:1:1:1::/64
 ipv6 prefix-list non101 seq 5 deny 1:1:1:15::/64
 route-map USERS permit 10
  match ip address 5 6
+!
+route-map OSPF-DMVPN permit 10
+ match ip address OSPF-DMVPN
+ set metric 1000000 1 255 1 1500
 !
 !
 access-list 6 permit 10.0.0.128 0.0.0.127
