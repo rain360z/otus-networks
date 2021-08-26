@@ -1,11 +1,12 @@
 
 !
-! Last configuration change at 16:15:55 +04 Thu Jun 10 2021
+! Last configuration change at 22:13:50 +04 Wed Aug 25 2021
 !
-version 15.4
+version 15.2
 service timestamps debug datetime msec
 service timestamps log datetime msec
 no service password-encryption
+service compress-config
 !
 hostname R2
 !
@@ -16,10 +17,6 @@ boot-end-marker
 !
 no aaa new-model
 clock timezone +04 4 0
-mmi polling-interval 60
-no mmi auto-configure
-no mmi pvc
-mmi snmp-timeout 180
 !
 !
 !
@@ -28,29 +25,18 @@ mmi snmp-timeout 180
 !
 !
 !
-
-
-!
-!
-!
-!
-ip cef
+no ip cef
 no ipv6 cef
 !
-multilink bundle-name authenticated
 !
 !
+spanning-tree mode rapid-pvst
+spanning-tree extend system-id
 !
-!
-!
-!
-!
-!
-!
-redundancy
-!
+vlan internal allocation policy ascending
 !
 ! 
+!
 !
 !
 !
@@ -68,37 +54,54 @@ interface Loopback0
  ip nat outside
 !
 interface Ethernet0/0
- no switchport
  no shutdown
  description "client's home 3"
+ no switchport
  ip address 192.168.168.2 255.255.255.0
  ip nat inside
+ duplex auto
 !
 interface Ethernet0/1
- no switchport
  no shutdown
  description "to BGP AS 1"
+ no switchport
  ip address 66.66.66.1 255.255.255.240
+ duplex auto
 !
 interface Ethernet0/2
  no shutdown
- no switchport
  description "to BGP AS 3"
+ no switchport
  ip address 33.33.33.2 255.255.255.240
+ duplex auto
 !
 interface Ethernet0/3
  no shutdown
- no switchport
  description "to BGP AS 3"
+ no switchport
  ip address 60.60.60.2 255.255.255.240
+ duplex auto
+!
+interface Ethernet1/0
+ no shutdown
+!
+interface Ethernet1/1
+ no shutdown
+!
+interface Ethernet1/2
+ no shutdown
+!
+interface Ethernet1/3
+ no shutdown
 !
 router bgp 2
  bgp log-neighbor-changes
- network 66.66.66.0 mask 255.255.255.240
  network 33.33.33.0 mask 255.255.255.240
  network 66.66.65.0 mask 255.255.255.0
- neighbor 60.60.60.1 remote-as 7
+ network 66.66.66.0 mask 255.255.255.240
  neighbor 33.33.33.1 remote-as 4
+ neighbor 60.60.60.1 remote-as 7
+ neighbor 66.66.66.2 remote-as 1
 !
 ip nat pool CLIENTS-HOME-3 66.66.65.2 66.66.65.254 netmask 255.255.255.0
 ip nat inside source list 1 pool CLIENTS-HOME-3
@@ -107,6 +110,7 @@ ip forward-protocol nd
 no ip http server
 no ip http secure-server
 !
+ip route 10.0.0.0 255.255.255.0 66.66.66.2
 !
 !
 access-list 1 permit 192.168.0.0 0.0.0.255
@@ -114,12 +118,6 @@ access-list 1 permit 192.168.0.0 0.0.0.255
 !
 !
 control-plane
-!
-!
-!
-!
-!
-!
 !
 !
 line con 0

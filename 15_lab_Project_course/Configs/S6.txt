@@ -1,6 +1,6 @@
 
 !
-! Last configuration change at 00:44:02 +04 Tue Jul 27 2021
+! Last configuration change at 16:09:02 +04 Wed Aug 25 2021
 !
 version 15.2
 service timestamps debug datetime msec
@@ -113,18 +113,10 @@ router eigrp E
   exit-af-interface
   !
   af-interface Ethernet0/0
-   summary-address 10.0.0.0 255.0.0.0
-   summary-address 10.0.0.0 255.255.0.0
-   summary-address 172.16.0.0 255.255.252.0
-   summary-address 172.16.4.0 255.255.252.0
    no passive-interface
   exit-af-interface
   !
   af-interface Ethernet0/1
-   summary-address 10.0.0.0 255.0.0.0
-   summary-address 10.0.0.0 255.255.0.0
-   summary-address 172.16.0.0 255.255.252.0
-   summary-address 172.16.4.0 255.255.252.0
    no passive-interface
   exit-af-interface
   !

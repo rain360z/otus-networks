@@ -1,45 +1,40 @@
 
 : 
-: Serial Number: 9AGR4G0J359
+: Serial Number: 9A6CKN3RB5G
 : Hardware:   ASAv, 2048 MB RAM, CPU Xeon E5 series 2899 MHz
-: Written by enable_15 at 19:36:53.079 UTC Sat Jul 24 2021
+: Written by enable_15 at 19:59:44.787 UTC Thu Aug 26 2021
+: Call-home enabled from prompt by enable_15 at 19:40:41 UTC Jul 24 2021
 !
 ASA Version 9.9(2) 
 !
-hostname ASAv10
+hostname ASAv39
+enable password $sha512$5000$x7Lm8VHj8JfOTkXfSz6OPQ==$+vJUpYpGZBio2tboPZj6XA== pbkdf2
 names
 
 !
 interface GigabitEthernet0/0
- description LAN Failover Interface
 !
 interface GigabitEthernet0/1
- no nameif
- no security-level
- ip address 11.0.1.2 255.255.255.0 standby 11.0.1.3 
+ nameif inside
+ security-level 100
+ ip address 172.16.8.1 255.255.255.240 
 !
 interface GigabitEthernet0/2
- no nameif
- no security-level
- ip address 10.0.1.2 255.255.255.0 standby 10.0.1.3 
+ nameif inside2
+ security-level 100
+ ip address 172.16.8.33 255.255.255.240 
 !
 interface GigabitEthernet0/3
- shutdown
- no nameif
- no security-level
- no ip address
 !
 interface GigabitEthernet0/4
- shutdown
- no nameif
- no security-level
- no ip address
+ nameif outside
+ security-level 0
+ ip address 66.66.66.2 255.255.255.240 
 !
 interface GigabitEthernet0/5
- shutdown
- no nameif
- no security-level
- no ip address
+ nameif outside2
+ security-level 0
+ ip address 46.46.46.2 255.255.255.240 
 !
 interface GigabitEthernet0/6
  shutdown
@@ -53,17 +48,71 @@ interface Management0/0
  no security-level
  no ip address
 !
+interface Redundant1
+ description LAN Failover Interface
+ member-interface GigabitEthernet0/0
+ member-interface GigabitEthernet0/3
+!
 ftp mode passive
+same-security-traffic permit inter-interface
+object network inside_lan
+ subnet 10.0.0.0 255.255.255.0
+object network outside_lan
+ host 100.100.100.100
+object network SERVER_REAL
+ host 10.128.0.1
+object network SERVER_SOURCE
+ host 100.100.100.128
+access-list DEF standard permit any4 
+access-list OUTSIDE_DMZ_TELNET extended permit tcp any host 10.128.0.1 eq telnet 
 pager lines 23
+mtu inside 1500
+mtu inside2 1500
+mtu outside 1500
+mtu outside2 1500
 failover
-failover lan unit second
-failover lan interface FAILOVER GigabitEthernet0/0
-failover interface ip FAILOVER 172.31.1.2 255.255.255.0 standby 172.31.1.3
+failover lan unit secondary
+failover lan interface FAILOVER Redundant1
+failover interface ip FAILOVER 192.168.1.1 255.255.255.0 standby 192.168.1.2
 icmp unreachable rate-limit 1 burst-size 1
 no asdm history enable
 arp timeout 14400
 no arp permit-nonconnected
 arp rate-limit 8192
+nat (any,any) source dynamic inside_lan outside_lan
+nat (any,any) source static SERVER_REAL SERVER_SOURCE
+access-group OUTSIDE_DMZ_TELNET in interface outside
+access-group OUTSIDE_DMZ_TELNET in interface outside2
+!
+route-map DEF permit 10
+ match ip address DEF
+
+!
+router bgp 1
+ bgp log-neighbor-changes
+ address-family ipv4 unicast
+  neighbor 46.46.46.1 remote-as 4
+  neighbor 46.46.46.1 activate
+  neighbor 66.66.66.1 remote-as 2
+  neighbor 66.66.66.1 activate
+  network 46.46.46.0 mask 255.255.255.240
+  network 66.66.66.0 mask 255.255.255.240
+  network 100.100.100.0 mask 255.255.255.0
+  no auto-summary
+  no synchronization
+ exit-address-family
+!
+router eigrp 1
+ eigrp router-id 0.0.0.40
+ network 172.16.8.0 255.255.255.240
+ network 172.16.8.32 255.255.255.240
+ passive-interface default
+ no passive-interface inside
+ no passive-interface inside2
+ redistribute static route-map DEF
+!
+route Null0 0.0.0.0 0.0.0.0 1
+route Null0 100.100.100.0 255.255.255.0 1
 timeout xlate 3:00:00
 timeout pat-xlate 0:00:30
 timeout conn 1:00:00 half-closed 0:10:00 udp 0:02:00 sctp 0:02:00 icmp 0:00:02
@@ -167,6 +216,7 @@ policy-map global_policy
   inspect tftp 
   inspect sip  
   inspect xdmcp 
+  inspect icmp 
 policy-map type inspect dns migrated_dns_map_2
  parameters
   message-length maximum client auto
@@ -175,7 +225,7 @@ policy-map type inspect dns migrated_dns_map_2
 !
 service-policy global_policy global
 prompt hostname context 
-call-home reporting anonymous prompt 2
+call-home reporting anonymous
 call-home
  profile License
   destination address http https://tools.cisco.com/its/service/oddce/services/DDCEService
@@ -190,5 +240,5 @@ call-home
   subscribe-to-alert-group inventory periodic monthly
   subscribe-to-alert-group configuration periodic monthly
   subscribe-to-alert-group telemetry periodic daily
-Cryptochecksum:9307079fa0a21561631e865a55f874d7
+Cryptochecksum:93b39a2c9603005935c4df93b8044b84
 : end

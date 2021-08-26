@@ -1,6 +1,6 @@
 
 !
-! Last configuration change at 17:08:42 +04 Sun Jul 25 2021
+! Last configuration change at 16:09:12 +04 Wed Aug 25 2021
 !
 version 15.2
 service timestamps debug datetime msec
@@ -130,7 +130,6 @@ router eigrp E
   !
   topology base
   exit-af-topology
-  network 10.128.1.0 0.0.0.255
   network 172.16.0.112 0.0.0.15
   network 172.16.0.128 0.0.0.15
   eigrp router-id 0.0.0.28

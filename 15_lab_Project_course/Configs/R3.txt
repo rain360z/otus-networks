@@ -62,17 +62,15 @@ redundancy
 !
 !
 interface Ethernet0/0
- description "provider"
- ip address 192.168.168.1 255.255.255.0
  no shutdown
- 
+ description "users"
+ ip address 192.168.168.1 255.255.255.0
  shutdown
 !
 interface Ethernet0/1
  no shutdown
-  description "users"
+ description "provider"
  ip address 192.168.1.1 255.255.255.0
- no shutdown
 !
 interface Ethernet0/2
  no shutdown

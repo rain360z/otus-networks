@@ -1,6 +1,6 @@
 
 !
-! Last configuration change at 17:08:42 +04 Sun Jul 25 2021
+! Last configuration change at 21:55:47 +04 Thu Aug 26 2021
 !
 version 15.2
 service timestamps debug datetime msec
@@ -25,7 +25,7 @@ clock timezone +04 4 0
 !
 !
 !
-ip cef
+no ip cef
 ipv6 unicast-routing
 ipv6 cef
 !
@@ -63,6 +63,8 @@ interface Ethernet0/1
 !
 interface Ethernet0/2
  no shutdown
+ switchport access vlan 300
+ switchport mode access
 !
 interface Ethernet0/3
  no shutdown
@@ -109,7 +111,7 @@ interface Ethernet3/3
 interface Vlan300
  no shutdown
  description "USERS-1"
- ip address 10.128.0.1 255.255.255.0
+ ip address 10.0.0.1 255.255.255.0
 !
 !
 router eigrp E
@@ -130,7 +132,7 @@ router eigrp E
   !
   topology base
   exit-af-topology
-  network 10.128.0.0 0.0.0.255
+  network 10.0.0.0 0.0.0.255
   network 172.16.0.80 0.0.0.15
   network 172.16.0.96 0.0.0.15
   eigrp router-id 0.0.0.31
@@ -153,7 +155,9 @@ line con 0
  logging synchronous
 line aux 0
 line vty 0 4
+ password cisco
  login
+ transport input telnet
 !
 !
 end

@@ -1,6 +1,6 @@
 
 !
-! Last configuration change at 23:46:35 +04 Fri Jul 16 2021
+! Last configuration change at 16:09:09 +04 Wed Aug 25 2021
 !
 version 15.2
 service timestamps debug datetime msec
@@ -53,31 +53,37 @@ interface Ethernet0/0
  no shutdown
  no switchport
  ip address 172.16.0.18 255.255.255.240
+ duplex auto
 !
 interface Ethernet0/1
  no shutdown
  no switchport
  ip address 172.16.0.50 255.255.255.240
+ duplex auto
 !
 interface Ethernet0/2
  no shutdown
  no switchport
  ip address 172.16.0.97 255.255.255.240
+ duplex auto
 !
 interface Ethernet0/3
  no shutdown
  no switchport
  ip address 172.16.0.129 255.255.255.240
+ duplex auto
 !
 interface Ethernet1/0
  no shutdown
+ no switchport
  ip address 172.16.0.161 255.255.255.240
- no shutdown
+ duplex auto
 !
 interface Ethernet1/1
  no shutdown
  no switchport
  ip address 172.16.0.66 255.255.255.240
+ duplex auto
 !
 interface Ethernet1/2
  no shutdown
@@ -85,22 +91,44 @@ interface Ethernet1/2
 interface Ethernet1/3
  no shutdown
 !
+interface Ethernet2/0
+ no shutdown
+!
+interface Ethernet2/1
+ no shutdown
+!
+interface Ethernet2/2
+ no shutdown
+!
+interface Ethernet2/3
+ no shutdown
+!
+interface Ethernet3/0
+ no shutdown
+!
+interface Ethernet3/1
+ no shutdown
+!
+interface Ethernet3/2
+ no shutdown
+!
+interface Ethernet3/3
+ no shutdown
+!
 !
 router eigrp E
-!
-address-family ipv4 unicast autonomous-system 1
+ !
+ address-family ipv4 unicast autonomous-system 1
   !
   af-interface default
    passive-interface
   exit-af-interface
   !
   af-interface Ethernet0/0
-   summary-address 10.128.0.0 255.255.128.0
    no passive-interface
   exit-af-interface
   !
   af-interface Ethernet0/1
-   summary-address 10.128.0.0 255.255.128.0
    no passive-interface
   exit-af-interface
   !
@@ -112,22 +140,22 @@ address-family ipv4 unicast autonomous-system 1
    no passive-interface
   exit-af-interface
   !
-  af-interface Ethernet1/0
+  af-interface Ethernet1/1
    no passive-interface
   exit-af-interface
   !
-  af-interface Ethernet1/1
+  af-interface Ethernet1/0
    no passive-interface
   exit-af-interface
   !
   topology base
   exit-af-topology
-  network 172.16.0.16 255.255.255.240
-  network 172.16.0.48 255.255.255.240
-  network 172.16.0.64 255.255.255.240
-  network 172.16.0.96 255.255.255.240
-  network 172.16.0.128 255.255.255.240
-  network 172.16.0.160 255.255.255.240
+  network 172.16.0.16 0.0.0.15
+  network 172.16.0.48 0.0.0.15
+  network 172.16.0.64 0.0.0.15
+  network 172.16.0.96 0.0.0.15
+  network 172.16.0.128 0.0.0.15
+  network 172.16.0.160 0.0.0.15
   eigrp router-id 0.0.0.8
  exit-address-family
  !
@@ -143,7 +171,6 @@ no ip http server
 no ip http secure-server
 !
 !
-!         
 !
 !
 !

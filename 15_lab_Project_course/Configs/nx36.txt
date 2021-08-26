@@ -1,8 +1,8 @@
 
 
 !Command: show running-config
-!Running configuration last done at: Tue Jul 27 13:46:50 2021
-!Time: Tue Jul 27 13:46:50 2021
+!Running configuration last done at: Thu Aug 26 20:02:43 2021
+!Time: Thu Aug 26 20:02:44 2021
 
 version 9.2(2) Bios:version  
 hostname nx36
@@ -53,6 +53,8 @@ interface Vlan1
 interface Vlan105
   no shutdown
   ip address 172.16.4.66/28
+  ip router eigrp E
+  no ip passive-interface eigrp E
 
 interface port-channel15
   description **vPC Peer-Link**
@@ -86,7 +88,6 @@ interface Ethernet1/5
   ip address 172.16.4.81/28
   ip router eigrp E
   no ip passive-interface eigrp E
-  no shutdown
 
 interface Ethernet1/6
 

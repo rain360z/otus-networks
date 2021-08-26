@@ -1,6 +1,6 @@
 
 !
-! Last configuration change at 17:08:42 +04 Sun Jul 25 2021
+! Last configuration change at 16:09:14 +04 Wed Aug 25 2021
 !
 version 15.2
 service timestamps debug datetime msec
@@ -106,11 +106,6 @@ interface Ethernet3/2
 interface Ethernet3/3
  no shutdown
 !
-interface Vlan302
- no shutdown
- description "USERS-1"
- ip address 10.128.3.1 255.255.255.0
-!
 !
 router eigrp E
  !
@@ -130,7 +125,6 @@ router eigrp E
   !
   topology base
   exit-af-topology
-  network 10.128.3.0 0.0.0.255
   network 172.16.0.144 0.0.0.15
   network 172.16.0.160 0.0.0.15
   eigrp router-id 0.0.0.29

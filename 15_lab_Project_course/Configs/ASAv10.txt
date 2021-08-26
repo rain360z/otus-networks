@@ -1,8 +1,8 @@
 
 : 
-: Serial Number: 9AWPSFCX8A9
+: Serial Number: 9A61VQTFSTM
 : Hardware:   ASAv, 2048 MB RAM, CPU Xeon E5 series 2899 MHz
-: Written by enable_15 at 13:46:33.877 UTC Tue Jul 27 2021
+: Written by enable_15 at 20:03:50.857 UTC Thu Aug 26 2021
 !
 ASA Version 9.9(2) 
 !
@@ -20,7 +20,7 @@ interface GigabitEthernet0/1
  security-level 100
 !
 interface GigabitEthernet0/2
- bridge-group 1
+ bridge-group 2
  nameif inside2
  security-level 100
 !
@@ -32,7 +32,7 @@ interface GigabitEthernet0/4
  security-level 0
 !
 interface GigabitEthernet0/5
- bridge-group 1
+ bridge-group 2
  nameif outside2
  security-level 0
 !
@@ -50,17 +50,23 @@ interface Management0/0
 interface BVI1
  ip address 172.16.4.67 255.255.255.240 
 !
+interface BVI2
+ ip address 172.16.4.88 255.255.255.240 
+!
 interface Redundant1
  description LAN/STATE Failover Interface
  member-interface GigabitEthernet0/0
  member-interface GigabitEthernet0/3
 !
 ftp mode passive
+access-list LAN_EIGRP extended permit eigrp 172.16.4.64 255.255.255.240 172.16.4.64 255.255.255.240 
+access-list LAN_EIGRP extended permit eigrp 172.16.4.80 255.255.255.240 172.16.4.80 255.255.255.240 
+access-list LAN_EIGRP extended permit ip any host 224.0.0.10 
 pager lines 23
-mtu outside 1500
-mtu outside2 1500
 mtu inside 1500
 mtu inside2 1500
+mtu outside 1500
+mtu outside2 1500
 failover
 failover lan unit secondary
 failover lan interface FAILOVER Redundant1
@@ -71,6 +77,8 @@ no asdm history enable
 arp timeout 14400
 no arp permit-nonconnected
 arp rate-limit 8192
+access-group LAN_EIGRP in interface outside
+access-group LAN_EIGRP in interface outside2
 timeout xlate 3:00:00
 timeout pat-xlate 0:00:30
 timeout conn 1:00:00 half-closed 0:10:00 udp 0:02:00 sctp 0:02:00 icmp 0:00:02
@@ -90,6 +98,7 @@ crypto ca trustpoint _SmartCallHome_ServerCA
  no validation-usage
  crl configure
 crypto ca trustpool policy
+ auto-import
 crypto ca certificate chain _SmartCallHome_ServerCA
  certificate ca 513fb9743870b73440418d30930699ff
     30820538 30820420 a0030201 02021051 3fb97438 70b73440 418d3093 0699ff30 
@@ -177,9 +186,20 @@ policy-map global_policy
 !
 service-policy global_policy global
 prompt hostname context 
+no call-home reporting anonymous
 call-home
  profile License
   destination address http https://tools.cisco.com/its/service/oddce/services/DDCEService
   destination transport-method http
-Cryptochecksum:78c085689d31c4b8fe8f38b8a5df1ebf
+ profile CiscoTAC-1
+  no active
+  destination address http https://tools.cisco.com/its/service/oddce/services/DDCEService
+  destination address email callhome@cisco.com
+  destination transport-method http
+  subscribe-to-alert-group diagnostic
+  subscribe-to-alert-group environment
+  subscribe-to-alert-group inventory periodic monthly
+  subscribe-to-alert-group configuration periodic monthly
+  subscribe-to-alert-group telemetry periodic daily
+Cryptochecksum:8e47cb429f9feba4846b00ad17c18ae3
 : end

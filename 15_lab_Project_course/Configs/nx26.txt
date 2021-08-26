@@ -1,8 +1,8 @@
 
 
 !Command: show running-config
-!Running configuration last done at: Tue Jul 27 19:32:30 2021
-!Time: Tue Jul 27 19:32:30 2021
+!Running configuration last done at: Thu Aug 26 20:00:47 2021
+!Time: Thu Aug 26 20:00:47 2021
 
 version 9.2(2) Bios:version  
 hostname nx26
@@ -24,6 +24,8 @@ feature vpc
 no password strength-check
 username admin password 5 $5$PDFPCF$kKThMTW6pYINooIZpW9bB.RpnTUa28kI8dvmfxj.fq9  role network-admin
 ip domain-lookup
+ip access-list GATE
+  10 permit ip any any 
 copp profile strict
 snmp-server user admin network-admin auth md5 0x9ad8aea86e4d8fdb3fd92786a0f71c60 priv 0x9ad8aea86e4d8fdb3fd92786a0f71c60 localizedkey
 rmon event 1 description FATAL(1) owner PMON@FATAL
@@ -32,7 +34,6 @@ rmon event 3 description ERROR(3) owner PMON@ERROR
 rmon event 4 description WARNING(4) owner PMON@WARNING
 rmon event 5 description INFORMATION(5) owner PMON@INFO
 
-ip route 0.0.0.0/0 172.16.8.1
 vlan 1,100,103
 vlan 100
   name R22-ASA-FAILOVER
@@ -349,6 +350,7 @@ line vty
 no feature signature-verification
 router eigrp E
   autonomous-system 1
+  router-id 0.0.0.26
   passive-interface default
   address-family ipv4 unicast
 

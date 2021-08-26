@@ -1,8 +1,8 @@
 
 
 !Command: show running-config
-!Running configuration last done at: Tue Jul 27 13:46:52 2021
-!Time: Tue Jul 27 13:46:52 2021
+!Running configuration last done at: Thu Aug 26 20:02:57 2021
+!Time: Thu Aug 26 20:02:58 2021
 
 version 9.2(2) Bios:version  
 hostname nx37
@@ -40,6 +40,8 @@ vlan 103
   name ASA-INSIDE
 vlan 105
   name R30-DMZ
+vlan 106
+  name NX37-S30
 vlan 110
   name ASA
 
@@ -50,9 +52,11 @@ vpc domain 20
 
 interface Vlan1
 
-interface Vlan105
+interface Vlan106
   no shutdown
-  ip address 172.16.4.65/28
+  ip address 172.16.4.87/28
+  ip router eigrp E
+  no ip passive-interface eigrp E
 
 interface port-channel15
   description **vPC Peer-Link**
@@ -69,7 +73,7 @@ interface Ethernet1/1
 
 interface Ethernet1/2
   description **VLAN in DMZ**
-  switchport access vlan 105
+  switchport access vlan 106
 
 interface Ethernet1/3
   no switchport
@@ -86,7 +90,6 @@ interface Ethernet1/5
   ip address 172.16.4.82/28
   ip router eigrp E
   no ip passive-interface eigrp E
-  no shutdown
 
 interface Ethernet1/6
 
@@ -96,7 +99,7 @@ interface Ethernet1/8
 
 interface Ethernet1/9
   description **VLAN in DMZ**
-  switchport access vlan 105
+  switchport access vlan 106
 
 interface Ethernet1/10
   description **vPC Peer-Link**
