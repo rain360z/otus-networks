@@ -30,6 +30,9 @@
 
 ![alert-text](Pictures/Screenshot_1.png) 
 
+Общая адресация расположана тут:  
+https://github.com/rain360z/otus-networks/blob/main/15_lab_Project_course/IPv4.md
+
 План работ:
 
 1) Настроить Доступность Сisco ASA c внешней сети
@@ -37,10 +40,7 @@
 3) Настроить NAT для доступа пользоватлей в интернет на пограничном cisco Asa 
 4) Настроить DMZ zone, провреить работу EIGRP
 5) Настроить статический NAT для DMZ zone.
-6) До филиалов организовать IPSec
-
-
-
+6) Для филиалов организовать IPSec
 
 
 ## Пункт 1.
@@ -49,14 +49,16 @@
 
  Промежуточное оборудование настроено. R7 анонсирует 8.8.8.8
 
- сбросили настройки с cisco asa
+ Cбросили настройки с cisco asa
 
 ```
 clear configure all
 ```
+
+Cisco asa работает в routed mode. Проверить это можно командо ``show firewall``
+
 ```
 
-Cisco asa работает в routed mode 
 
 interface GigabitEthernet0/1
     nameif inside
@@ -79,108 +81,58 @@ interface GigabitEthernet0/5
     ip address 46.46.46.2 255.255.255.240 
 
 ```
-__Настроим ASA Active/Standby failover__
+__Настроим ASA Active/Standby failover__  
+Принцип работы failvoer.
+Основной межсетевой экран всегда находится в активном состоянии и выполняет свою функциональную работу до тех пор, пока не выйдет из строя например или не упадет
+
+Настройка первой(primary) cisco asa
+
 
 ```
-Настройка Primary ASA
-[править]Настройка standby-адресов
-Если ASA работает в режиме routed, то надо настроить standby-адреса на интерфейсах ASA (active-адрес и standby-адрес должны быть из одной сети):
+!
+interface Redundant1
+ description LAN Failover Interface
+ member-interface GigabitEthernet0/0
+ member-interface GigabitEthernet0/3
+```
+Пара физических интерфейсов может быть объединена в один Redundant интерфейс. При работе Redundant интерфейса один из его членов в состоянии active, второй - standby
 
-ASA1(config)# interface g0/0
-ASA1(config-if)# ip address 11.0.1.1 255.255.255.0 standby 11.0.1.3
-ASA1(config)# interface g0/2
-ASA1(config-if)# ip address 192.168.1.1 255.255.255.0 standby 192.168.1.3
-Если ASA работает в режиме transparent, то надо настроить standby-адрес для управляющего интерфейса (active-адрес и standby-адрес должны быть из одной сети):
-
-ASA1(config)# ip address 192.168.25.1 255.255.255.0 standby 192.168.25.2
-[править]Настройка роли primary
-Указать, что эта ASA выполняет роль primary unit:
-
-ASA1(config)# failover lan unit primary 
-[править]Настройка failover-интерфейса
-Указать какой интерфейс будет использоваться для failover:
-
-ASA1(config)# failover lan interface <if-name> <type-number>
-Например, интерфейс g 0/2 будет выполнять роль failover-интерфейса и будет называться failover:
-
-ASA1(config)# failover lan interface failover g0/2
-Назначить active и standby IP-адреса на failover-интерфейс:
-
-ASA1(config)# failover interface ip failover 192.168.1.1 255.255.255.0 standby 192.168.1.2
-Включить интерфейс, который будет выполнять роль failover-интерфейса:
-
-ASA1(config)# interface g0/2
-ASA1(config-if)# no shut
-[править]Настройка stateful failover-интерфейса
-Если необходимо использовать stateful failover, то, кроме предыдущих настроек, необходимо настроить stateful failover-интерфейс.
-
-Указать какой интерфейс будет использоваться в качестве stateful failover-интерфейса:
-
-ASA1(config)# failover link <if-name> <type-number>
-Если, например, в качестве stateful failover-интерфейса будет использоваться failover-интерфейс, то достаточно указать имя интерфейса:
-
-ASA1(config)# failover link failover
-[править]Включение failover
-Включить failover:
-
-ASA1(config)# failover 
-Сохранить конфигурацию:
-
-ASA1(config)# wr mem
-ASA1(config)# failover key 123456
-ASA1(config)# failover lan unit primary
-ASA1(config)# sh failover
-[править]Настройка Secondary ASA
-Удалить существующую конфигурацию
-
-ASA2# write erase
-ASA2# reload
-[править]Настройка failover-интерфейса
-Указать какой интерфейс будет использоваться для failover:
-
-ASA2(config)# failover lan interface <if-name> <type-number>
-Например, интерфейс g 0/2 будет выполнять роль failover-интерфейса и будет называться failover:
-
-ASA2(config)# failover lan interface failover g0/2
-Назначить active и standby IP-адреса на failover-интерфейс (команда должна в точности повторять команду введенную на primary ASA):
-
-ASA2(config)# failover interface ip failover 192.168.1.1 255.255.255.0 standby 192.168.1.2
-Включить интерфейс, который будет выполнять роль failover-интерфейса:
-
-ASA2(config)# interface g0/2
-ASA2(config-if)# no shut
-[править]Настройка роли secondary
-Указать, что эта ASA выполняет роль secondary unit:
-
-ASA2(config)# failover lan unit secondary 
-[править]Включение failover
-Включить failover:
-
-ASA2(config)# failover 
-Сохранить конфигурацию:
-
-ASA2(config)# wr mem
-ASA2(config)# failover key 123456
-ASA2(config)# failover lan unit secondary
-ASA2(config)# sh failover
-[править]Проверка failover
-Зайти telnet, ssh или подобное
-
-Перегрузить primary ASA
-
-ASA1(config)# sh failover
-Возвращаем primary в состояние active:
-
-ASA1(config)# failover active
-Statefull failover:
-
-ASA1(config)# failover link MYFAIL
-ASA1(config)# failover polltime unit msec 500
-Проверить
+```
+failover
+failover lan unit primary
+failover lan interface FAILOVER Redundant1
+failover interface ip FAILOVER 192.168.1.1 255.255.255.0 standby 192.168.1.2
 ```
 
+Настройка второй (secondary) cisco asa
 
+```
+failover
+failover lan unit secondary
+failover lan interface FAILOVER Redundant1
+failover interface ip FAILOVER 192.168.1.1 255.255.255.0 standby 192.168.1.2
+```
 
+Failover настроили, когда будем вносить изменения в конфигурацию, они будут переноситься на standby ноду.
+
+![alert-text](Pictures/Screenshot_17.png)
+
+```
+router bgp 1
+ bgp log-neighbor-changes
+ address-family ipv4 unicast
+  neighbor 46.46.46.1 remote-as 4
+  neighbor 46.46.46.1 activate
+  neighbor 46.46.46.1 filter-list 1 out
+  neighbor 66.66.66.1 remote-as 2
+  neighbor 66.66.66.1 activate
+  neighbor 66.66.66.1 filter-list 1 out
+  network 46.46.46.0 mask 255.255.255.240
+  network 66.66.66.0 mask 255.255.255.240
+  network 100.100.100.0 mask 255.255.255.0
+  no auto-summary
+  no synchronization
+```
 
 Соседство с провайдерами установлено
 ![alert-text](Pictures/Screenshot_2.png)
@@ -189,18 +141,10 @@ ASA1(config)# failover polltime unit msec 500
 ![alert-text](Pictures/Screenshot_3.png)
 
 
-
-
 Перейдем к настройками Cisco ASA.  
-
-```
-show firewall
-```
 
 Настроим название интерфейса, уровень безопансости, ip адресс
 
-
-зона
 Списки контроля доступа (сокращенно «списки доступа» или ACL) являются методом, которым межсетевой экран ASA определяет, является ли трафик разрешенным или запрещенным. По умолчанию трафик, который проходит от более низкого к более высокому уровню безопасности, запрещен. Это можно переопределить в ACL, примененном к соответствующему интерфейсу безопасности нижнего уровня. Также ASA по умолчанию разрешает трафик от интерфейсов с более высоким к интерфейсам с более низким уровнем безопасности. Это поведение можно также переопределить в ACL.
 
 ```
@@ -238,27 +182,18 @@ interface GigabitEthernet0/5
 ```
 На Active node
 
+access-list DEF standard permit any4 
+
 router eigrp 1
     router eigrp 1
-    eigrp router-id 0.0.0.40
-    passive-interface default
-    no passive-interface inside 
-    no passive-interface inside2
+ eigrp router-id 0.0.0.40
     network 172.16.8.0 255.255.255.240
     network 172.16.8.32 255.255.255.240
+    passive-interface default
+    no passive-interface inside
+    no passive-interface inside2
+    redistribute static route-map DEF
 ```
-
-Анонсируем дефолт во внутреннюю сеть.
-
-```
-route Null0 0.0.0.0 0.0.0.0 
-
-router eigrp 1
-    network 0.0.0.0 0.0.0.0
-
-```
-
-На Cisco Asa g0/1 сделаем более приоритетным. Соответственно нужно будет на g0/2 увеличить метрику задержки. Может нужно с двух сторон задержку увеличить.
 
 На l3 switch прилетел дефолт. Доступ до сежсетевого экрана Cisco ASA есть.
 
@@ -297,20 +232,12 @@ ASAv40(config-pmap-c)#   inspect icmp
 
 Настроим PAT во внешнюю сеть.
 
-
-Будем натировать адреса в совершенно другой адрес 100.100.100.100 из сети 100.100.100.0/24.
-
-Нужно анонсировать ее в BGP и сделать маршрут в эту сеть.
-
 ```
 router bgp 1
     network 100.100.100.0 mask 255.255.255.0
 
 route Null0 100.100.100.0 255.255.255.0
-```
-``Так как у нас настроены транзитные фильтры для AS BGP. Нужно в него добавить новую сеть. ``
-```
-prefix-list BGP_OUT seq 15 permit 100.100.100.0/24
+
 ```
 
 Перейдем непосредственно к настройке NAT
@@ -318,7 +245,6 @@ prefix-list BGP_OUT seq 15 permit 100.100.100.0/24
 ```
 object network inside_lan
     subnet 10.0.0.0 255.255.255.0
-    nat (inside)
 
 object network outside_lan
     host 100.100.100.100
@@ -391,7 +317,7 @@ same-security-traffic permit inter-interface
 В данный момент мултикаст фильруется.
 ![alert-text](Pictures/Screenshot_12.png)
 
-Сделаем ACL на все интерфейсы для поднятия соседства между R30/NXOS36/NXOS37.
+Сделаем ACL на все интерфейсы для поднятия EIGRP соседства.
 ```
 access-list LAN_EIGRP line 1 extended permit eigrp 172.16.4.64 255.255.255.240 172.16.4.64 255.255.255.240 
 access-list LAN_EIGRP line 3 extended permit eigrp 172.16.4.80 255.255.255.240 172.16.4.80 255.255.255.240 
@@ -412,7 +338,7 @@ access-group LAN_EIGRP outside2
 
 ![alert-text](Pictures/Screenshot_15.png)
 
-__Пункт 5.__
+## __Пункт 5.__
 
 Настроить статический NAT для DMZ zone.
 
@@ -450,3 +376,15 @@ access-group OUTSIDE_DMZ_TELNET in interface outside2
 _________________________
 
 Сохраним конфигурацию
+
+
+## Вывод и планы по развитию
+
+Выводы:  
++ В данный работе мы организовали коркас высоконадежной безопасной корпоративной сети. В дальнейшем можно ее развивать, не мешая сотрудникам компании выполнять свои фунции.  
++ Не удалось настроить DMVPN. Можно настроить DMVPN поверх IPSec   static NAT на cisco ASA настроить исопользуя как hub NXOS26/NXOS25 или эти два маршрутизатора добавить в AS 1 используя iBGP. 
+Планы по развитию:
++ Настроить управление сетью используя VRF или паралелльную сеть
++ Внедрить сервис по сбору логов, настроить NTP
++ Вместо ASA Active/Standby failover настроить ASA Cluster используя cisco nexus 9000
+
