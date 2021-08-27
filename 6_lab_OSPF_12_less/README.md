@@ -24,7 +24,7 @@
 ### 1. Настроить OSPF IPv4   
 
 СХЕМА  
-![](https://github.com/rain360z/otus-networks/blob/main/11_lab/Pictures/Screenshot_1.png)
+![](Pictures/Screenshot_1.png)
 
 Настроим работу OSPF на всех маршрутизаторах в сети
 
@@ -77,19 +77,19 @@ R14(config-if)# ip ospf network point-to-point
 
 Проверим в LSDB каждой AREA Router Link States.
 AREA 0 
-![](https://github.com/rain360z/otus-networks/blob/main/11_lab/Pictures/Screenshot_2.png)
+![](Pictures/Screenshot_2.png)
 
 AREA 101  
 
-![](https://github.com/rain360z/otus-networks/blob/main/11_lab/Pictures/Screenshot_3.png)
+![](Pictures/Screenshot_3.png)
 
 AREA 102  
 
-![](https://github.com/rain360z/otus-networks/blob/main/11_lab/Pictures/Screenshot_4.png)  
+![](Pictures/Screenshot_4.png)  
 
 AREA 10  
 
-![](https://github.com/rain360z/otus-networks/blob/main/11_lab/Pictures/Screenshot_5.png)
+![](Pictures/Screenshot_5.png)
 
 ### 1.1 Поставить фильтр на AREA 101, маршрутизаторы получают только маршрут по умолчанию.
 
@@ -97,7 +97,7 @@ AREA 10
 
 Посмотирм текущие маршруты в AREA 101
 
-![](https://github.com/rain360z/otus-networks/blob/main/11_lab/Pictures/Screenshot_6.png)
+![](Pictures/Screenshot_6.png)
 
 После настройки зоны должны остаться присоединенные сети и Default route
 
@@ -115,7 +115,7 @@ ABR
 
 Посмотрим маршруты на R19 
 
-![](https://github.com/rain360z/otus-networks/blob/main/11_lab/Pictures/Screenshot_7.png)  
+![](Pictures/Screenshot_7.png)  
 
 Все файлы изменений приведены [здесь](configs/).   
 
@@ -125,7 +125,7 @@ ABR
 
 Проверим текущие маршруты в AREA 102
 
-![](https://github.com/rain360z/otus-networks/blob/main/11_lab/Pictures/Screenshot_8.png) 
+![](Pictures/Screenshot_8.png) 
 
 Необходимо добавить фильтр на ABR граничащие с зоной 102
 
@@ -142,7 +142,7 @@ ABR
 
 Проверим текущие маршруты в AREA 102
 
-![](https://github.com/rain360z/otus-networks/blob/main/11_lab/Pictures/Screenshot_9.png)
+![](Pictures/Screenshot_9.png)
 
 видим что в таблице маршрутизации из других зон нету сетей из AREA 101
 
@@ -165,24 +165,24 @@ ABR
 
 Area 101
 
-![](https://github.com/rain360z/otus-networks/blob/main/11_lab/Pictures/Screenshot_10.png)
+![](Pictures/Screenshot_10.png)
 
 
 AREA 0 
 
-![](https://github.com/rain360z/otus-networks/blob/main/11_lab/Pictures/Screenshot_11.png)
+![](Pictures/Screenshot_11.png)
 
 AREA 102  
 
-![](https://github.com/rain360z/otus-networks/blob/main/11_lab/Pictures/Screenshot_12.png)
+![](Pictures/Screenshot_12.png)
 
-![](https://github.com/rain360z/otus-networks/blob/main/11_lab/Pictures/Screenshot_13.png)
+![](Pictures/Screenshot_13.png)
 
 Настроим Total stub Area 101
 
 Настройки аналогичные с ipv4
 
-![](https://github.com/rain360z/otus-networks/blob/main/11_lab/Pictures/Screenshot_14.png)
+![](Pictures/Screenshot_14.png)
 
 
 Настроим фильтр на зоне 102
@@ -192,12 +192,12 @@ R15(config)# ipv6 prefix-list non101 seq 4 deny 1:1:1:1::/64
 R15(config)# ipv6 prefix-list non101 seq 5 deny 1:1:1:15::/64
 R15(config-rtr)# area 102 filter-list prefix non101 in
 ```
-![](https://github.com/rain360z/otus-networks/blob/main/11_lab/Pictures/Screenshot_16.png)
+![](Pictures/Screenshot_16.png)
 
 
 Исходя из таблица маршрутизации, у нас вместе с AREA 101 пропали маршруты и AREA 0
 
-![](https://github.com/rain360z/otus-networks/blob/main/11_lab/Pictures/Screenshot_15.png)
+![](Pictures/Screenshot_15.png)
 
 Настройка ospf ipv6 закончена.  
 
@@ -207,15 +207,15 @@ R15(config-rtr)# area 102 filter-list prefix non101 in
 
 1) В AREA 101 пропали маршруты и AREA 0  
 
-![](https://github.com/rain360z/otus-networks/blob/main/11_lab/Pictures/Screenshot_15.png)   
+![](Pictures/Screenshot_15.png)   
 
 R15 
 
-![](https://github.com/rain360z/otus-networks/blob/main/11_lab/Pictures/Screenshot_23.png)  
+![](Pictures/Screenshot_23.png)  
    
 R13  
 
-![](https://github.com/rain360z/otus-networks/blob/main/11_lab/Pictures/Screenshot_24.png) 
+![](Pictures/Screenshot_24.png) 
 
 
 2) Не работает маршрутизация на L3 коммутаторах 
@@ -223,31 +223,31 @@ R13
 
 Проверка доступности SW4 (10.127.255.177) c узла 10.0.0.10  
 
-![](https://github.com/rain360z/otus-networks/blob/main/11_lab/Pictures/Screenshot_17.png)   
+![](Pictures/Screenshot_17.png)   
  
 Настройки VPCs   
 
-![](https://github.com/rain360z/otus-networks/blob/main/11_lab/Pictures/Screenshot_19.png)
+![](Pictures/Screenshot_19.png)
 
 Настройки SW3  
 
-![](https://github.com/rain360z/otus-networks/blob/main/11_lab/Pictures/Screenshot_20.png)
+![](Pictures/Screenshot_20.png)
 
 С SW3 доступ до маршрутизатора доступ есть
 
-![](https://github.com/rain360z/otus-networks/blob/main/11_lab/Pictures/Screenshot_18.png)
+![](Pictures/Screenshot_18.png)
 
 проверка достпуа с VPCs:      
 + SW3: SVI-10.0.0.1
 + SW3: e0/1-10.127.255.194
 + SW4: e0/0-10.127.255.161  
 
-![](https://github.com/rain360z/otus-networks/blob/main/11_lab/Pictures/Screenshot_21.png)  
+![](Pictures/Screenshot_21.png)  
   
 trace SW4: e0/1 10.127.255.177  
 
 
-![](https://github.com/rain360z/otus-networks/blob/main/11_lab/Pictures/Screenshot_22.png)
+![](Pictures/Screenshot_22.png)
 
 
 
