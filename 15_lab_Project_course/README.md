@@ -30,7 +30,7 @@
 
 ![alert-text](Pictures/Screenshot_1.png) 
 
-Общая адресация расположана тут:  
+Общая адресация расположена тут:  
 https://github.com/rain360z/otus-networks/blob/main/15_lab_Project_course/IPv4.md
 
 План работ:
