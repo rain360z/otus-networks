@@ -34,7 +34,7 @@
 #### Часть 1. Постройка стенда сети и базовая настройка устройств.
 
 ### Соберем стенд как указанно в задании. 
-![alert text](https://github.com/rain360z/otus-networks/blob/main/2_lab/pictures/1.JPG)
+![alert text](pictures/1.JPG)
 
 #### Конфигурируем базовые настройки на оборудовании:
 

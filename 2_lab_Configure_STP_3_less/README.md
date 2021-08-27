@@ -12,7 +12,7 @@
 из приоритета портов](https://github.com/rain360z/otus-networks/tree/main/3_lab#%D1%87%D0%B0%D1%81%D1%82%D1%8C-4%D0%BD%D0%B0%D0%B1%D0%BB%D1%8E%D0%B4%D0%B5%D0%BD%D0%B8%D0%B5-%D0%B7%D0%B0-%D0%BF%D1%80%D0%BE%D1%86%D0%B5%D1%81%D1%81%D0%BE%D0%BC-%D0%B2%D1%8B%D0%B1%D0%BE%D1%80%D0%B0-%D0%BF%D1%80%D0%BE%D1%82%D0%BE%D0%BA%D0%BE%D0%BB%D0%BE%D0%BC-stp-%D0%BF%D0%BE%D1%80%D1%82%D0%B0-%D0%B8%D1%81%D1%85%D0%BE%D0%B4%D1%8F-%D0%B8%D0%B7-%D0%BF%D1%80%D0%B8%D0%BE%D1%80%D0%B8%D1%82%D0%B5%D1%82%D0%B0-%D0%BF%D0%BE%D1%80%D1%82%D0%BE%D0%B2)
 
 
-![alt text](https://github.com/rain360z/otus-networks/blob/main/3_lab/pictures/1.JPG)
+![alt text](pictures/1.JPG)
 
 Топология
 
@@ -40,16 +40,16 @@ S1(config-line)#logging synchronous
 
 Проверим связь между коммутатором S1 и S2?
 
-![alt text](https://github.com/rain360z/otus-networks/blob/main/3_lab/pictures/3.PNG)
+![alt text](pictures/3.png)
 
 Проверим связь между коммутатором S1 и S3?  
 
 
-![alt text](https://github.com/rain360z/otus-networks/blob/main/3_lab/pictures/3.PNG)  
+![alt text](pictures/3.PNG)  
 Проверим связь между коммутатором S2 и S3?  
 
 
-![alt text](https://github.com/rain360z/otus-networks/blob/main/3_lab/pictures/4.PNG)
+![alt text](pictures/4.PNG)
 #### Часть 2. Выбер корневого моста
 
 Отключим все порты кроме F0/2 и F0/4,данные порты настроим в качестве транковых и отобразим данные протокола spanning-tree.
@@ -57,17 +57,17 @@ S1(config-line)#logging synchronous
 
 Коммутатор S1   
 
-![alt text](https://github.com/rain360z/otus-networks/blob/main/3_lab/pictures/5.PNG)
+![alt text](pictures/5.PNG)
 
 Коммутатор S2   
-![alt text](https://github.com/rain360z/otus-networks/blob/main/3_lab/pictures/6.PNG)
+![alt text](pictures/6.PNG)
 
 Коммутатор S3  
-![alt text](https://github.com/rain360z/otus-networks/blob/main/3_lab/pictures/7.PNG)
+![alt text](pictures/7.PNG)
 
 Приоритеты у всех коммутаторов одинаковые. Корневой мост будет выбираться на основании MAC-адресов. 
 В нашем случае корневой мост S1  
-![alt text](https://github.com/rain360z/otus-networks/blob/main/3_lab/pictures/8.PNG)
+![alt text](pictures/8.PNG)
 
 Определим роли и состояние активных портов на каждом коммутаторе
 
@@ -106,9 +106,9 @@ STA выбирает какие порты будут заблокированы
 
 Изменим стоимость порта на S3
 
-![alt text](https://github.com/rain360z/otus-networks/blob/main/3_lab/pictures/10.PNG)
-![alt text](https://github.com/rain360z/otus-networks/blob/main/3_lab/pictures/11.PNG)
-![alt text](https://github.com/rain360z/otus-networks/blob/main/3_lab/pictures/12.PNG)
+![alt text](pictures/10.PNG)
+![alt text](pictures/11.PNG)
+![alt text](pictures/12.PNG)
 
 Почему протокол spanning-tree заменяет ранее заблокированный порт на назначенный порт и блокирует порт, который был назначенным портом на другом коммутаторе?
 + Потому что пересчиталась стоимость до корневого порта на S2 и S3. И на S3 заблокированном порту стоимость стала меньше, чем на S2 и роль порта стала Desg.
