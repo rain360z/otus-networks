@@ -8,6 +8,8 @@
 
 GRE tunnel будем использовать между R15 и R18 на loopback интерфейсах.
 
+![](Pictures/Screenshot_13.png)
+
 План:
 1) Выбрать адресацию  
 2) Настроить Loopback    
@@ -130,11 +132,11 @@ router eigrp E
 
 1. Используем 2 Фазу
 
-В дальнейшем будет настроен 2 Hub
+Будем использовать архитектуру сети DualHub,Single cloud, чтобы сделать резервирование HUB. Т.к не у всех филиалов, есть 2 провайдера.
 
 ![](Pictures/Screenshot_4.png)
 
-
+![](Pictures/Screenshot_13.png)
 
 2. Адресация
 
@@ -180,6 +182,28 @@ interface tunnel100
     ip nhrp network-id 100
     ip nhrp map multicast dynamic
     tunnel source loopback100
+```
+
+R14
+
+```
+interface loopback 100
+    ip address 5.5.5.101 255.255.255.255
+    no sh
+    exit
+interface tunnel100
+    tunnel mode gre multipoint
+    ip address 172.31.1.2 255.255.255.0
+    ip mtu 1400
+    ip tcp adjust-mss 1360
+    ip nhrp network-id 100
+    ip nhrp map multicast dynamic
+    tunnel source loopback100
+    ip nhrp map 172.31.1.1 5.5.5.100
+    ip nhrp map multicast 5.5.5.100
+    ip nhrp nhs 172.31.1.1
+    
+
 
 ```
 
@@ -193,8 +217,11 @@ interface tunnel100
     ip tcp adjust-mss 1360
     ip nhrp network-id 100
     ip nhrp map 172.31.1.1 5.5.5.100
+    ip nhrp map 172.31.1.2 5.5.5.101
     ip nhrp map multicast 5.5.5.100
+    ip nhrp map multicast 5.5.5.101
     ip nhrp nhs 172.31.1.1
+    ip nhrp nhs 172.31.1.2
     tunnel source Ethernet0/1
 ```
 R27
@@ -265,6 +292,7 @@ ip access-list standard OSPF-DMVPN
 
 route-map OSPF-DMVPN permit 10
  match ip address OSPF-DMVPN
+ set metric 1000000 1 255 1 1500
 ```
 R28
 
@@ -354,4 +382,10 @@ ip access-list standard OSPF-DMVPN
 
 Доступ из сети пользователей в Москве до сети в Лабытанге есть. У других тоже
 
-![](Pictures/Screenshot_11.png) 
+![](Pictures/Screenshot_11.png)
+
+Выключим R15(HUB) проверим отказоустойчивость.  
+
+При выходе из строя HUB r15 2 HUB обеспечит нам отказоустойчивость.
+
+![](Pictures/Screenshot_14.png)
