@@ -1,6 +1,6 @@
 # DesignNetworkDataCenter
 
-Лабораторная работа 1.
+Лабораторная работа 1.  
 Цель:
 - Собрать схему CLOS;
 - Распределить адресное пространство;
@@ -83,7 +83,7 @@ username admin password [password]
 
 
 
-### cisco C3275
+### Cisco C3275
 
 
 ```
@@ -126,7 +126,7 @@ no shutdown
 ```  
 
 
-### cisco C3275
+### Cisco C3275
 
 ```
 interface [EthernetX/X]
