@@ -88,11 +88,11 @@ crypto dynamic-map DMAP 1
 crypto map CMAP 10 ipsec-isakmp dynamic DMAP
 
 interface FastEthernet0/0
- ip address 1.1.1.2 255.255.255.252
+ ip address 2.2.2.2 255.255.255.252
  crypto map CMAP
 !
 interface FastEthernet0/1
- ip address 192.168.1.1 255.255.255.0
+ ip address 192.168.2.1 255.255.255.0
 !
 interface Tunnel1
  ip address 10.0.0.2 255.255.255.0
