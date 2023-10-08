@@ -7,7 +7,7 @@
 
 
 План работ:
-1) Адресное пространство, настройку оборудования используем из первой лабы. Предварительно клонируем проект лабораторной работы 1. 
+1) Адресное пространство, настройку оборудования используем из второй лабораторной. Предварительно клонируем проект лабораторной работы 2. 
 2) Внесём изменения в схему: 
  - Если это необходимо добавить зоны.
  - укажем Router ID
@@ -72,21 +72,26 @@ is-type level-1
 
 interface e1/[x]
 ip router isis Underlay
-authentication-type md5 level-1
-authentication key-chain [key] level-1
-
 ```
 
-authentication-type md5 level-1
-authentication key-chain isis level-1
+Настроим BFD
 
+```
+feature bfd
+bfd ipv4 interval 100 min_rx 100 multiplier 3
+router isis [process-id]
+bfd
+int e[x/y]
+no ip redirects
 
 
 ## 4 Проверка работоспособности.
 
 Проверим установилось ли соседство у Spine с Leaf
 
-```show isis adjacency```
+```
+show isis adjacency
+```
 
 ![alt text](lab3_2.drawio.png)
 
