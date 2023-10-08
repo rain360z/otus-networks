@@ -96,7 +96,7 @@ show isis adjacency
 
 ![alt text](lab3_2.drawio.png)
 
-Посмотрим маршруты полученные по процессом isis-Underlay
+Посмотрим маршруты полученные процессом isis-Underlay
 
 ```
 show ip route  isis-Underlay
