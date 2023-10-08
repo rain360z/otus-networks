@@ -46,6 +46,14 @@ AFI 49
 Номер зоны 0010  
 SysID - адрес loopback 2.2.2.1 - SysID:0002.0002.0201
 
+| Hostname | NET                     |
+|----------|-------------------------|
+|S-NX9500_1|49.0010.0002.0002.0201.00|
+|S-NX9500_2|49.0010.0002.0002.0202.00|
+|L-NX9500_1|49.0010.0001.0001.0101.00|
+|L-NX9500_2|49.0010.0001.0001.0102.00|
+|L-NX9500_3|49.0010.0001.0001.0103.00|
+
 ![alt text](lab3_1.drawio.png)
 
 ## 3 Включим ISIS, сконфигурируем оборудование.
@@ -56,11 +64,41 @@ SysID - адрес loopback 2.2.2.1 - SysID:0002.0002.0201
 feature isis
 
 router isis Underlay
-net 47.[xxxx.xxxx.xxxx].00
+net 49.0010[xxxx.xxxx.xxxx].00
 address-family ipv4 unicast
 log-adjacency-changes
-
 is-type level-1
+
+
+interface e1/[x]
+ip router isis Underlay
+authentication-type md5 level-1
+authentication key-chain [key] level-1
+
 ```
 
+authentication-type md5 level-1
+authentication key-chain isis level-1
+
+
+
 ## 4 Проверка работоспособности.
+
+Проверим установилось ли соседство у Spine с Leaf
+
+```show isis adjacency```
+
+![alt text](lab3_2.drawio.png)
+
+Посмотрим маршруты полученные по процессом isis-Underlay
+
+```
+show ip route  isis-Underlay
+```
+![alt text](lab3_3.drawio.png)
+
+Проверим доступность доступность хостом с помощью утилиты ping 
+
+![alt text](lab3_4.drawio.png)
+
+
