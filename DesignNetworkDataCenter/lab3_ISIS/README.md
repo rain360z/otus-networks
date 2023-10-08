@@ -103,7 +103,7 @@ show ip route  isis-Underlay
 ```
 ![alt text](lab3_3.drawio.png)
 
-Проверим доступность доступность хостом с помощью утилиты ping 
+Проверим доступность хостом с помощью утилиты ping 
 
 ![alt text](lab3_4.drawio.png)
 
