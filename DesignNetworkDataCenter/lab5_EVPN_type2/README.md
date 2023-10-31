@@ -53,51 +53,66 @@
 |L-NX9500_3|65003  |1.1.1.3          |100.111.111.3  |
 
 
-
+![alt-text](img_3.png)
 
 
 ## 3 Сконфигурируем оборудование.
 
+Кратко, что нужно настроить на LEAF(VTEP):
+
+1) Включить VXLAN и EVPN
+2) Настроим VLAN и VXLAN VNI  
++ Приявзка vlan к vni
++ Укажем принцип формирования RD для уникальности MAC и параметрты RT для импорта/экспорта MAC VRF
+3) Создадим NVE интерфейса для инкапсуляции VLAN в VXLAN
++ Укажем какой протокол будет использовать для анонсов MAC адресов.
++ Указать протокол обмена BUM трафиком
+4) Настром BGP на VTEP
++ Сконфигурируем address family l2 vpn evpn.
++ укажем возможность раширенной отправки comunity и функцию перезаписи RT. 
+
 
 Настройка на LEAF
+
 ```
-## Enable Function
+## Включить VXLAN и EVPN
 feature vn-segment-vlan-based
 feature nv overlay
 nv overlay evpn
 !
 
-router bgp 65001
-router-id 1.1.1.1
-timers bgp 3 9
-bestpath as-path multipath-relax
-reconnect-interval 10
-log-neighbor-changes
-address-family l2vpn evpn
-maximum-paths 10
- 
-
- template peer SPINES
-bfd
-remote-as 65999
-update-source loopback0
-ebgp-multihop 2
-timers 3 9
-address-family l2vpn evpn
-send-community
-send-community extended
-rewrite-evpn-rt-asn
-neighbor 4.4.4.4
-inherit peer SPINES
+router bgp [number-asn]
+  router-id [x.y.z.w]
+  timers bgp 3 9
+  bestpath as-path multipath-relax
+  reconnect-interval 10
+  log-neighbor-changes
+  address-family l2vpn evpn
+    maximum-paths 10
+  template peer SPINES
+    bfd
+    remote-as [number-AS]
+    update-source loopback [number]
+    ebgp-multihop 5
+    timers 3 9
+    address-family l2vpn evpn
+      send-community
+      send-community extended
+      rewrite-evpn-rt-asn
+  neighbor [adress]
+    inherit peer SPINES
+  neighbor [adress]
+    inherit peer SPINES
 
 
 # Mapping VLAN to VXLAN VNI
-vlan 10
-name VLAN_10
-vn-segment 10010
+
+vlan [number_vlan]
+name [name_bvan]
+vn-segment [number-vni]
 !
 evpn
-vni 10010l2
+vni [number-vni]
 rd auto
 route-target import auto
 route-target export auto
@@ -113,40 +128,67 @@ ingress-replication protocol bgp
 
 SPINE 
 
+Кратко, что нужно настроить на SPINE:
+
+1) Включить возможнолсть EVPN в качестве contral plane для VXLAN
+2) Настройка BGP для EVPN на SPENE
++ Настроим route map для сохранения next hop
++ Сконфигурируем address family l2 vpn evpn.
++ Укажем что нужно сохранять/не удалять RT для l2vpn, про который не знает SPINE
++ При автоматическом назначение RT, перезаписывать RT ASN
+
+
 ```
 nv overlay evpn
 !
 route-map NH_UNCHANGED permit 10
 set ip next-hop unchanged
 !
-router bgp 65999
-router-id 4.4.4.4
-timers bgp 3 9
-reconnect-interval 10
-log-neighbor-changes
-address-family l2vpn evpn
-maximum-paths 10
-retain route-target all
+router bgp [number-asn]
+  router-id [x.y.z.w]
+  timers bgp 3 9
+  reconnect-interval 12
+  log-neighbor-changes
+  address-family l2vpn evpn
+    maximum-paths 10
+    retain route-target all
+  neighbor [adress]
+    remote-as 65001
+    update-source loopback0
+    ebgp-multihop 5
+    address-family l2vpn evpn
+      send-community
+      send-community extended
+      route-map NH_UNCHANGED out
+      rewrite-evpn-rt-asn
+  neighbor [adress]
+    remote-as 65003
+    update-source loopback0
+    ebgp-multihop 5
+    address-family l2vpn evpn
+      send-community
+      send-community extended
+      route-map NH_UNCHANGED out
+      rewrite-evpn-rt-asn
 
-
-router bgp 65999
-neighbor 1.1.1.1
-remote-as 65001
-update-source loopback0
-ebgp-multihop 5
-address-family l2vpn evpn
-send-community
-send-community extended
-rewrite-evpn-rt-asn
-route-map NH_UNCHANGED out
-```
-
-```
-show mac address-table static interface nve 1
 ```
 
 ## 4 Проверка работоспособности.
 
+Пустим пинг с HOST_1_3=>HOST_3_1
+Поднялся туннель Между VTEP
 
+![alt-text](img_2.png)
+
+![alt-text](img_4.png)
+
+Проверим l2 маршрутнюую инормацию
+
+```
+show l2route evpn mac all
+```
+
+
+![alt-text](img_1.png)
 
 

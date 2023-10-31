@@ -1,10 +1,4 @@
-L-NX9300_1(config)# show run
 
-!Command: show running-config
-!Running configuration last done at: Mon Oct  2 19:52:16 2023
-!Time: Mon Oct  2 20:20:10 2023
-
-version 9.3(10) Bios:version
 hostname L-NX9300_1
 vdc L-NX9300_1 id 1
   limit-resource vlan minimum 16 maximum 4094
