@@ -61,14 +61,14 @@
 Кратко, что нужно настроить на LEAF(VTEP):
 
 1) Включить VXLAN и EVPN
-2) Настроим VLAN и VXLAN VNI  
+2) Настроить VLAN и VXLAN VNI  
 + Приявзка vlan к vni
 + Укажем принцип формирования RD для уникальности MAC и параметрты RT для импорта/экспорта MAC VRF
 3) Создадим NVE интерфейса для инкапсуляции VLAN в VXLAN
 + Укажем какой протокол будет использовать для анонсов MAC адресов.
 + Указать протокол обмена BUM трафиком
 4) Настром BGP на VTEP
-+ Сконфигурируем address family l2 vpn evpn.
++ В address family l2 vpn evpn укажем соседей eBGP
 + укажем возможность раширенной отправки comunity и функцию перезаписи RT. 
 
 
@@ -133,8 +133,8 @@ SPINE
 1) Включить возможнолсть EVPN в качестве contral plane для VXLAN
 2) Настройка BGP для EVPN на SPENE
 + Настроим route map для сохранения next hop
-+ Сконфигурируем address family l2 vpn evpn.
-+ Укажем что нужно сохранять/не удалять RT для l2vpn, про который не знает SPINE
++ В address family l2 vpn evpn укажем соседей eBGP
++ укажем возможность раширенной отправки comunity
 + При автоматическом назначение RT, перезаписывать RT ASN
 
 
@@ -162,7 +162,7 @@ router bgp [number-asn]
       route-map NH_UNCHANGED out
       rewrite-evpn-rt-asn
   neighbor [adress]
-    remote-as 65003
+    remote-as [number-AS]
     update-source loopback0
     ebgp-multihop 5
     address-family l2vpn evpn
