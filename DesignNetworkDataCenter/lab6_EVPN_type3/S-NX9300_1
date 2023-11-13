@@ -1,4 +1,3 @@
-version 9.3(10) Bios:version
 hostname S-NX9300_1
 vdc S-NX9300_1 id 1
   limit-resource vlan minimum 16 maximum 4094
@@ -30,7 +29,6 @@ rmon event 5 log trap public description INFORMATION(5) owner PMON@INFO
 
 vlan 1
 
-ip prefix-list network seq 10 permit 2.2.2.1/32
 route-map LEAF permit 10
   match as-number 65001-65003
 route-map NH_UNCHANGED permit 10
@@ -196,9 +194,6 @@ interface loopback0
   ip address 2.2.2.1/32
   ip router ospf 10 area 0.0.0.0
 
-interface loopback1
-  ip router ospf 10 area 0.0.0.0
-
 interface loopback100
   ip address 100.122.122.1/32
   ip router ospf 10 area 0.0.0.0
@@ -220,21 +215,20 @@ router bgp 64601
   address-family l2vpn evpn
     maximum-paths 10
     retain route-target all
+  template peer LEAF
+    update-source loopback0
+    ebgp-multihop 5
+    address-family l2vpn evpn
+      send-community
+      send-community extended
+      route-map NH_UNCHANGED out
+      rewrite-evpn-rt-asn
   neighbor 1.1.1.1
+    inherit peer LEAF
     remote-as 65001
-    update-source loopback0
-    ebgp-multihop 5
-    address-family l2vpn evpn
-      send-community
-      send-community extended
-      route-map NH_UNCHANGED out
-      rewrite-evpn-rt-asn
+  neighbor 1.1.1.2
+    inherit peer LEAF
+    remote-as 65002
   neighbor 1.1.1.3
+    inherit peer LEAF
     remote-as 65003
-    update-source loopback0
-    ebgp-multihop 5
-    address-family l2vpn evpn
-      send-community
-      send-community extended
-      route-map NH_UNCHANGED out
-      rewrite-evpn-rt-asn

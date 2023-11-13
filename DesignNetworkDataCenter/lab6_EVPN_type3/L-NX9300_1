@@ -1,4 +1,4 @@
-version 9.3(10) Bios:version
+
 hostname L-NX9300_1
 vdc L-NX9300_1 id 1
   limit-resource vlan minimum 16 maximum 4094
@@ -12,6 +12,7 @@ vdc L-NX9300_1 id 1
 nv overlay evpn
 feature ospf
 feature bgp
+feature interface-vlan
 feature vn-segment-vlan-based
 feature bfd
 feature nv overlay
@@ -28,19 +29,54 @@ rmon event 3 log trap public description ERROR(3) owner PMON@ERROR
 rmon event 4 log trap public description WARNING(4) owner PMON@WARNING
 rmon event 5 log trap public description INFORMATION(5) owner PMON@INFO
 
-vlan 1,10
+fabric forwarding anycast-gateway-mac 0000.0000.0001
+vlan 1,10-11,1111
 vlan 10
   name VLAN_10
-  vn-segment 10010
+  vn-segment 100010
+vlan 11
+  name VLAN_11
+  vn-segment 100011
+vlan 1111
+  name L3_VNI
+  vn-segment 101111
 
+vrf context OTUS
+  vni 101111
+  rd auto
+  address-family ipv4 unicast
+    route-target both auto
+    route-target both auto evpn
 vrf context management
+
+interface Vlan1
+
+interface Vlan10
+  no shutdown
+  vrf member OTUS
+  ip address 10.0.10.1/24
+  fabric forwarding mode anycast-gateway
+
+interface Vlan11
+  no shutdown
+  vrf member OTUS
+  ip address 10.0.11.1/24
+  fabric forwarding mode anycast-gateway
+
+interface Vlan1111
+  no shutdown
+  vrf member OTUS
+  ip forward
 
 interface nve1
   no shutdown
   host-reachability protocol bgp
   source-interface loopback100
-  member vni 10010
+  member vni 100010
     ingress-replication protocol bgp
+  member vni 100011
+    ingress-replication protocol bgp
+  member vni 101111 associate-vrf
 
 interface Ethernet1/1
   no switchport
@@ -68,7 +104,7 @@ interface Ethernet1/3
   duplex full
 
 interface Ethernet1/4
-  switchport access vlan 10
+  switchport access vlan 11
   speed 1000
   duplex full
 
@@ -235,7 +271,13 @@ router bgp 65001
   neighbor 2.2.2.2
     inherit peer SPINES
 evpn
-  vni 10010 l2
+  vni 100010 l2
     rd auto
     route-target import auto
     route-target export auto
+  vni 100011 l2
+    rd auto
+    route-target import auto
+    route-target export auto
+
+no logging console
