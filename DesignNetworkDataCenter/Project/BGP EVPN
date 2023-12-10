@@ -1,0 +1,379 @@
+Настройка на LEAF
+
+C1-P2-L-NX9500_2
+
+```
+## Включить VXLAN и EVPN
+nv overlay evpn
+feature ospf
+feature bgp
+feature vn-segment-vlan-based
+feature bfd
+feature nv overlay
+feature interface-vlan
+!
+
+interface loopback100
+  ip address 100.1.2.1/32
+  ip router ospf 10 area 1
+  
+router bgp 65007
+  router-id 1.1.2.1
+  timers bgp 3 9
+  bestpath as-path multipath-relax
+  reconnect-interval 10
+  log-neighbor-changes
+  address-family l2vpn evpn
+    maximum-paths 10
+  template peer SPINES
+    bfd
+    remote-as 64801
+    update-source loopback 0
+    ebgp-multihop 5
+    timers 3 9
+    address-family l2vpn evpn
+      send-community
+      send-community extended
+      rewrite-evpn-rt-asn
+  neighbor 2.1.2.2
+    inherit peer SPINES
+  evpn
+    vni 555555 l2
+    rd auto
+    route-target import auto
+    route-target export auto
+VLAN 55
+  name VLAN55
+  vn-segment 555555
+	
+VLAN 1111
+  name L3_VNI
+  vn-segment 101111
+ 
+ Interface Vlan 1111
+  no shutdown
+  vrf member OTUS
+  ip forward 
+  
+
+vrf context OTUS
+vni 101111
+rd auto
+address-family ipv4 unicast
+  route-target import 65007:101111
+  route-target export 65007:101111
+  route-target import 65007:555555 evpn
+  route-target export 65007:555555 evpn
+  
+
+
+fabric forwarding anycast-gateway-mac 0000.0000.0001
+
+interface Vlan10
+no shutdown
+vrf member OTUS
+ip address 55.55.55.1/24
+fabric forwarding mode anycast-gateway
+
+interface nve1
+no shutdown
+host-reachability protocol bgp
+source-interface loopback100
+member vni 555555
+ingress-replication protocol bgp
+member vni 101111 associate-vrf
+
+### C1_P2_BL-NX9300_1
+########################################
+
+interface loopback100
+  ip address 100.1.2.2/32
+  ip router ospf 10 area 1
+
+nv overlay evpn
+feature ospf
+feature bgp
+feature vn-segment-vlan-based
+feature bfd
+feature nv overlay
+feature interface-vlan
+!
+router bgp 65008
+  router-id 1.1.2.2
+  timers bgp 3 9
+  bestpath as-path multipath-relax
+  reconnect-interval 10
+  log-neighbor-changes
+  address-family l2vpn evpn
+    maximum-paths 10
+  template peer SPINES
+    bfd
+    remote-as 64801
+    update-source loopback 0
+    ebgp-multihop 5
+    timers 3 9
+    address-family l2vpn evpn
+      send-community
+      send-community extended
+      rewrite-evpn-rt-asn
+  neighbor 2.1.2.2
+    inherit peer SPINES
+
+VLAN 1111
+  name L3_VNI
+  vn-segment 101111
+ 
+ Interface Vlan 1111
+  no shutdown
+  vrf member OTUS
+  ip forward 
+  
+vrf context OTUS
+vni 101111
+rd auto
+address-family ipv4 unicast
+  route-target import 65008:101111
+  route-target export 65008:101111
+  
+
+fabric forwarding anycast-gateway-mac 0000.0000.0001
+
+interface nve1
+no shutdown
+host-reachability protocol bgp
+source-interface loopback100
+member vni 101111 associate-vrf
+
+### C2_P2_BL-NX9300_2
+########################################
+
+interface loopback100
+  ip address 100.1.2.2/32
+  ip router ospf 10 area 1
+
+nv overlay evpn
+feature ospf
+feature bgp
+feature vn-segment-vlan-based
+feature bfd
+feature nv overlay
+feature interface-vlan
+!
+router bgp 65135
+  router-id 1.2.2.2
+  timers bgp 3 9
+  bestpath as-path multipath-relax
+  reconnect-interval 10
+  log-neighbor-changes
+  address-family l2vpn evpn
+    maximum-paths 10
+  template peer SPINES
+    bfd
+    remote-as 64851
+    update-source loopback 0
+    ebgp-multihop 5
+    timers 3 9
+    address-family l2vpn evpn
+      send-community
+      send-community extended
+      rewrite-evpn-rt-asn
+  neighbor 2.2.2.2
+    inherit peer SPINES
+
+VLAN 1111
+  name L3_VNI
+  vn-segment 101111
+ 
+ Interface Vlan 1111
+  no shutdown
+  vrf member OTUS
+  ip forward 
+  
+vrf context OTUS
+vni 101111
+rd auto
+address-family ipv4 unicast
+  route-target import 65135:101111
+  route-target export 65135:101111
+  
+fabric forwarding anycast-gateway-mac 0000.0000.0001
+
+interface nve1
+no shutdown
+host-reachability protocol bgp
+source-interface loopback100
+member vni 101111 associate-vrf
+
+####C2-P2-L-NX9500_1
+############################################
+```
+
+## Включить VXLAN и EVPN
+
+interface loopback100
+  ip address 200.1.2.1/32
+  ip router ospf 10 area 1
+  
+  
+nv overlay evpn
+feature ospf
+feature bgp
+feature vn-segment-vlan-based
+feature bfd
+feature nv overlay
+feature interface-vlan
+!
+router bgp 65134
+  router-id 1.2.2.1
+  timers bgp 3 9
+  bestpath as-path multipath-relax
+  reconnect-interval 10
+  log-neighbor-changes
+  address-family l2vpn evpn
+    maximum-paths 10
+  template peer SPINES
+    bfd
+    remote-as 64851
+    update-source loopback 0
+    ebgp-multihop 5
+    timers 3 9
+    address-family l2vpn evpn
+      send-community
+      send-community extended
+      rewrite-evpn-rt-asn
+  neighbor 2.2.2.2
+    inherit peer SPINES
+  evpn
+	vni 555555 l2
+	rd auto
+	route-target import auto
+	route-target export auto
+	
+VLAN 55
+  name VLAN55
+  vn-segment 555555
+	
+VLAN 1111
+  name L3_VNI
+  vn-segment 101111
+ 
+ Interface Vlan 1111
+  no shutdown
+  vrf member OTUS
+  ip forward 
+  
+
+vrf context OTUS
+vni 101111
+rd auto
+address-family ipv4 unicast
+  route-target import 65134:101111
+  route-target export 65134:101111
+  route-target import 65134:555555 evpn
+  route-target export 65134:555555 evpn
+  
+
+
+fabric forwarding anycast-gateway-mac 0000.0000.0001
+
+interface Vlan10
+no shutdown
+vrf member OTUS
+ip address 55.55.55.1/24
+fabric forwarding mode anycast-gateway
+
+interface nve1
+no shutdown
+host-reachability protocol bgp
+source-interface loopback100
+member vni 555555
+ingress-replication protocol bgp
+member vni 101111 associate-vrf
+
+
+SPINES
+#####C1_P2_S_NX9500_2
+######################################
+
+nv overlay evpn
+feature bgp
+!
+interface loopback100
+  ip address 100.2.2.2/32
+  ip router ospf 10 area 1
+  
+route-map NH_UNCHANGED permit 10
+set ip next-hop unchanged
+!
+router bgp 64801
+  router-id 2.1.2.2
+  timers bgp 3 9
+  reconnect-interval 12
+  log-neighbor-changes
+  address-family l2vpn evpn
+    maximum-paths 10
+    retain route-target all
+  neighbor 1.1.2.1
+    remote-as 65007
+    update-source loopback0
+    ebgp-multihop 5
+    address-family l2vpn evpn
+      send-community
+      send-community extended
+      route-map NH_UNCHANGED out
+      rewrite-evpn-rt-asn
+  neighbor 1.1.2.2
+    remote-as 65007
+    update-source loopback0
+    ebgp-multihop 5
+    address-family l2vpn evpn
+      send-community
+      send-community extended
+      route-map NH_UNCHANGED out
+      rewrite-evpn-rt-asn
+
+
+
+#####C2_P2_S_NX9500_2
+######################################
+
+nv overlay evpn
+feature bgp
+
+!
+
+interface loopback100
+  ip address 200.2.2.2/32
+  ip router ospf 10 area 1
+  
+route-map NH_UNCHANGED permit 10
+set ip next-hop unchanged
+!
+router bgp 64801
+  router-id 2.2.2.2
+  timers bgp 3 9
+  reconnect-interval 12
+  log-neighbor-changes
+  address-family l2vpn evpn
+    maximum-paths 10
+    retain route-target all
+  neighbor 1.2.2.2
+    remote-as 65135
+    update-source loopback0
+    ebgp-multihop 5
+    address-family l2vpn evpn
+      send-community
+      send-community extended
+      route-map NH_UNCHANGED out
+      rewrite-evpn-rt-asn
+  neighbor 1.2.2.1
+    remote-as 65134
+    update-source loopback0
+    ebgp-multihop 5
+    address-family l2vpn evpn
+      send-community
+      send-community extended
+      route-map NH_UNCHANGED out
+      rewrite-evpn-rt-asn
+	  
+```

@@ -1,0 +1,231 @@
+### Конфигурация OSPF (можно свернуть).
+#### C1_P2_S_NX9500_2
+
+conf t
+boot nxos bootflash:///nxos.9.3.10.bin
+end
+copy run start
+
+no ip domain-lookup
+
+hostname C1_P2_S_NX9500_2
+username admin password admin
+
+
+feature ospf
+feature bfd
+
+bfd ipv4 interval 100 min_rx 100 multiplier 3
+
+
+router ospf 10
+  bfd
+  router-id 2.1.2.2
+  auto-cost reference-bandwidth 25 Gbps
+  passive-interface default
+  
+
+interface Ethernet1/3
+  no switchport
+  no sh 
+  ip add 172.16.2.0/31
+  no ip ospf passive-interface
+  ip router ospf 10 area 1
+  no ip redirects
+  
+ interface Ethernet1/4
+  no switchport
+  no sh 
+  ip add 172.16.2.4/31
+  no ip ospf passive-interface
+  ip router ospf 10 area 1
+  no ip redirects
+
+interface loopback0
+  ip address 2.1.2.2/32
+  ip router ospf 10 area 1
+
+#### C2_P2_S_NX9500_2
+
+conf t
+boot nxos bootflash:///nxos.9.3.10.bin
+end
+copy run start
+conf t
+no ip domain-lookup
+
+hostname C2_P2_S_NX9500_2
+username admin password admin
+
+
+feature ospf
+feature bfd
+
+bfd ipv4 interval 100 min_rx 100 multiplier 3
+
+router ospf 10
+  bfd
+  router-id 2.2.2.2
+  auto-cost reference-bandwidth 25 Gbps
+  passive-interface default
+  
+
+interface Ethernet1/3
+  no switchport
+  no sh 
+  ip add 172.17.2.0/31
+  no ip ospf passive-interface
+  ip router ospf 10 area 2
+  no ip redirects
+  
+ interface Ethernet1/4
+  no switchport
+  no sh 
+  ip add 172.17.2.4/31
+  no ip ospf passive-interface
+  ip router ospf 10 area 2
+  no ip redirects
+  
+interface loopback0
+  ip address 2.2.2.2/32
+  ip router ospf 10 area 2  
+ 
+#### C1-P2-L-NX9500_2
+
+
+conf t
+boot nxos bootflash:///nxos.9.3.10.bin
+end
+copy run start
+
+
+conf t
+no ip domain-lookup
+
+hostname C1-P2-L-NX9500_2
+username admin password admin
+
+
+feature ospf
+feature bfd
+
+bfd ipv4 interval 100 min_rx 100 multiplier 3
+
+router ospf 10
+  bfd
+  router-id 1.1.2.2
+  auto-cost reference-bandwidth 25 Gbps
+  passive-interface default
+  
+
+interface Ethernet1/2
+  no switchport
+  no sh 
+  ip add 172.16.2.1/31
+  no ip ospf passive-interface
+  ip router ospf 10 area 1
+  no ip redirects
+
+interface loopback0
+  ip address 1.1.2.2/32
+  ip router ospf 10 area 1
+  
+#### C1_P2_BL-NX9300_1
+
+conf t
+no ip domain-lookup
+
+hostname C1_P2_BL-NX9300_1
+username admin password admin
+
+
+feature ospf
+feature bfd
+
+bfd ipv4 interval 100 min_rx 100 multiplier 3
+
+router ospf 10
+  bfd
+  router-id 1.1.2.1
+  auto-cost reference-bandwidth 25 Gbps
+  passive-interface default
+  
+
+interface Ethernet1/2
+  no switchport
+  no sh 
+  ip add 172.16.2.5/31
+  no ip ospf passive-interface
+  ip router ospf 10 area 1
+  no ip redirects
+  
+interface loopback0
+  ip address 1.1.2.1/32
+  ip router ospf 10 area 1
+
+#### C2_P2_BL-NX9300_2
+
+conf t
+no ip domain-lookup
+
+hostname C2_P2_BL-NX9300_2
+username admin password admin
+
+
+feature ospf
+feature bfd
+
+bfd ipv4 interval 100 min_rx 100 multiplier 3
+
+router ospf 10
+  bfd
+  router-id 1.2.2.2
+  auto-cost reference-bandwidth 25 Gbps
+  passive-interface default
+  
+
+interface Ethernet1/2
+  no switchport
+  no sh 
+  ip add 172.17.2.5/31
+  no ip ospf passive-interface
+  ip router ospf 10 area 2
+  no ip redirects
+
+interface loopback0
+  ip address 1.2.2.2/32
+  ip router ospf 10 area 2
+  
+####  C2-P2-L-NX9500_1
+ 
+ 
+ conf t
+no ip domain-lookup
+
+hostname  C2-P2-L-NX9500_1
+username admin password admin
+
+
+feature ospf
+feature bfd
+
+bfd ipv4 interval 100 min_rx 100 multiplier 3
+
+router ospf 10
+  bfd
+  router-id 1.2.2.1
+  auto-cost reference-bandwidth 25 Gbps
+  passive-interface default
+  
+
+interface Ethernet1/2
+  no switchport
+  no sh 
+  ip add 172.17.2.1/31
+  no ip ospf passive-interface
+  ip router ospf 10 area 2
+  no ip redirects
+  
+interface loopback0
+  ip address 1.1.2.1/32
+  ip router ospf 10 area 2  
