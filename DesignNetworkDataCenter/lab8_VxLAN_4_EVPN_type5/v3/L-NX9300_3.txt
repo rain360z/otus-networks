@@ -1,10 +1,17 @@
-hostname S-NX9300_1
-
-
+hostname L-NX9300_3
+vdc L-NX9300_3 id 1
+  limit-resource vlan minimum 16 maximum 4094
+  limit-resource vrf minimum 2 maximum 4096
+  limit-resource port-channel minimum 0 maximum 511
+  limit-resource u4route-mem minimum 128 maximum 128
+  limit-resource u6route-mem minimum 96 maximum 96
+  limit-resource m4route-mem minimum 58 maximum 58
+  limit-resource m6route-mem minimum 8 maximum 8
 
 nv overlay evpn
 feature ospf
 feature bgp
+feature interface-vlan
 feature vn-segment-vlan-based
 feature bfd
 feature nv overlay
@@ -15,21 +22,59 @@ username admin password 5 $5$JMEIOP$NluYln9P9sKC1EfF5WWC0FA61TnwCHggZTctjr79Ji7
 ip domain-lookup
 copp profile strict
 bfd ipv4 interval 100 min_rx 100 multiplier 3
+rmon event 1 log trap public description FATAL(1) owner PMON@FATAL
+rmon event 2 log trap public description CRITICAL(2) owner PMON@CRITICAL
+rmon event 3 log trap public description ERROR(3) owner PMON@ERROR
+rmon event 4 log trap public description WARNING(4) owner PMON@WARNING
+rmon event 5 log trap public description INFORMATION(5) owner PMON@INFO
 
+vlan 1,1111,2222
+vlan 1111
+  name L3_VNI_OTUS
+  vn-segment 101111
+vlan 2222
+  name L3_VNI_CLIENT
+  vn-segment 102222
 
-vlan 1
-
-route-map LEAF permit 10
-  match as-number 65001-65003
 route-map NH_UNCHANGED permit 10
   set ip next-hop unchanged
+vrf context CLIENT
+  vni 102222
+  rd auto
+  address-family ipv4 unicast
+    route-target both auto
+    route-target both auto evpn
+vrf context OTUS
+  vni 101111
+  rd auto
+  address-family ipv4 unicast
+    route-target both auto
+    route-target both auto evpn
 vrf context management
 
 
+interface Vlan1
+
+interface Vlan1111
+  no shutdown
+  vrf member OTUS
+  ip forward
+
+interface Vlan2222
+  no shutdown
+  vrf member CLIENT
+  ip forward
+
+interface nve1
+  no shutdown
+  host-reachability protocol bgp
+  source-interface loopback100
+  member vni 101111 associate-vrf
+  member vni 102222 associate-vrf
+
 interface Ethernet1/1
-  no switchport
   no ip redirects
-  ip address 172.16.1.0/31
+  ip address 172.16.3.1/31
   ip ospf authentication message-digest
   ip ospf message-digest-key 1 md5 3 01cee192a36f2db2
   no ip ospf passive-interface
@@ -37,9 +82,8 @@ interface Ethernet1/1
   no shutdown
 
 interface Ethernet1/2
-  no switchport
   no ip redirects
-  ip address 172.16.2.0/31
+  ip address 172.16.3.3/31
   ip ospf authentication message-digest
   ip ospf message-digest-key 1 md5 3 01cee192a36f2db2
   no ip ospf passive-interface
@@ -47,12 +91,20 @@ interface Ethernet1/2
   no shutdown
 
 interface Ethernet1/3
-  no switchport
-  ip address 172.16.3.0/31
-  ip ospf authentication message-digest
-  ip ospf message-digest-key 1 md5 3 01cee192a36f2db2
-  no ip ospf passive-interface
-  ip router ospf 10 area 0.0.0.0
+  speed 1000
+  duplex full
+  no shutdown
+
+interface Ethernet1/3.1111
+  encapsulation dot1q 1111
+  vrf member OTUS
+  ip address 172.172.0.0/31
+  no shutdown
+
+interface Ethernet1/3.2222
+  encapsulation dot1q 2222
+  vrf member CLIENT
+  ip address 172.172.0.2/31
   no shutdown
 
 interface Ethernet1/4
@@ -181,41 +233,54 @@ interface mgmt0
   vrf member management
 
 interface loopback0
-  ip address 2.2.2.1/32
+  ip address 1.1.1.3/32
   ip router ospf 10 area 0.0.0.0
 
 interface loopback100
-  ip address 100.122.122.1/32
+  ip address 100.111.111.3/32
   ip router ospf 10 area 0.0.0.0
 icam monitor scale
 
+line console
+line vty
+boot nxos bootflash:/nxos.9.3.7.bin sup-1
 router ospf 10
   bfd
-  router-id 2.2.2.1
+  router-id 1.1.1.3
   auto-cost reference-bandwidth 1000 Mbps
   passive-interface default
-router bgp 64601
-  router-id 2.2.2.1
+router bgp 65003
+  router-id 1.1.1.3
   timers bgp 3 9
-  reconnect-interval 12
+  bestpath as-path multipath-relax
+  reconnect-interval 10
   log-neighbor-changes
+  address-family ipv4 unicast
   address-family l2vpn evpn
     maximum-paths 10
     retain route-target all
-  template peer LEAF
+  template peer SPINES
+    bfd
+    remote-as 64601
     update-source loopback0
     ebgp-multihop 5
+    timers 3 9
     address-family l2vpn evpn
       send-community
       send-community extended
       route-map NH_UNCHANGED out
       rewrite-evpn-rt-asn
-  neighbor 1.1.1.1
-    inherit peer LEAF
-    remote-as 65001
-  neighbor 1.1.1.2
-    inherit peer LEAF
-    remote-as 65002
-  neighbor 1.1.1.3
-    inherit peer LEAF
-    remote-as 65003
+  neighbor 2.2.2.1
+    inherit peer SPINES
+  neighbor 2.2.2.2
+    inherit peer SPINES
+  vrf CLIENT
+    address-family ipv4 unicast
+    neighbor 172.172.0.3
+      remote-as 70001
+      address-family ipv4 unicast
+  vrf OTUS
+    address-family ipv4 unicast
+    neighbor 172.172.0.1
+      remote-as 70001
+      address-family ipv4 unicast
