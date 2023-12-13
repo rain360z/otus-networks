@@ -10,7 +10,7 @@
 1) Адресное пространство 
 2) Внесём изменения в схему.
 3) Сконфигурируем оборудование.
-4) Проверка работоспособности.
+
 
  
 ## 1. Распределение ip адресов.
@@ -195,6 +195,7 @@ L3 VPN не работает. Нет маршрутов в VRF.
 
 Импортируем на Boarder LEAF таргеты из L3VNI обоих VRF.
 
+Boarder LEAF
 ```
 nv overlay evpn
 feature ospf
@@ -286,104 +287,67 @@ router bgp 65003
 
 ### Настроим VRF для VXLAN Routing и внешние подключения используя BGP.
 
-Настроим VRF на border node в данном случае это LNX9300_3 и 
+Для кажждого VRF нужно поднять отдельную BGP сессия в VRF. Для импорта внешних маршртов в VRF.
 
+Настройки на Boarder LEAF
 ```
-vrf context OTUS
-  vni 101111
-  rd auto
-  address-family ipv4 unicast
-    route-target both auto
-    route-target both auto evpn
-
-vrf context CLIENT
-  vni 101112
-  rd auto
-  address-family ipv4 unicast
-    route-target both auto
-    route-target both auto evpn  
-```
-
-Настроим VTEP на Border node
-
-```
-interface nve1
+interface Ethernet1/3
+  speed 1000
+  duplex full
   no shutdown
-  host-reachability protocol bgp
-  source-interface loopback100
-  member vni 100011
-    ingress-replication protocol bgp
-   member vni 100012
-    ingress-replication protocol bgp
-  member vni 101111 associate-vrf
-  member vni 101112 associate-vrf
 
-Настроим BGP VRF на Border node для ipv4 per-VRF Peering 
+interface Ethernet1/3.1111
+  encapsulation dot1q 1111
+  vrf member OTUS
+  ip address 172.172.0.0/31
+  no shutdown
 
-```
-configure terminal
-router bgp autonomous-system-number
-vrf vrf-name
-address-family ipv4 unicast
-advertise l2vpn evpn
-neighbor address remote-as number
-update-source type/id
-address-family ipv4 unicast
-```
-
-Настроим Sub-interface для Per-VRF
-
-
-
-
-```
-configure terminal
-interface type/id
-no switchport
-no shutdown
-exit
-interface type/idadadd  daadadad
-encapsulation dot1q number
-vrf member vrf-name
-ip address address
-no shutdown
-```
-
-Настройка внешнего маршрутизатора
-
-vrf context OTUS
-!
-router bgp 70001
+interface Ethernet1/3.2222
+  encapsulation dot1q 2222
+  vrf member CLIENT
+  ip address 172.172.0.2/31
+  no shutdown
+  
+ vrf CLIENT
+    address-family ipv4 unicast
+    neighbor 172.172.0.3
+      remote-as 70001
+      address-family ipv4 unicast
   vrf OTUS
     address-family ipv4 unicast
-      maximum-paths 2
-    address-family ipv6 unicast
-      maximum-paths 2
-    neighbor 172.172.0.0
-      remote-as 65003
+    neighbor 172.172.0.1
+      remote-as 70001
       address-family ipv4 unicast
+
+  ```
+Настройки на PE
+
+```
+interface Loopback0
+ ip address 8.8.8.8 255.255.255.255
 !
-interface Ethernet1/1
-  no switchport
-  no shutdown
-interface Ethernet1/1.1111
-  encapsulation dot1q 2
-  vrf member OTUS
-  ip address 172.172.0.1/31
-  no shutdown
+interface Ethernet0/0
+ no ip address
+!
+interface Ethernet0/0.1111
+ encapsulation dot1Q 1111
+ ip address 172.172.0.1 255.255.255.254
+!
+interface Ethernet0/0.2222
+ encapsulation dot1Q 2222
+ ip address 172.172.0.3 255.255.255.254
 
+router bgp 70001
+ bgp log-neighbor-changes
+ network 8.8.8.8 mask 255.255.255.255
+ neighbor 172.172.0.0 remote-as 65003
+ neighbor 172.172.0.2 remote-as 65003
 
-Адресация ддя vrf
-
-VRF CLIENT - 172.172.0.0/31
-VRF OTUS - 172.172.0.2/31
-
-## 4. Проверка работоспособности.
-
-Проверим установлено ли соседство по l2 evpn
 ```
-show bgp l2 evpn summary
-```
-![alt-text](img_2.png)
 
+Маршрут type-5 получили, адрес доступен.
+![Alt text](image-6.png)
+
+
+router bgp 65003
 
