@@ -651,7 +651,7 @@ vrrp 10 ip 55.55.55.254
 ### Underlay
 Проверим, что мы получили на LEAF все маршруты NVE1 интерфейсов в Underlay. Проверим доступность.
 
-![Alt text](image-2.png)
+![Alt text](image-2.png)  
 Проверять будет с NVE интерфейса на C1_P2_L_NX9500_1
 
 ![Alt text](image-3.png)

@@ -1,0 +1,23 @@
+hostname PROXY_2
+!
+!
+interface Ethernet0/0
+ ip address 55.55.55.10 255.255.255.0
+ vrrp 10 ip 55.55.55.254
+!
+interface Ethernet0/1
+ no ip address
+ shutdown
+!
+interface Ethernet0/2
+ no ip address
+ shutdown
+!
+interface Ethernet0/3
+ no ip address
+ shutdown
+!
+
+
+ip route 0.0.0.0 0.0.0.0 55.55.55.1
+!

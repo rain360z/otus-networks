@@ -1,12 +1,4 @@
-hostname S-NX9300_1
-vdc S-NX9300_1 id 1
-  limit-resource vlan minimum 16 maximum 4094
-  limit-resource vrf minimum 2 maximum 4096
-  limit-resource port-channel minimum 0 maximum 511
-  limit-resource u4route-mem minimum 128 maximum 128
-  limit-resource u6route-mem minimum 96 maximum 96
-  limit-resource m4route-mem minimum 58 maximum 58
-  limit-resource m6route-mem minimum 8 maximum 8
+hostname S-NX9300_2
 
 nv overlay evpn
 feature ospf
@@ -15,17 +7,8 @@ feature vn-segment-vlan-based
 feature bfd
 feature nv overlay
 
-no password strength-check
+
 username admin password 5 $5$JMEIOP$NluYln9P9sKC1EfF5WWC0FA61TnwCHggZTctjr79Ji7
- role network-admin
-ip domain-lookup
-copp profile strict
-bfd ipv4 interval 100 min_rx 100 multiplier 3
-rmon event 1 log trap public description FATAL(1) owner PMON@FATAL
-rmon event 2 log trap public description CRITICAL(2) owner PMON@CRITICAL
-rmon event 3 log trap public description ERROR(3) owner PMON@ERROR
-rmon event 4 log trap public description WARNING(4) owner PMON@WARNING
-rmon event 5 log trap public description INFORMATION(5) owner PMON@INFO
 
 vlan 1
 
@@ -35,46 +18,42 @@ route-map NH_UNCHANGED permit 10
   set ip next-hop unchanged
 vrf context management
 
-
 interface Ethernet1/1
   no switchport
   no ip redirects
-  ip address 172.16.1.0/31
+  ip address 172.16.1.2/31
   ip ospf authentication message-digest
   ip ospf message-digest-key 1 md5 3 01cee192a36f2db2
   no ip ospf passive-interface
   ip router ospf 10 area 0.0.0.0
-  no shutdown
 
 interface Ethernet1/2
   no switchport
   no ip redirects
-  ip address 172.16.2.0/31
+  ip address 172.16.2.2/31
   ip ospf authentication message-digest
   ip ospf message-digest-key 1 md5 3 01cee192a36f2db2
   no ip ospf passive-interface
   ip router ospf 10 area 0.0.0.0
-  no shutdown
 
 interface Ethernet1/3
   no switchport
-  ip address 172.16.3.0/31
+  ip address 172.16.3.2/31
   ip ospf authentication message-digest
   ip ospf message-digest-key 1 md5 3 01cee192a36f2db2
   no ip ospf passive-interface
   ip router ospf 10 area 0.0.0.0
-  no shutdown
 
 
 interface mgmt0
   vrf member management
 
 interface loopback0
-  ip address 2.2.2.1/32
+  ip address 2.2.2.2/32
   ip router ospf 10 area 0.0.0.0
 
 interface loopback100
-  ip address 100.122.122.1/32
+  ip address 100.122.122.2/32
   ip router ospf 10 area 0.0.0.0
 icam monitor scale
 
@@ -83,11 +62,11 @@ line vty
 boot nxos bootflash:/nxos.9.3.10.bin sup-1
 router ospf 10
   bfd
-  router-id 2.2.2.1
+  router-id 2.2.2.2
   auto-cost reference-bandwidth 1000 Mbps
   passive-interface default
 router bgp 64601
-  router-id 2.2.2.1
+  router-id 2.2.2.2
   timers bgp 3 9
   reconnect-interval 12
   log-neighbor-changes

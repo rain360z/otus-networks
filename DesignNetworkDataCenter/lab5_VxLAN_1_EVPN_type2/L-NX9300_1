@@ -33,6 +33,10 @@ vlan 10
   name VLAN_10
   vn-segment 10010
 
+vlan 20
+  name VLAN_20
+  vn-segment 10020
+  
 vrf context management
 
 interface nve1
@@ -63,14 +67,19 @@ interface Ethernet1/2
   no shutdown
 
 interface Ethernet1/3
+  switchport
   switchport access vlan 10
   speed 1000
   duplex full
+  no shutdown
 
 interface Ethernet1/4
-  switchport access vlan 10
+  switchport
+  switchport access vlan 20
   speed 1000
   duplex full
+  no shutdown
+
 
 interface Ethernet1/5
 
@@ -236,6 +245,10 @@ router bgp 65001
     inherit peer SPINES
 evpn
   vni 10010 l2
+    rd auto
+    route-target import auto
+    route-target export auto
+  vni 10020 l2
     rd auto
     route-target import auto
     route-target export auto

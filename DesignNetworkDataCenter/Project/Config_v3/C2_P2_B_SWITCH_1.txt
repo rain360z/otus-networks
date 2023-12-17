@@ -1,0 +1,70 @@
+Building configuration...
+
+Current configuration : 1506 bytes
+!
+
+hostname C2_P2_B_SWITCH_1
+!
+interface Loopback0
+  ip address 4.2.2.1 255.255.255.254
+ ip ospf 10 area 0.0.0.0
+!
+interface Ethernet0/0
+ no switchport
+ no ip address
+ no ip redirects
+!
+interface Ethernet0/0.2
+  encapsulation dot1Q 2
+  ip address 172.31.254.5 255.255.255.254
+  no ip redirects
+  ip ospf 10 area 0.0.0.0
+  no sh
+!
+interface Ethernet0/0.10
+ encapsulation dot1Q 10
+ ip address 172.31.201.1 255.255.255.254
+!
+interface Ethernet0/1
+!
+interface Ethernet0/2
+!
+interface Ethernet0/3
+ no switchport
+ ip address 99.99.99.0 255.255.255.254
+ duplex auto
+!
+router ospf 10
+ router-id 4.2.2.1
+ passive-interface default
+ no passive-interface Ethernet0/0
+ no passive-interface Ethernet0/0.2
+ no passive-interface Ethernet0/0.10
+ no passive-interface Ethernet0/3
+ no passive-interface Loopback0
+!
+router bgp 64000
+ bgp log-neighbor-changes
+ neighbor 99.99.99.1 remote-as 9999
+ neighbor 172.31.201.0 remote-as 65135
+!
+ip forward-protocol nd
+!
+no ip http server
+no ip http secure-server
+!
+!
+!
+!
+!
+!
+control-plane
+!
+!
+line con 0
+ logging synchronous
+line aux 0
+line vty 0 4
+!
+!
+end

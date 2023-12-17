@@ -1,0 +1,88 @@
+hostname C2_P2_S_NX9500_2
+
+nv overlay evpn
+feature ospf
+feature bgp
+feature bfd
+
+no password strength-check
+username admin password 5 $5$KMPBGF$WQpX3gXGdWI1hUPHlu8rqBcXjKuqoac/oysHlMoxWx9
+
+bfd ipv4 interval 100 min_rx 100 multiplier 3
+
+vlan 1
+
+route-map NH_UNCHANGED permit 10
+  set ip next-hop unchanged
+vrf context management
+
+
+interface Ethernet1/1
+
+interface Ethernet1/2
+
+interface Ethernet1/3
+  no switchport
+  no ip redirects
+  ip address 172.17.2.0/31
+  no ip ospf passive-interface
+  ip router ospf 10 area 0.0.0.2
+  no shutdown
+  no ip redirects
+
+interface Ethernet1/4
+  no switchport
+  no ip redirects
+  ip address 172.17.2.4/31
+  no ip ospf passive-interface
+  ip router ospf 10 area 0.0.0.2
+  no shutdown
+  mtu 9216
+  no ip redirects
+
+interface mgmt0
+  vrf member management
+
+interface loopback0
+  ip address 2.2.2.2/32
+  ip router ospf 10 area 0.0.0.2
+
+interface loopback100
+  ip address 200.2.2.2/32
+  ip router ospf 10 area 0.0.0.2
+icam monitor scale
+
+line console
+line vty
+boot nxos bootflash:/nxos.9.3.10.bin sup-1
+router ospf 10
+  bfd
+  router-id 2.2.2.2
+  auto-cost reference-bandwidth 25 Gbps
+  passive-interface default
+router bgp 64851
+  router-id 2.2.2.2
+  timers bgp 3 9
+  reconnect-interval 12
+  log-neighbor-changes
+  address-family l2vpn evpn
+    maximum-paths 10
+    retain route-target all
+  neighbor 1.2.2.1
+    remote-as 65134
+    update-source loopback0
+    ebgp-multihop 5
+    address-family l2vpn evpn
+      send-community
+      send-community extended
+      route-map NH_UNCHANGED out
+      rewrite-evpn-rt-asn
+  neighbor 1.2.2.2
+    remote-as 65135
+    update-source loopback0
+    ebgp-multihop 5
+    address-family l2vpn evpn
+      send-community
+      send-community extended
+      route-map NH_UNCHANGED out
+      rewrite-evpn-rt-asn

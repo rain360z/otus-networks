@@ -1,12 +1,9 @@
-<mxfile host="Electron" modified="2023-12-13T19:03:46.963Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/22.1.2 Chrome/114.0.5735.289 Electron/25.9.4 Safari/537.36" etag="wyw-sWeYAy8xHoBSgcXn" version="22.1.2" type="device">
+<mxfile host="app.diagrams.net" modified="2023-11-12T19:05:42.151Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36" etag="vRSXyoJnVA1BXKc2_Q1x" version="22.1.0" type="device">
   <diagram name="Страница — 1" id="TyXKpOnX87bSKpu7sTU_">
-    <mxGraphModel dx="2514" dy="993" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+    <mxGraphModel dx="2261" dy="841" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
-        <mxCell id="ZXuQBLCLjrkzV2k7H-WU-3" value="" style="ellipse;whiteSpace=wrap;html=1;fillColor=none;" parent="1" vertex="1">
-          <mxGeometry x="-95" y="80" width="990" height="180" as="geometry" />
-        </mxCell>
         <mxCell id="x6yWvG2BefHzN4PRWWCQ-21" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.392;exitY=0.058;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;entryPerimeter=0;endArrow=none;endFill=0;fontSize=14;fillColor=#d5e8d4;strokeColor=#330000;strokeWidth=1;" parent="1" source="x6yWvG2BefHzN4PRWWCQ-4" edge="1">
           <mxGeometry relative="1" as="geometry">
             <Array as="points">
@@ -112,7 +109,13 @@
           </mxGeometry>
         </mxCell>
         <mxCell id="x6yWvG2BefHzN4PRWWCQ-8" value="L-NX9500_3" style="shape=mxgraph.cisco.misc.nexus_7000;html=1;pointerEvents=1;fillColor=#036897;strokeColor=#ffffff;strokeWidth=2;verticalLabelPosition=bottom;verticalAlign=top;align=center;outlineConnect=0;fontSize=14;" parent="1" vertex="1">
-          <mxGeometry x="686.5" y="415.7" width="51" height="69" as="geometry" />
+          <mxGeometry x="700" y="420" width="51" height="69" as="geometry" />
+        </mxCell>
+        <mxCell id="x6yWvG2BefHzN4PRWWCQ-19" value="" style="endArrow=none;html=1;rounded=0;exitX=0.5;exitY=0;exitDx=0;exitDy=0;exitPerimeter=0;fontSize=14;" parent="1" target="x6yWvG2BefHzN4PRWWCQ-8" edge="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="725.5" y="560" as="sourcePoint" />
+            <mxPoint x="623.5" y="480" as="targetPoint" />
+          </mxGeometry>
         </mxCell>
         <mxCell id="x6yWvG2BefHzN4PRWWCQ-26" value="Leaf" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;fontSize=14;" parent="1" vertex="1">
           <mxGeometry x="-95" y="405.2" width="50" height="30" as="geometry" />
@@ -176,6 +179,9 @@
             <mxPoint x="3" y="-3" as="offset" />
           </mxGeometry>
         </mxCell>
+        <mxCell id="ZXuQBLCLjrkzV2k7H-WU-3" value="" style="ellipse;whiteSpace=wrap;html=1;fillColor=none;" parent="1" vertex="1">
+          <mxGeometry x="-95" y="80" width="990" height="180" as="geometry" />
+        </mxCell>
         <mxCell id="X2sETJuaRFryXuntK1pU-1" value="2.2.2.1" style="text;html=1;strokeColor=default;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
           <mxGeometry x="323" y="120" width="79" height="20" as="geometry" />
         </mxCell>
@@ -227,25 +233,25 @@
         <mxCell id="yzosTKQXO0_5mTfsmzgm-1" value="VLAN 10&lt;br style=&quot;box-sizing: border-box; font-family: &amp;quot;Helvetica Neue&amp;quot;, Helvetica, Arial, sans-serif;&quot;&gt;&lt;br style=&quot;box-sizing: border-box; font-family: &amp;quot;Helvetica Neue&amp;quot;, Helvetica, Arial, sans-serif;&quot;&gt;&lt;span style=&quot;font-family: &amp;quot;Helvetica Neue&amp;quot;, Helvetica, Arial, sans-serif; background-color: rgb(255, 255, 255);&quot;&gt;10.0.10.11/24&lt;/span&gt;&lt;br style=&quot;box-sizing: border-box; font-family: &amp;quot;Helvetica Neue&amp;quot;, Helvetica, Arial, sans-serif;&quot;&gt;&lt;span style=&quot;font-family: &amp;quot;Helvetica Neue&amp;quot;, Helvetica, Arial, sans-serif; background-color: rgb(255, 255, 255);&quot;&gt;aabb.cc00.5000&amp;nbsp;&lt;/span&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;" parent="1" vertex="1">
           <mxGeometry x="-45" y="640" width="120" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="yzosTKQXO0_5mTfsmzgm-2" value="VLAN 20&lt;br style=&quot;box-sizing: border-box; font-family: &amp;quot;Helvetica Neue&amp;quot;, Helvetica, Arial, sans-serif;&quot;&gt;&lt;br style=&quot;box-sizing: border-box; font-family: &amp;quot;Helvetica Neue&amp;quot;, Helvetica, Arial, sans-serif;&quot;&gt;&lt;span style=&quot;font-family: &amp;quot;Helvetica Neue&amp;quot;, Helvetica, Arial, sans-serif; background-color: rgb(255, 255, 255);&quot;&gt;10.0.11.33/24&lt;/span&gt;&lt;br style=&quot;box-sizing: border-box; font-family: &amp;quot;Helvetica Neue&amp;quot;, Helvetica, Arial, sans-serif;&quot;&gt;&lt;span style=&quot;font-family: &amp;quot;Helvetica Neue&amp;quot;, Helvetica, Arial, sans-serif; background-color: rgb(255, 255, 255);&quot;&gt;aabb.cc00.a000&lt;/span&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;" parent="1" vertex="1">
-          <mxGeometry x="451" y="650" width="120" height="60" as="geometry" />
+        <mxCell id="yzosTKQXO0_5mTfsmzgm-2" value="VLAN 11&lt;br style=&quot;box-sizing: border-box; font-family: &amp;quot;Helvetica Neue&amp;quot;, Helvetica, Arial, sans-serif;&quot;&gt;&lt;br style=&quot;box-sizing: border-box; font-family: &amp;quot;Helvetica Neue&amp;quot;, Helvetica, Arial, sans-serif;&quot;&gt;&lt;span style=&quot;font-family: &amp;quot;Helvetica Neue&amp;quot;, Helvetica, Arial, sans-serif; background-color: rgb(255, 255, 255);&quot;&gt;10.0.11.33/24&lt;/span&gt;&lt;br style=&quot;box-sizing: border-box; font-family: &amp;quot;Helvetica Neue&amp;quot;, Helvetica, Arial, sans-serif;&quot;&gt;&lt;span style=&quot;font-family: &amp;quot;Helvetica Neue&amp;quot;, Helvetica, Arial, sans-serif; background-color: rgb(255, 255, 255);&quot;&gt;aabb.cc00.a000&lt;/span&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;" parent="1" vertex="1">
+          <mxGeometry x="671" y="640" width="120" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="MMty6rGAYYeYoGaEWioG-2" value="R1" style="shape=mxgraph.cisco.servers.fileserver;sketch=0;html=1;pointerEvents=1;dashed=0;fillColor=#036897;strokeColor=#ffffff;strokeWidth=2;verticalLabelPosition=bottom;verticalAlign=top;align=center;outlineConnect=0;" parent="1" vertex="1">
+        <mxCell id="MMty6rGAYYeYoGaEWioG-2" value="R5" style="shape=mxgraph.cisco.servers.fileserver;sketch=0;html=1;pointerEvents=1;dashed=0;fillColor=#036897;strokeColor=#ffffff;strokeWidth=2;verticalLabelPosition=bottom;verticalAlign=top;align=center;outlineConnect=0;" parent="1" vertex="1">
           <mxGeometry y="550" width="43" height="62" as="geometry" />
         </mxCell>
-        <mxCell id="MMty6rGAYYeYoGaEWioG-3" value="R4" style="shape=mxgraph.cisco.servers.fileserver;sketch=0;html=1;pointerEvents=1;dashed=0;fillColor=#036897;strokeColor=#ffffff;strokeWidth=2;verticalLabelPosition=bottom;verticalAlign=top;align=center;outlineConnect=0;" parent="1" vertex="1">
-          <mxGeometry x="489" y="561" width="43" height="62" as="geometry" />
+        <mxCell id="MMty6rGAYYeYoGaEWioG-3" value="R10" style="shape=mxgraph.cisco.servers.fileserver;sketch=0;html=1;pointerEvents=1;dashed=0;fillColor=#036897;strokeColor=#ffffff;strokeWidth=2;verticalLabelPosition=bottom;verticalAlign=top;align=center;outlineConnect=0;" parent="1" vertex="1">
+          <mxGeometry x="704" y="554" width="43" height="62" as="geometry" />
         </mxCell>
         <mxCell id="n9neXPnXXwjS_fX_pykw-1" value="VLAN 10&lt;br style=&quot;box-sizing: border-box; font-family: &amp;quot;Helvetica Neue&amp;quot;, Helvetica, Arial, sans-serif;&quot;&gt;&lt;br style=&quot;box-sizing: border-box; font-family: &amp;quot;Helvetica Neue&amp;quot;, Helvetica, Arial, sans-serif;&quot;&gt;&lt;span style=&quot;font-family: &amp;quot;Helvetica Neue&amp;quot;, Helvetica, Arial, sans-serif; background-color: rgb(255, 255, 255);&quot;&gt;10.0.10.22/24&lt;/span&gt;&lt;br style=&quot;box-sizing: border-box; font-family: &amp;quot;Helvetica Neue&amp;quot;, Helvetica, Arial, sans-serif;&quot;&gt;&lt;span style=&quot;font-family: &amp;quot;Helvetica Neue&amp;quot;, Helvetica, Arial, sans-serif; background-color: rgb(255, 255, 255);&quot;&gt;aabb.cc00.7000&lt;/span&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;" parent="1" vertex="1">
-          <mxGeometry x="322.5" y="650" width="120" height="60" as="geometry" />
+          <mxGeometry x="370" y="640" width="120" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="zxpr9zlDvvXhfmrwCtQk-2" value="VLAN 20&lt;br style=&quot;box-sizing: border-box; font-family: &amp;quot;Helvetica Neue&amp;quot;, Helvetica, Arial, sans-serif;&quot;&gt;&lt;br style=&quot;box-sizing: border-box; font-family: &amp;quot;Helvetica Neue&amp;quot;, Helvetica, Arial, sans-serif;&quot;&gt;&lt;span style=&quot;font-family: &amp;quot;Helvetica Neue&amp;quot;, Helvetica, Arial, sans-serif; background-color: rgb(255, 255, 255);&quot;&gt;10.0.11.11/24&lt;/span&gt;&lt;br style=&quot;box-sizing: border-box; font-family: &amp;quot;Helvetica Neue&amp;quot;, Helvetica, Arial, sans-serif;&quot;&gt;&lt;span style=&quot;font-family: &amp;quot;Helvetica Neue&amp;quot;, Helvetica, Arial, sans-serif; background-color: rgb(255, 255, 255);&quot;&gt;aabb.cc00.6000&lt;/span&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;" parent="1" vertex="1">
+        <mxCell id="zxpr9zlDvvXhfmrwCtQk-2" value="VLAN 11&lt;br style=&quot;box-sizing: border-box; font-family: &amp;quot;Helvetica Neue&amp;quot;, Helvetica, Arial, sans-serif;&quot;&gt;&lt;br style=&quot;box-sizing: border-box; font-family: &amp;quot;Helvetica Neue&amp;quot;, Helvetica, Arial, sans-serif;&quot;&gt;&lt;span style=&quot;font-family: &amp;quot;Helvetica Neue&amp;quot;, Helvetica, Arial, sans-serif; background-color: rgb(255, 255, 255);&quot;&gt;10.0.11.11/24&lt;/span&gt;&lt;br style=&quot;box-sizing: border-box; font-family: &amp;quot;Helvetica Neue&amp;quot;, Helvetica, Arial, sans-serif;&quot;&gt;&lt;span style=&quot;font-family: &amp;quot;Helvetica Neue&amp;quot;, Helvetica, Arial, sans-serif; background-color: rgb(255, 255, 255);&quot;&gt;aabb.cc00.6000&lt;/span&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;" parent="1" vertex="1">
           <mxGeometry x="139" y="640" width="120" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="n9neXPnXXwjS_fX_pykw-2" value="R3" style="shape=mxgraph.cisco.servers.fileserver;sketch=0;html=1;pointerEvents=1;dashed=0;fillColor=#036897;strokeColor=#ffffff;strokeWidth=2;verticalLabelPosition=bottom;verticalAlign=top;align=center;outlineConnect=0;" parent="1" vertex="1">
-          <mxGeometry x="361" y="561" width="43" height="62" as="geometry" />
+        <mxCell id="n9neXPnXXwjS_fX_pykw-2" value="R7" style="shape=mxgraph.cisco.servers.fileserver;sketch=0;html=1;pointerEvents=1;dashed=0;fillColor=#036897;strokeColor=#ffffff;strokeWidth=2;verticalLabelPosition=bottom;verticalAlign=top;align=center;outlineConnect=0;" parent="1" vertex="1">
+          <mxGeometry x="414" y="554" width="43" height="62" as="geometry" />
         </mxCell>
-        <mxCell id="zxpr9zlDvvXhfmrwCtQk-3" value="R2" style="shape=mxgraph.cisco.servers.fileserver;sketch=0;html=1;pointerEvents=1;dashed=0;fillColor=#036897;strokeColor=#ffffff;strokeWidth=2;verticalLabelPosition=bottom;verticalAlign=top;align=center;outlineConnect=0;" parent="1" vertex="1">
+        <mxCell id="zxpr9zlDvvXhfmrwCtQk-3" value="R6" style="shape=mxgraph.cisco.servers.fileserver;sketch=0;html=1;pointerEvents=1;dashed=0;fillColor=#036897;strokeColor=#ffffff;strokeWidth=2;verticalLabelPosition=bottom;verticalAlign=top;align=center;outlineConnect=0;" parent="1" vertex="1">
           <mxGeometry x="186" y="550" width="43" height="62" as="geometry" />
         </mxCell>
         <mxCell id="n9neXPnXXwjS_fX_pykw-3" value="" style="endArrow=none;html=1;rounded=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;entryPerimeter=0;fontSize=14;" parent="1" source="n9neXPnXXwjS_fX_pykw-2" target="x6yWvG2BefHzN4PRWWCQ-5" edge="1">
@@ -260,71 +266,11 @@
             <mxPoint x="117" y="499" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="_hJDTMYRQlUMZoIFVpZK-1" value="AS 70001" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=default;" parent="1" vertex="1">
-          <mxGeometry x="840" y="540" width="80" height="30" as="geometry" />
+        <mxCell id="ScZtDjHDxOF6LSS0myNd-1" value="&lt;span style=&quot;color: rgb(0, 0, 0); font-family: &amp;quot;Helvetica Neue&amp;quot;, Helvetica, Arial, sans-serif; font-size: 12px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: -webkit-center; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; background-color: rgb(255, 255, 255); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial; float: none; display: inline !important;&quot;&gt;svi 1111&lt;/span&gt;&lt;br style=&quot;box-sizing: border-box; color: rgb(0, 0, 0); font-family: &amp;quot;Helvetica Neue&amp;quot;, Helvetica, Arial, sans-serif; font-size: 12px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: -webkit-center; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;&quot;&gt;&lt;span style=&quot;color: rgb(0, 0, 0); font-family: &amp;quot;Helvetica Neue&amp;quot;, Helvetica, Arial, sans-serif; font-size: 12px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: -webkit-center; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; background-color: rgb(255, 255, 255); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial; float: none; display: inline !important;&quot;&gt;&amp;nbsp;mac 5002.0000.1b08&lt;/span&gt;" style="text;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="840" y="405.2" width="150" height="50" as="geometry" />
         </mxCell>
-        <mxCell id="_hJDTMYRQlUMZoIFVpZK-3" value="&amp;nbsp;LO0 8.8.8.8" style="whiteSpace=wrap;html=1;" parent="1" vertex="1">
-          <mxGeometry x="820" y="571" width="150" height="20" as="geometry" />
-        </mxCell>
-        <mxCell id="_hJDTMYRQlUMZoIFVpZK-4" value="" style="endArrow=classic;html=1;rounded=0;" parent="1" edge="1">
-          <mxGeometry width="50" height="50" relative="1" as="geometry">
-            <mxPoint x="989.9999999999999" y="620" as="sourcePoint" />
-            <mxPoint x="989.9999999999999" y="540" as="targetPoint" />
-          </mxGeometry>
-        </mxCell>
-        <mxCell id="_hJDTMYRQlUMZoIFVpZK-5" value="0.0.0.0/0" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" parent="1" vertex="1">
-          <mxGeometry x="996.67" y="577" width="70" height="30" as="geometry" />
-        </mxCell>
-        <mxCell id="_hJDTMYRQlUMZoIFVpZK-7" value=".0" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" parent="1" vertex="1">
-          <mxGeometry x="725.5" y="475.2" width="30" height="30" as="geometry" />
-        </mxCell>
-        <mxCell id="_hJDTMYRQlUMZoIFVpZK-8" value="R5" style="shape=mxgraph.cisco.servers.fileserver;sketch=0;html=1;pointerEvents=1;dashed=0;fillColor=#036897;strokeColor=#ffffff;strokeWidth=2;verticalLabelPosition=bottom;verticalAlign=top;align=center;outlineConnect=0;" parent="1" vertex="1">
-          <mxGeometry x="784" y="554" width="43" height="62" as="geometry" />
-        </mxCell>
-        <mxCell id="_hJDTMYRQlUMZoIFVpZK-9" value="" style="endArrow=none;html=1;rounded=0;exitX=0.5;exitY=0;exitDx=0;exitDy=0;exitPerimeter=0;fontSize=14;entryX=0.5;entryY=1;entryDx=0;entryDy=0;entryPerimeter=0;" parent="1" source="_hJDTMYRQlUMZoIFVpZK-8" target="x6yWvG2BefHzN4PRWWCQ-8" edge="1">
-          <mxGeometry width="50" height="50" relative="1" as="geometry">
-            <mxPoint x="657" y="564" as="sourcePoint" />
-            <mxPoint x="700" y="495" as="targetPoint" />
-          </mxGeometry>
-        </mxCell>
-        <mxCell id="_hJDTMYRQlUMZoIFVpZK-10" value="VRF OTUS" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" parent="1" vertex="1">
-          <mxGeometry x="-37" y="700" width="80" height="30" as="geometry" />
-        </mxCell>
-        <mxCell id="_hJDTMYRQlUMZoIFVpZK-11" value="VRF CLIENT" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" parent="1" vertex="1">
-          <mxGeometry x="154" y="700" width="90" height="30" as="geometry" />
-        </mxCell>
-        <mxCell id="_hJDTMYRQlUMZoIFVpZK-12" value="VRF OTUS" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" parent="1" vertex="1">
-          <mxGeometry x="335" y="710" width="80" height="30" as="geometry" />
-        </mxCell>
-        <mxCell id="_hJDTMYRQlUMZoIFVpZK-13" value="VRF CLIENT" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" parent="1" vertex="1">
-          <mxGeometry x="466" y="720" width="90" height="30" as="geometry" />
-        </mxCell>
-        <mxCell id="J7aCOsFA-Z2rsu3Mbpn7-1" value="OTUS = e1/3.1111 172.172.0.0/31&lt;br&gt;CLIENT =&amp;nbsp; e1/3.2222 172.172.0.2/31" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" parent="1" vertex="1">
-          <mxGeometry x="760" y="484.7" width="220" height="40" as="geometry" />
-        </mxCell>
-        <mxCell id="C_h0cgzkrQzbpGa9JTxL-1" value="" style="endArrow=none;html=1;rounded=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;entryPerimeter=0;fontSize=14;exitX=0.5;exitY=0;exitDx=0;exitDy=0;exitPerimeter=0;" edge="1" parent="1" source="MMty6rGAYYeYoGaEWioG-3" target="x6yWvG2BefHzN4PRWWCQ-5">
-          <mxGeometry width="50" height="50" relative="1" as="geometry">
-            <mxPoint x="410" y="571" as="sourcePoint" />
-            <mxPoint x="450" y="499" as="targetPoint" />
-          </mxGeometry>
-        </mxCell>
-        <mxCell id="C_h0cgzkrQzbpGa9JTxL-3" value="L3 VNI&lt;br&gt;VNI 101111" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
-          <mxGeometry x="335" y="750" width="80" height="40" as="geometry" />
-        </mxCell>
-        <mxCell id="C_h0cgzkrQzbpGa9JTxL-4" value="" style="shape=flexArrow;endArrow=classic;html=1;rounded=0;fillColor=#ffe6cc;strokeColor=#d79b00;" edge="1" parent="1">
-          <mxGeometry width="50" height="50" relative="1" as="geometry">
-            <mxPoint x="10" y="740" as="sourcePoint" />
-            <mxPoint x="720" y="740" as="targetPoint" />
-          </mxGeometry>
-        </mxCell>
-        <mxCell id="C_h0cgzkrQzbpGa9JTxL-5" value="" style="shape=flexArrow;endArrow=classic;html=1;rounded=0;fillColor=#f8cecc;strokeColor=#b85450;" edge="1" parent="1">
-          <mxGeometry width="50" height="50" relative="1" as="geometry">
-            <mxPoint x="701" y="810" as="sourcePoint" />
-            <mxPoint x="380" y="810" as="targetPoint" />
-          </mxGeometry>
-        </mxCell>
-        <mxCell id="C_h0cgzkrQzbpGa9JTxL-9" value="L3 VNI&lt;br&gt;VNI 102222" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
-          <mxGeometry x="505" y="820" width="90" height="40" as="geometry" />
+        <mxCell id="ScZtDjHDxOF6LSS0myNd-2" value="&lt;span style=&quot;color: rgb(0, 0, 0); font-family: &amp;quot;Helvetica Neue&amp;quot;, Helvetica, Arial, sans-serif; font-size: 12px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: -webkit-center; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; background-color: rgb(255, 255, 255); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial; float: none; display: inline !important;&quot;&gt;SVI 1111&lt;/span&gt;&lt;br style=&quot;box-sizing: border-box; color: rgb(0, 0, 0); font-family: &amp;quot;Helvetica Neue&amp;quot;, Helvetica, Arial, sans-serif; font-size: 12px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: -webkit-center; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;&quot;&gt;&lt;span style=&quot;color: rgb(0, 0, 0); font-family: &amp;quot;Helvetica Neue&amp;quot;, Helvetica, Arial, sans-serif; font-size: 12px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: -webkit-center; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; background-color: rgb(255, 255, 255); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial; float: none; display: inline !important;&quot;&gt;mac 5009.0000.1b08&lt;/span&gt;" style="text;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="-25" y="425.2" width="125" height="50" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>

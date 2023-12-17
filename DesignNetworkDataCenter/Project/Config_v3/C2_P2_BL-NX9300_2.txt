@@ -1,52 +1,69 @@
-hostname S-NX9300_1
+hostname C2_P2_BL-NX9300_2
 
 nv overlay evpn
 feature ospf
 feature bgp
+feature interface-vlan
 feature vn-segment-vlan-based
 feature bfd
 feature nv overlay
 
 
-username admin password 5 $5$JMEIOP$NluYln9P9sKC1EfF5WWC0FA61TnwCHggZTctjr79Ji7
+username admin password 5 $5$KDFPJO$76HH1Gc8Xj4jzFxJ4pyqsRAG0nFVH.IrYnAF12pDR0/
+ 
+no ip domain-lookup
 
 bfd ipv4 interval 100 min_rx 100 multiplier 3
 
-route-map LEAF permit 10
-  match as-number 65001-65003
+fabric forwarding anycast-gateway-mac 0000.0000.0001
+vlan 1-2,10,1111
+vlan 2
+  name VLAN2
+vlan 10
+  name VLAN10
+vlan 1111
+  name L3_VNI
+  vn-segment 101111
+
 route-map NH_UNCHANGED permit 10
   set ip next-hop unchanged
+vrf context OTUS
+  vni 101111
+  rd auto
+  address-family ipv4 unicast
+    route-target both auto
+    route-target both auto evpn
 vrf context management
 
 
-interface Ethernet1/1
-  no switchport
-  no ip redirects
-  ip address 172.16.1.0/31
-  ip ospf authentication message-digest
-  ip ospf message-digest-key 1 md5 3 01cee192a36f2db2
-  no ip ospf passive-interface
-  ip router ospf 10 area 0.0.0.0
+interface Vlan1
+
+interface Vlan1111
   no shutdown
+  vrf member OTUS
+  ip forward
+  mtu 9216
+  no ip redirects
+
+interface nve1
+  no shutdown
+  host-reachability protocol bgp
+  source-interface loopback100
+  member vni 101111 associate-vrf
+
+interface Ethernet1/1
 
 interface Ethernet1/2
   no switchport
   no ip redirects
-  ip address 172.16.2.0/31
-  ip ospf authentication message-digest
-  ip ospf message-digest-key 1 md5 3 01cee192a36f2db2
+  ip address 172.17.2.5/31
   no ip ospf passive-interface
-  ip router ospf 10 area 0.0.0.0
+  ip router ospf 10 area 0.0.0.2
   no shutdown
+  mtu 9216
+  no ip redirects
 
 interface Ethernet1/3
-  no switchport
-  ip address 172.16.3.0/31
-  ip ospf authentication message-digest
-  ip ospf message-digest-key 1 md5 3 01cee192a36f2db2
-  no ip ospf passive-interface
-  ip router ospf 10 area 0.0.0.0
-  no shutdown
 
 interface Ethernet1/4
 
@@ -55,6 +72,27 @@ interface Ethernet1/5
 interface Ethernet1/6
 
 interface Ethernet1/7
+  no switchport
+  no shutdown
+  mtu 9216
+  no ip redirects
+
+interface Ethernet1/7.2
+  encapsulation dot1q 2
+  ip address 172.31.254.4/31
+  no ip ospf passive-interface
+  ip router ospf 10 area 0.0.0.0
+  no shutdown
+  mtu 9216
+  no ip redirects
+
+interface Ethernet1/7.10
+  encapsulation dot1q 10
+  vrf member OTUS
+  ip address 172.31.201.0/31
+  no shutdown
+  mtu 9216
+  no ip redirects
 
 interface Ethernet1/8
 
@@ -174,44 +212,47 @@ interface mgmt0
   vrf member management
 
 interface loopback0
-  ip address 2.2.2.1/32
-  ip router ospf 10 area 0.0.0.0
+  ip address 1.2.2.2/32
+  ip router ospf 10 area 0.0.0.2
 
 interface loopback100
-  ip address 100.122.122.1/32
-  ip router ospf 10 area 0.0.0.0
-icam monitor scale
+  ip address 200.1.2.2/32
+  ip router ospf 10 area 0.0.0.2
 
-line console
-line vty
-boot nxos bootflash:/nxos.9.3.10.bin sup-1
 router ospf 10
   bfd
-  router-id 2.2.2.1
-  auto-cost reference-bandwidth 1000 Mbps
+  router-id 1.2.2.2
+  auto-cost reference-bandwidth 25 Gbps
   passive-interface default
-router bgp 64601
-  router-id 2.2.2.1
+router bgp 65135
+  router-id 1.2.2.2
   timers bgp 3 9
-  reconnect-interval 12
+  bestpath as-path multipath-relax
+  reconnect-interval 10
   log-neighbor-changes
   address-family l2vpn evpn
     maximum-paths 10
-    retain route-target all
-  template peer LEAF
+  template peer SPINES
+    bfd
     update-source loopback0
     ebgp-multihop 5
+    timers 3 9
     address-family l2vpn evpn
       send-community
       send-community extended
       route-map NH_UNCHANGED out
       rewrite-evpn-rt-asn
-  neighbor 1.1.1.1
-    inherit peer LEAF
-    remote-as 65001
-  neighbor 1.1.1.2
-    inherit peer LEAF
-    remote-as 65002
-  neighbor 1.1.1.3
-    inherit peer LEAF
-    remote-as 65003
+  neighbor 1.1.2.2
+    inherit peer SPINES
+    remote-as 65008
+  neighbor 2.2.2.2
+    inherit peer SPINES
+    remote-as 64851
+  vrf OTUS
+    router-id 1.2.2.2
+    timers bgp 3 9
+    address-family ipv4 unicast
+      advertise l2vpn evpn
+    neighbor 172.31.201.1
+      remote-as 64000
+      address-family ipv4 unicast

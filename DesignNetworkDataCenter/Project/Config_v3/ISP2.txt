@@ -1,0 +1,25 @@
+hostname ISP2
+!
+interface Loopback0
+ ip address 10.10.10.10 255.255.255.255
+!
+interface Ethernet0/0
+ no ip address
+ shutdown
+!
+interface Ethernet0/1
+ no ip address
+ shutdown
+!
+interface Ethernet0/2
+ no ip address
+ shutdown
+!
+interface Ethernet0/3
+ ip address 99.99.99.1 255.255.255.254
+!
+router bgp 9999
+ bgp log-neighbor-changes
+ network 10.10.10.10 mask 255.255.255.255
+ neighbor 99.99.99.0 remote-as 64000
+!
