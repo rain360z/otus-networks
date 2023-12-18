@@ -100,6 +100,16 @@ int po 1
 vpc peer-link
 switchport mode trunk
 
+int e1/3
+channel-group 10
+
+int po 10
+switchport
+switchport mode trunk
+vpc 10
+
+int lo 100
+ ip address 100.111.111.254/32 secondary
 ```
 L-NX9300_2
 
@@ -128,7 +138,33 @@ int e1/7
 int po 1
 vpc peer-link
 switchport mode trunk
+
+
+int e1/3
+channel-group 10
+
+int po 10
+switchport
+switchport mode trunk
+vpc 10
+
+int lo 100
+ ip address 100.111.111.254/32 secondary
  ```
+
+
+Server VPC
+
+```
+int e0/0-1
+no sh
+channel-group 10 mode active
+```
+
+После настроек проверим, что в статусе success Configuration consistencu status.
+Определились роли vPC. L-NX9500_1 - primary , L-NX9300_2 - secondary
+
+![Alt text](image.png)
 
 ## 4. Проверка работоспособности.
 
@@ -136,4 +172,15 @@ show vpc
 
 
 show vpc peer-keepalive
+
+show lacp peer
+
+show lacp neighbor
+show port-channel summary
+
+
+Cata
+sh etherchannel port-channel
+show etherchannel summary
+
 
